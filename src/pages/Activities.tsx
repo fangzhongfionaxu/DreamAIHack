@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Navigation from "@/components/Navigation";
 import PlantProgress from "@/components/PlantProgress";
 import ActivityItem from "@/components/ActivityItem";
-import { Checkbox, FileText, Activity, Calendar } from "lucide-react";
+import { CheckSquare, FileText, Activity, Calendar } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 // Sample activity data
@@ -17,7 +17,7 @@ const defaultActivities = [
     title: "Wear Brace",
     description: "Wear your brace for at least 18 hours today.",
     timeOfDay: "All Day",
-    icon: <Checkbox className="w-6 h-6" />,
+    icon: <CheckSquare className="w-6 h-6" />,
     completed: false
   },
   {
