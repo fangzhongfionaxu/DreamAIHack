@@ -80,7 +80,7 @@ const AiChatInterface = () => {
   }, [messages]);
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full pb-16"> {/* Added pb-16 to create space for the navigation bar */}
       <div className="flex flex-col flex-1">
         <ScrollArea className="flex-1 p-4 bg-slate-50">
           <div className="space-y-4 pb-4">
@@ -105,7 +105,7 @@ const AiChatInterface = () => {
           </div>
         </ScrollArea>
         
-        <div className="p-4 bg-background border-t sticky bottom-0">
+        <div data-lov-id="src/components/AiChatInterface.tsx:108:8" className="p-4 bg-background border-t fixed bottom-16 left-0 right-0 z-10">
           <div className="flex gap-2 items-end relative rounded-xl bg-card border shadow-sm p-2">
             <Button variant="ghost" size="icon" className="rounded-full h-7 w-7 p-0 absolute bottom-3 left-3">
               <Plus className="h-4 w-4" />
