@@ -80,7 +80,7 @@ const AiChatInterface = () => {
   }, [messages]);
 
   return (
-    <div className="flex flex-col h-full pb-16 bg-gradient-to-br from-pastel-pink to-pastel-yellow"> {/* Added gradient background */}
+    <div className="flex flex-col h-full pb-16 bg-gradient-to-br from-pastel-pink to-pastel-yellow"> 
       <div className="flex flex-col flex-1">
         <ScrollArea className="flex-1 p-4">
           <div className="space-y-4 pb-4">
@@ -115,7 +115,7 @@ const AiChatInterface = () => {
             </Button>
             
             <Textarea
-              placeholder="Ask Lovable..."
+              placeholder="Type here..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => {
