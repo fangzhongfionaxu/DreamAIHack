@@ -56,7 +56,7 @@ const defaultActivities = [
 
 const Activities = () => {
   const [activities, setActivities] = useState(defaultActivities);
-  const [streak, setStreak] = useState(7); // Current streak of 7 days
+  const [streak, setStreak] = useState(20); // Updated to 20 days
   const { toast } = useToast();
 
   const handleCompleteActivity = (id: string) => {
@@ -99,7 +99,7 @@ const Activities = () => {
           </TabsList>
         </div>
         
-        <TabsContent value="today" className="flex-1 p-4 space-y-4">
+        <TabsContent value="today" className="flex-1 p-4 space-y-4 bg-gradient-to-br from-pastel-pink to-pastel-yellow">
           <div className="grid grid-cols-1 gap-4">
             {activities.map(activity => (
               <ActivityItem
@@ -129,7 +129,7 @@ const Activities = () => {
           </Card>
         </TabsContent>
         
-        <TabsContent value="streak" className="p-4">
+        <TabsContent value="streak" className="p-4 bg-gradient-to-br from-pastel-pink to-pastel-yellow">
           <Card className="streak-container">
             <CardContent className="p-6">
               <h3 className="text-xl font-semibold text-brand-dark text-center mb-4">
