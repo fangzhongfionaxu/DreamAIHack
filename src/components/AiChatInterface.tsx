@@ -1,9 +1,8 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Send, Plus, PaperClip, Edit, ArrowUp } from "lucide-react";
+import { Send, Plus, Paperclip, Edit, ArrowUp } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
@@ -100,7 +99,7 @@ const AiChatInterface = () => {
                 <Plus className="h-4 w-4" />
               </Button>
               <Button variant="ghost" size="icon" className="rounded-full h-7 w-7 p-0">
-                <PaperClip className="h-4 w-4" />
+                <Paperclip className="h-4 w-4" />
               </Button>
             </div>
             
