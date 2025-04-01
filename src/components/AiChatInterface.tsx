@@ -82,7 +82,7 @@ const AiChatInterface = () => {
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-hidden flex flex-col">
-        <ScrollArea className="flex-1 p-4 space-y-4 bg-gradient-to-br from-pastel-pink to-pastel-yellow">
+        <ScrollArea className="flex-1 p-4 bg-gradient-to-br from-pastel-pink to-pastel-yellow">
           <div className="space-y-4 pb-4">
             {messages.map((message, index) => (
               <Card 
