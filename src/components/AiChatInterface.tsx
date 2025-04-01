@@ -3,8 +3,10 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Send } from "lucide-react";
+import { Send, Plus, PaperClip, Edit, ArrowUp } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Textarea } from "@/components/ui/textarea";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -68,42 +70,63 @@ const AiChatInterface = () => {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="p-4 border-b">
-        <h2 className="text-2xl font-semibold text-brand-dark">Your Assistant</h2>
-      </div>
-      
-      <div className="flex-1 overflow-auto p-4 space-y-4 bg-gradient-to-br from-pastel-pink to-pastel-yellow">
-        {messages.map((message, index) => (
-          <Card 
-            key={index} 
-            className={`animate-fade-in max-w-[80%] ${
-              message.role === 'user' 
-                ? 'ml-auto bg-brand/10 border-brand/20' 
-                : 'mr-auto bg-white'
-            }`}
-          >
-            <div className="p-3">
-              <p>{message.content}</p>
-              <p className="text-xs text-muted-foreground mt-1">
-                {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-              </p>
+      <div className="flex-1 overflow-hidden flex flex-col">
+        <ScrollArea className="flex-1 p-4 space-y-4 bg-gradient-to-br from-pastel-pink to-pastel-yellow">
+          <div className="space-y-4 pb-4">
+            {messages.map((message, index) => (
+              <Card 
+                key={index} 
+                className={`animate-fade-in max-w-[80%] ${
+                  message.role === 'user' 
+                    ? 'ml-auto bg-brand/10 border-brand/20' 
+                    : 'mr-auto bg-white'
+                }`}
+              >
+                <div className="p-3">
+                  <p>{message.content}</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </ScrollArea>
+        
+        <div className="p-4 bg-background border-t">
+          <div className="flex gap-2 items-end relative rounded-xl bg-card border shadow-sm p-2">
+            <div className="flex items-center gap-2 absolute bottom-3 left-3">
+              <Button variant="ghost" size="icon" className="rounded-full h-7 w-7 p-0">
+                <Plus className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="icon" className="rounded-full h-7 w-7 p-0">
+                <PaperClip className="h-4 w-4" />
+              </Button>
             </div>
-          </Card>
-        ))}
-      </div>
-      
-      <div className="p-4 border-t bg-background">
-        <div className="flex gap-2">
-          <Input
-            placeholder="Type your message..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            className="flex-1"
-          />
-          <Button onClick={handleSend} className="bg-brand hover:bg-brand-dark">
-            <Send className="h-4 w-4" />
-          </Button>
+            
+            <Textarea
+              placeholder="Ask Lovable..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend();
+                }
+              }}
+              className="pl-16 pr-10 resize-none min-h-[40px] max-h-[200px] border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"
+              rows={1}
+            />
+            
+            <Button 
+              onClick={handleSend}
+              className="absolute bottom-2 right-2 rounded-full bg-brand hover:bg-brand-dark h-7 w-7 p-0"
+              size="icon"
+              disabled={!input.trim()}
+            >
+              <ArrowUp className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
     </div>
