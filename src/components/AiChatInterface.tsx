@@ -81,8 +81,8 @@ const AiChatInterface = () => {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-hidden flex flex-col">
-        <ScrollArea className="flex-1 p-4 bg-gradient-to-br from-pastel-pink to-pastel-yellow">
+      <div className="flex flex-col flex-1">
+        <ScrollArea className="flex-1 p-4 bg-slate-50">
           <div className="space-y-4 pb-4">
             {messages.map((message, index) => (
               <Card 
@@ -105,16 +105,14 @@ const AiChatInterface = () => {
           </div>
         </ScrollArea>
         
-        <div className="p-4 bg-background border-t">
+        <div className="p-4 bg-background border-t sticky bottom-0">
           <div className="flex gap-2 items-end relative rounded-xl bg-card border shadow-sm p-2">
-            <div className="flex items-center gap-2 absolute bottom-3 left-3">
-              <Button variant="ghost" size="icon" className="rounded-full h-7 w-7 p-0">
-                <Plus className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="rounded-full h-7 w-7 p-0">
-                <Paperclip className="h-4 w-4" />
-              </Button>
-            </div>
+            <Button variant="ghost" size="icon" className="rounded-full h-7 w-7 p-0 absolute bottom-3 left-3">
+              <Plus className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" className="rounded-full h-7 w-7 p-0 absolute bottom-3 left-12">
+              <Paperclip className="h-4 w-4" />
+            </Button>
             
             <Textarea
               placeholder="Ask Lovable..."
@@ -126,17 +124,17 @@ const AiChatInterface = () => {
                   handleSend();
                 }
               }}
-              className="pl-16 pr-10 resize-none min-h-[40px] max-h-[200px] border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"
+              className="pl-20 pr-10 resize-none min-h-[40px] max-h-[200px] border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"
               rows={1}
             />
             
             <Button 
               onClick={handleSend}
-              className="absolute bottom-2 right-2 rounded-full bg-brand hover:bg-brand-dark h-7 w-7 p-0"
+              className="absolute bottom-2 right-2 rounded-full bg-blue-500 hover:bg-blue-600 h-7 w-7 p-0"
               size="icon"
               disabled={!input.trim() || isLoading}
             >
-              <ArrowUp className="h-4 w-4" />
+              <ArrowUp className="h-4 w-4 text-white" />
             </Button>
           </div>
         </div>
