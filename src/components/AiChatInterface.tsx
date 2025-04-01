@@ -1,8 +1,8 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Send, Plus, Paperclip, Edit, ArrowUp } from "lucide-react";
+import { Plus, Paperclip, ArrowUp } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,24 +22,28 @@ const AiChatInterface = () => {
     }
   ]);
   const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   const handleSend = () => {
     if (!input.trim()) return;
     
+    // Add user message to chat
     const userMessage: Message = {
       role: 'user',
       content: input,
       timestamp: new Date()
     };
     
-    setMessages([...messages, userMessage]);
+    setMessages(prevMessages => [...prevMessages, userMessage]);
     setInput('');
+    setIsLoading(true);
 
-    // Simple AI response simulation with safety layer
+    // Simulate AI response (would be replaced with actual API call in production)
     setTimeout(() => {
       let responseContent = '';
       
+      // Simple AI response simulation with safety layer
       if (input.toLowerCase().includes('diagnosis') || 
           input.toLowerCase().includes('diagnose') || 
           input.toLowerCase().includes('what do i have')) {
@@ -64,8 +68,16 @@ const AiChatInterface = () => {
       };
       
       setMessages(prevMessages => [...prevMessages, aiMessage]);
+      setIsLoading(false);
     }, 1000);
   };
+
+  // Auto-scroll to bottom when new messages are added
+  const messagesEndRef = React.useRef<HTMLDivElement>(null);
+  
+  React.useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   return (
     <div className="flex flex-col h-full">
@@ -89,6 +101,7 @@ const AiChatInterface = () => {
                 </div>
               </Card>
             ))}
+            <div ref={messagesEndRef} />
           </div>
         </ScrollArea>
         
@@ -121,7 +134,7 @@ const AiChatInterface = () => {
               onClick={handleSend}
               className="absolute bottom-2 right-2 rounded-full bg-brand hover:bg-brand-dark h-7 w-7 p-0"
               size="icon"
-              disabled={!input.trim()}
+              disabled={!input.trim() || isLoading}
             >
               <ArrowUp className="h-4 w-4" />
             </Button>
