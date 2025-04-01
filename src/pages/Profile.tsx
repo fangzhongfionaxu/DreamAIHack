@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,8 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BadgeDisplay, { AchievementBadge } from "@/components/BadgeDisplay";
 import Navigation from "@/components/Navigation";
-import { Bell, MessageSquare, Award, CheckCircle, Calendar, Heart, Shield } from "lucide-react";
+import { Bell, MessageSquare, Award, CheckCircle, Calendar, Heart, Shield, UserCog, UserPlus } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 // Sample badge data
 const badges: AchievementBadge[] = [
@@ -88,13 +88,27 @@ const Profile = () => {
                 <h2 className="text-xl font-semibold">Jane Doe</h2>
                 <p className="text-muted-foreground">7-day streak 🌱</p>
                 <div className="flex gap-2 mt-2">
-                  <Button size="sm" variant="outline" className="text-xs">
-                    Edit Profile
-                  </Button>
-                  <Button size="sm" className="bg-brand hover:bg-brand-dark text-xs">
-                    <Bell className="h-3 w-3 mr-1" />
-                    Notifications
-                  </Button>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button size="icon" variant="outline" className="h-9 w-9">
+                        <UserCog className="h-4 w-4" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-2">
+                      <p className="text-sm">Edit Profile</p>
+                    </PopoverContent>
+                  </Popover>
+                  
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button size="icon" className="h-9 w-9 bg-brand hover:bg-brand-dark">
+                        <Bell className="h-4 w-4" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-2">
+                      <p className="text-sm">Notifications</p>
+                    </PopoverContent>
+                  </Popover>
                 </div>
               </div>
             </div>
@@ -172,7 +186,9 @@ const Profile = () => {
                         <p className="text-sm text-muted-foreground">{friend.streak} day streak</p>
                       </div>
                     </div>
-                    <Button variant="outline" size="sm">Message</Button>
+                    <Button variant="outline" size="icon">
+                      <MessageSquare className="h-4 w-4" />
+                    </Button>
                   </div>
                 ))}
                 
@@ -180,7 +196,7 @@ const Profile = () => {
                 
                 <div className="text-center">
                   <Button className="bg-brand hover:bg-brand-dark">
-                    <MessageSquare className="h-4 w-4 mr-2" />
+                    <UserPlus className="h-4 w-4 mr-2" />
                     Chat with Friends
                   </Button>
                 </div>
@@ -194,7 +210,10 @@ const Profile = () => {
               <CardContent>
                 <div className="text-center p-4">
                   <p className="text-muted-foreground mb-4">Join challenges with friends to stay motivated!</p>
-                  <Button className="bg-brand hover:bg-brand-dark">Join a Challenge</Button>
+                  <Button className="bg-brand hover:bg-brand-dark">
+                    <Award className="h-4 w-4 mr-2" />
+                    Join a Challenge
+                  </Button>
                 </div>
               </CardContent>
             </Card>
