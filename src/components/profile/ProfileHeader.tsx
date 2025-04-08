@@ -11,7 +11,6 @@ const ProfileHeader = () => {
     <CardContent className="p-6">
       <div className="flex items-center">
         <Avatar className="h-20 w-20 border-4 border-brand">
-          <AvatarImage src="https://ui.shadcn.com/avatars/01.png" alt="Jane Doe" />
           <AvatarFallback className="bg-teal-500 text-white text-xl">JD</AvatarFallback>
         </Avatar>
         

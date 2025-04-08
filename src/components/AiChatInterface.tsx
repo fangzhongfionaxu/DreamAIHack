@@ -6,7 +6,7 @@ import { Plus, Paperclip, ArrowUp } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -88,11 +88,6 @@ const AiChatInterface = () => {
             {messages.map((message, index) => (
               <div key={index} className={`flex items-start gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}>
                 <Avatar className="mt-1">
-                  {message.role === 'assistant' ? (
-                    <AvatarImage src="/lovable-uploads/6ea3382b-37a4-445a-89e7-b2444fb75c5f.png" alt="AI Assistant" />
-                  ) : (
-                    <AvatarImage src="https://ui.shadcn.com/avatars/01.png" alt="User" />
-                  )}
                   <AvatarFallback className={message.role === 'assistant' ? 'bg-brand text-white' : 'bg-teal-500 text-white'}>
                     {message.role === 'assistant' ? 'AI' : 'JD'}
                   </AvatarFallback>
