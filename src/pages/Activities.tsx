@@ -56,7 +56,7 @@ const defaultActivities = [
 
 const Activities = () => {
   const [activities, setActivities] = useState(defaultActivities);
-  const [streak, setStreak] = useState(30); // Updated to 30 days for full growth
+  const [streak, setStreak] = useState(30); // Full 30-day streak
   const { toast } = useToast();
 
   const handleCompleteActivity = (id: string) => {
@@ -91,7 +91,7 @@ const Activities = () => {
         <h1 className="text-2xl font-semibold text-brand-dark">Activities</h1>
       </div>
       
-      <Tabs defaultValue="streak" className="flex-1"> {/* Changed default tab to streak */}
+      <Tabs defaultValue="streak" className="flex-1"> {/* Keep "streak" as default tab */}
         <div className="px-4 py-2 border-b sticky top-0 bg-background z-10">
           <TabsList className="w-full">
             <TabsTrigger value="today" className="flex-1">Today</TabsTrigger>
@@ -132,17 +132,17 @@ const Activities = () => {
         <TabsContent value="streak" className="p-4 bg-gradient-to-br from-pastel-pink to-pastel-yellow min-h-[calc(100vh-130px)]">
           <Card className="streak-container">
             <CardContent className="p-6">
-              <h3 className="text-xl font-semibold text-brand-dark text-center mb-2">
+              <h3 className="text-xl font-semibold text-brand-dark text-center mb-6">
                 Your Growth Journey
               </h3>
               
               <PlantProgress streak={streak} maxStreak={30} />
               
-              <div className="mt-2 text-center">
+              <div className="mt-6 text-center">
                 <p className="text-sm text-muted-foreground mb-4">
                   Congratulations! You've completed a full 30-day streak!
                 </p>
-                <Button className="bg-brand hover:bg-brand-dark flex items-center gap-2">
+                <Button className="bg-teal-500 hover:bg-teal-600 flex items-center gap-2">
                   <Share2 className="w-4 h-4" />
                   Share Your Progress
                 </Button>
