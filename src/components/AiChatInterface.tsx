@@ -6,6 +6,7 @@ import { Plus, Paperclip, ArrowUp } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -85,27 +86,38 @@ const AiChatInterface = () => {
         <ScrollArea className="flex-1 p-4">
           <div className="space-y-4 pb-4">
             {messages.map((message, index) => (
-              <Card 
-                key={index} 
-                className={`animate-fade-in max-w-[80%] ${
-                  message.role === 'user' 
-                    ? 'ml-auto bg-brand/10 border-brand/20' 
-                    : 'mr-auto bg-white'
-                }`}
-              >
-                <div className="p-3">
-                  <p>{message.content}</p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </p>
-                </div>
-              </Card>
+              <div key={index} className={`flex items-start gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                <Avatar className="mt-1">
+                  {message.role === 'assistant' ? (
+                    <AvatarImage src="/lovable-uploads/6ea3382b-37a4-445a-89e7-b2444fb75c5f.png" alt="AI Assistant" />
+                  ) : (
+                    <AvatarImage src="https://ui.shadcn.com/avatars/01.png" alt="User" />
+                  )}
+                  <AvatarFallback>
+                    {message.role === 'assistant' ? 'AI' : 'ME'}
+                  </AvatarFallback>
+                </Avatar>
+                <Card 
+                  className={`animate-fade-in max-w-[75%] ${
+                    message.role === 'user' 
+                      ? 'bg-brand/10 border-brand/20' 
+                      : 'bg-white'
+                  }`}
+                >
+                  <div className="p-3">
+                    <p>{message.content}</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+                </Card>
+              </div>
             ))}
             <div ref={messagesEndRef} />
           </div>
         </ScrollArea>
         
-        <div data-lov-id="src/components/AiChatInterface.tsx:108:8" className="p-4 bg-background border-t fixed bottom-16 left-0 right-0 z-10">
+        <div className="p-4 bg-background border-t fixed bottom-16 left-0 right-0 z-10">
           <div className="flex gap-2 items-end relative rounded-xl bg-card border shadow-sm p-2">
             <Button variant="ghost" size="icon" className="rounded-full h-7 w-7 p-0 absolute bottom-3 left-3">
               <Plus className="h-4 w-4" />
