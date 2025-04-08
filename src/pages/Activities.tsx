@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Navigation from "@/components/Navigation";
 import PlantProgress from "@/components/PlantProgress";
 import ActivityItem from "@/components/ActivityItem";
-import { CheckSquare, FileText, Activity, Calendar } from "lucide-react";
+import { CheckSquare, FileText, Activity, Calendar, Share2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 // Sample activity data
@@ -129,20 +129,21 @@ const Activities = () => {
           </Card>
         </TabsContent>
         
-        <TabsContent value="streak" className="p-4 bg-gradient-to-br from-pastel-pink to-pastel-yellow">
+        <TabsContent value="streak" className="p-4 bg-gradient-to-br from-pastel-pink to-pastel-yellow min-h-[calc(100vh-130px)]">
           <Card className="streak-container">
             <CardContent className="p-6">
-              <h3 className="text-xl font-semibold text-brand-dark text-center mb-4">
+              <h3 className="text-xl font-semibold text-brand-dark text-center mb-2">
                 Your Growth Journey
               </h3>
               
               <PlantProgress streak={streak} maxStreak={30} />
               
-              <div className="mt-6 text-center">
-                <p className="text-sm text-muted-foreground mb-2">
+              <div className="mt-2 text-center">
+                <p className="text-sm text-muted-foreground mb-4">
                   Congratulations! You've completed a full 30-day streak!
                 </p>
-                <Button className="bg-brand hover:bg-brand-dark">
+                <Button className="bg-brand hover:bg-brand-dark flex items-center gap-2">
+                  <Share2 className="w-4 h-4" />
                   Share Your Progress
                 </Button>
               </div>
