@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,7 +14,7 @@ const Settings = () => {
         <h1 className="text-2xl font-semibold text-brand-dark">Settings</h1>
       </div>
       
-      <div className="p-4 space-y-4">
+      <div className="p-4 space-y-4 flex-1 bg-gradient-to-br from-pastel-pink to-pastel-yellow">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -71,11 +72,11 @@ const friends = [
 const Profile = () => {
   return (
     <div className="flex flex-col min-h-screen pb-20">
-      <div className="p-4 bg-white border-b">
+      <div className="p-4 border-b bg-white">
         <h1 className="text-2xl font-semibold text-brand-dark">Profile</h1>
       </div>
       
-      <div className="p-4">
+      <div className="p-4 flex-1 bg-gradient-to-br from-pastel-pink to-pastel-yellow">
         <Card className="mb-4">
           <CardContent className="p-6">
             <div className="flex items-center">
