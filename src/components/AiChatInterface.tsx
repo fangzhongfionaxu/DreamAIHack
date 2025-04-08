@@ -93,8 +93,8 @@ const AiChatInterface = () => {
                   ) : (
                     <AvatarImage src="https://ui.shadcn.com/avatars/01.png" alt="User" />
                   )}
-                  <AvatarFallback>
-                    {message.role === 'assistant' ? 'AI' : 'ME'}
+                  <AvatarFallback className={message.role === 'assistant' ? 'bg-brand text-white' : 'bg-teal-500 text-white'}>
+                    {message.role === 'assistant' ? 'AI' : 'JD'}
                   </AvatarFallback>
                 </Avatar>
                 <Card 
