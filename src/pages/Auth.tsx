@@ -175,7 +175,7 @@ const Auth = () => {
         <CardContent>
           {tableCheckStatus && (
             <div className="mb-4">
-              <Alert variant="outline" className="text-xs">
+              <Alert variant="default" className="text-xs">
                 <AlertDescription className="text-muted-foreground">
                   {tableCheckStatus}
                 </AlertDescription>
