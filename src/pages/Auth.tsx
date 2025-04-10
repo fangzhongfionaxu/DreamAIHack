@@ -12,8 +12,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2 } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Loader2, CheckCircle2, AlertCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const signInSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -38,8 +39,10 @@ const Auth = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [tableCheckStatus, setTableCheckStatus] = useState<string>("");
   const [dbError, setDbError] = useState<string | null>(null);
+  const [dbSuccess, setDbSuccess] = useState<string | null>(null);
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
     // Check if profiles table exists
@@ -93,15 +96,30 @@ const Auth = () => {
 
   const handleSignIn = async (values: SignInFormValues) => {
     setDbError(null);
+    setDbSuccess(null);
     try {
       setIsSubmitting(true);
       await signIn(values.email, values.password);
+      toast({
+        title: "Sign in successful",
+        description: "Welcome back!",
+      });
     } catch (error) {
       console.error("Sign in error:", error);
       if (error instanceof Error) {
         setDbError(error.message);
+        toast({
+          title: "Sign in failed",
+          description: error.message,
+          variant: "destructive",
+        });
       } else {
         setDbError("An unknown error occurred during sign in.");
+        toast({
+          title: "Sign in failed",
+          description: "An unknown error occurred during sign in.",
+          variant: "destructive",
+        });
       }
     } finally {
       setIsSubmitting(false);
@@ -110,16 +128,35 @@ const Auth = () => {
 
   const handleSignUp = async (values: SignUpFormValues) => {
     setDbError(null);
+    setDbSuccess(null);
     try {
       setIsSubmitting(true);
       await signUp(values.email, values.password, values.username);
+      setDbSuccess("Account created successfully! You can now sign in.");
       setActiveTab("signin");
+      signInForm.setValue("email", values.email);
+      signUpForm.reset();
+      
+      toast({
+        title: "Account created",
+        description: "Please sign in with your new account.",
+      });
     } catch (error) {
       console.error("Sign up error:", error);
       if (error instanceof Error) {
         setDbError(error.message);
+        toast({
+          title: "Sign up failed",
+          description: error.message,
+          variant: "destructive",
+        });
       } else {
         setDbError("An unknown error occurred during sign up.");
+        toast({
+          title: "Sign up failed",
+          description: "An unknown error occurred during sign up.",
+          variant: "destructive",
+        });
       }
     } finally {
       setIsSubmitting(false);
@@ -127,8 +164,8 @@ const Auth = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-6 py-8 bg-background">
-      <Card className="w-full max-w-md">
+    <div className="flex flex-col items-center justify-center min-h-screen px-6 py-8 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+      <Card className="w-full max-w-md shadow-lg border-opacity-50">
         <CardHeader className="space-y-1 text-center">
           <CardTitle className="text-2xl font-bold">Welcome</CardTitle>
           <CardDescription>
@@ -138,8 +175,8 @@ const Auth = () => {
         <CardContent>
           {tableCheckStatus && (
             <div className="mb-4">
-              <Alert>
-                <AlertDescription className="text-xs text-muted-foreground">
+              <Alert variant="outline" className="text-xs">
+                <AlertDescription className="text-muted-foreground">
                   {tableCheckStatus}
                 </AlertDescription>
               </Alert>
@@ -149,7 +186,19 @@ const Auth = () => {
           {dbError && (
             <div className="mb-4">
               <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4 mr-2" />
+                <AlertTitle>Error</AlertTitle>
                 <AlertDescription>{dbError}</AlertDescription>
+              </Alert>
+            </div>
+          )}
+          
+          {dbSuccess && (
+            <div className="mb-4">
+              <Alert variant="default" className="bg-green-50 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800">
+                <CheckCircle2 className="h-4 w-4 mr-2" />
+                <AlertTitle>Success</AlertTitle>
+                <AlertDescription>{dbSuccess}</AlertDescription>
               </Alert>
             </div>
           )}
@@ -169,7 +218,7 @@ const Auth = () => {
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input placeholder="example@email.com" {...field} />
+                          <Input placeholder="example@email.com" {...field} autoComplete="email" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -182,7 +231,7 @@ const Auth = () => {
                       <FormItem>
                         <FormLabel>Password</FormLabel>
                         <FormControl>
-                          <Input type="password" placeholder="••••••••" {...field} />
+                          <Input type="password" placeholder="••••••••" {...field} autoComplete="current-password" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -209,7 +258,7 @@ const Auth = () => {
                       <FormItem>
                         <FormLabel>Username</FormLabel>
                         <FormControl>
-                          <Input placeholder="johndoe" {...field} />
+                          <Input placeholder="johndoe" {...field} autoComplete="username" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -222,7 +271,7 @@ const Auth = () => {
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input placeholder="example@email.com" {...field} />
+                          <Input placeholder="example@email.com" {...field} autoComplete="email" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -235,7 +284,7 @@ const Auth = () => {
                       <FormItem>
                         <FormLabel>Password</FormLabel>
                         <FormControl>
-                          <Input type="password" placeholder="••••••••" {...field} />
+                          <Input type="password" placeholder="••••••••" {...field} autoComplete="new-password" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -248,7 +297,7 @@ const Auth = () => {
                       <FormItem>
                         <FormLabel>Confirm Password</FormLabel>
                         <FormControl>
-                          <Input type="password" placeholder="••••••••" {...field} />
+                          <Input type="password" placeholder="••••••••" {...field} autoComplete="new-password" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -267,8 +316,8 @@ const Auth = () => {
             </TabsContent>
           </Tabs>
         </CardContent>
-        <CardFooter className="flex justify-center">
-          <p className="text-sm text-muted-foreground">
+        <CardFooter className="flex flex-col gap-2">
+          <p className="text-sm text-muted-foreground text-center">
             By continuing, you agree to our Terms of Service and Privacy Policy
           </p>
         </CardFooter>
