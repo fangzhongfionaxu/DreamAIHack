@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2 } from "lucide-react";
 
 const signInSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -33,8 +36,36 @@ type SignUpFormValues = z.infer<typeof signUpSchema>;
 const Auth = () => {
   const [activeTab, setActiveTab] = useState<string>("signin");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [tableCheckStatus, setTableCheckStatus] = useState<string>("");
+  const [dbError, setDbError] = useState<string | null>(null);
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if profiles table exists
+    const checkProfilesTable = async () => {
+      try {
+        setTableCheckStatus("Checking database tables...");
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('id')
+          .limit(1);
+          
+        if (error) {
+          console.error("Table check error:", error);
+          setTableCheckStatus(`Database error: ${error.message}`);
+          return;
+        }
+        
+        setTableCheckStatus("Database tables exist and are accessible.");
+      } catch (err) {
+        console.error("Table check exception:", err);
+        setTableCheckStatus(`Exception checking tables: ${err instanceof Error ? err.message : String(err)}`);
+      }
+    };
+
+    checkProfilesTable();
+  }, []);
 
   // Redirect if already logged in
   if (user) {
@@ -61,23 +92,35 @@ const Auth = () => {
   });
 
   const handleSignIn = async (values: SignInFormValues) => {
+    setDbError(null);
     try {
       setIsSubmitting(true);
       await signIn(values.email, values.password);
     } catch (error) {
       console.error("Sign in error:", error);
+      if (error instanceof Error) {
+        setDbError(error.message);
+      } else {
+        setDbError("An unknown error occurred during sign in.");
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleSignUp = async (values: SignUpFormValues) => {
+    setDbError(null);
     try {
       setIsSubmitting(true);
       await signUp(values.email, values.password, values.username);
       setActiveTab("signin");
     } catch (error) {
       console.error("Sign up error:", error);
+      if (error instanceof Error) {
+        setDbError(error.message);
+      } else {
+        setDbError("An unknown error occurred during sign up.");
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -93,6 +136,24 @@ const Auth = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {tableCheckStatus && (
+            <div className="mb-4">
+              <Alert>
+                <AlertDescription className="text-xs text-muted-foreground">
+                  {tableCheckStatus}
+                </AlertDescription>
+              </Alert>
+            </div>
+          )}
+          
+          {dbError && (
+            <div className="mb-4">
+              <Alert variant="destructive">
+                <AlertDescription>{dbError}</AlertDescription>
+              </Alert>
+            </div>
+          )}
+          
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="signin">Sign In</TabsTrigger>
@@ -128,7 +189,12 @@ const Auth = () => {
                     )}
                   />
                   <Button type="submit" className="w-full" disabled={isSubmitting}>
-                    {isSubmitting ? "Signing in..." : "Sign In"}
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Signing in...
+                      </>
+                    ) : "Sign In"}
                   </Button>
                 </form>
               </Form>
@@ -189,7 +255,12 @@ const Auth = () => {
                     )}
                   />
                   <Button type="submit" className="w-full" disabled={isSubmitting}>
-                    {isSubmitting ? "Signing up..." : "Sign Up"}
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Signing up...
+                      </>
+                    ) : "Sign Up"}
                   </Button>
                 </form>
               </Form>
