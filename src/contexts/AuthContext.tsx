@@ -81,12 +81,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const signUp = async (email: string, password: string, username: string) => {
     try {
       setLoading(true);
+      // Properly pass username to user_metadata to ensure it's available in the trigger function
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: {
-            username: username,
+            username: username.trim(),  // Ensure username is trimmed
           },
         },
       });

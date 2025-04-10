@@ -90,6 +90,7 @@ const Auth = () => {
     setDbSuccess(null);
     try {
       setIsSubmitting(true);
+      // Make sure we're passing the username properly to the signUp function
       await signUp(values.email, values.password, values.username);
       setDbSuccess("Account created successfully! You can now sign in.");
       setActiveTab("signin");
