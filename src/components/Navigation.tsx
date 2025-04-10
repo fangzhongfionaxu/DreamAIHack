@@ -1,9 +1,15 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Activity, User, Settings } from "lucide-react";
+import { MessageSquare, Activity, User, Settings, LogOut } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navigation = () => {
+  const { user, signOut } = useAuth();
+  
+  // Don't show navigation if not authenticated
+  if (!user) return null;
+
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 z-20">
       <div className="flex justify-around items-center">
@@ -50,6 +56,18 @@ const Navigation = () => {
           </Button>
           <span className="text-xs text-muted-foreground">Settings</span>
         </Link>
+
+        <div className="flex flex-col items-center gap-1">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="h-10 w-10 text-brand hover:text-brand-dark hover:bg-brand/10"
+            onClick={() => signOut()}
+          >
+            <LogOut className="h-6 w-6" />
+          </Button>
+          <span className="text-xs text-muted-foreground">Logout</span>
+        </div>
       </div>
     </div>
   );
