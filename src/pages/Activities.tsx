@@ -9,6 +9,7 @@ import PlantProgress from "@/components/PlantProgress";
 import ActivityItem from "@/components/ActivityItem";
 import { CheckSquare, FileText, Activity, Calendar, Plus } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { useStreak } from "@/contexts/StreakContext";
 
 // Sample activity data
 const defaultActivities = [
@@ -56,7 +57,7 @@ const defaultActivities = [
 
 const Activities = () => {
   const [activities, setActivities] = useState(defaultActivities);
-  const [streak, setStreak] = useState(23); // Set to 23 for 75% of 30 days
+  const { streak, setStreak } = useStreak();
   const { toast } = useToast();
 
   const handleCompleteActivity = (id: string) => {

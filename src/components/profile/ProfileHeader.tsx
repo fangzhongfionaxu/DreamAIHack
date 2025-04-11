@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -7,14 +6,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Bell, UserCog, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { useStreak } from "@/contexts/StreakContext";
 
 const ProfileHeader = () => {
   const { user, signOut } = useAuth();
   const { toast } = useToast();
+  const { streak } = useStreak();
   
-  // Updated to match the streak value in Activities.tsx (23 days)
-  const streak = 23;
-
   const getUserInitials = () => {
     if (!user) return "?";
     
