@@ -23,7 +23,7 @@ export function Toaster() {
                 <ToastDescription className="whitespace-pre-line">{description}</ToastDescription>
               )}
             </div>
-            {action && <div className="mt-2 flex justify-end">{action}</div>}
+            {action && <div className="mt-4 flex justify-end">{action}</div>}
             <ToastClose />
           </Toast>
         )
