@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -5,9 +6,12 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
 import Navigation from "@/components/Navigation";
-import { Bell, Calendar, MessageSquare, Clock, Shield, HelpCircle } from "lucide-react";
+import { Bell, Calendar, MessageSquare, Clock, Shield, HelpCircle, Share, Users } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
+  const navigate = useNavigate();
+  
   return (
     <div className="flex flex-col min-h-screen pb-20">
       <div className="p-4 bg-white border-b">
@@ -15,6 +19,33 @@ const Settings = () => {
       </div>
       
       <div className="p-4 space-y-4 flex-1 bg-gradient-to-br from-pastel-pink to-pastel-yellow">
+        {/* New Referrals Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Share className="h-5 w-5" />
+              Referrals
+            </CardTitle>
+            <CardDescription>
+              Invite friends and family to join emBrace
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="font-medium">Refer Friends</p>
+                <p className="text-sm text-muted-foreground">
+                  Share emBrace with others who might benefit
+                </p>
+              </div>
+              <Button onClick={() => navigate('/referrals')} variant="outline">
+                <Share className="h-4 w-4 mr-2" />
+                Invite
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+        
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
