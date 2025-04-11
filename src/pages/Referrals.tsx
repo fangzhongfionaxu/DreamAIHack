@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import Navigation from "@/components/Navigation";
-import { Mail, Send, Share, Link } from "lucide-react";
+import { Mail, Send, Share, Link, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -16,6 +16,7 @@ const Referrals = () => {
   const [referralLink, setReferralLink] = useState<string>('');
   const { toast } = useToast();
   const [referralCount, setReferralCount] = useState<number>(0);
+  const INVITATION_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfxLM6lGL5VGjBwZUtG_YGE8h_M0ml9O_CLbUSP54bgXPb4RA/viewform?usp=sharing";
 
   // Generate or retrieve a referral link for the current user
   const generateReferralLink = async () => {
@@ -58,6 +59,10 @@ const Referrals = () => {
       title: "Link copied!",
       description: "Referral link copied to clipboard.",
     });
+  };
+
+  const handleInvite = () => {
+    window.open(INVITATION_FORM_URL, '_blank', 'noopener,noreferrer');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -143,9 +148,17 @@ const Referrals = () => {
                 </Button>
               </div>
               <p className="text-sm text-muted-foreground mt-2">
-                Share this link directly with friends or use the email form below
+                Share this link directly with friends or use the invitation form
               </p>
             </div>
+            
+            <Button 
+              className="w-full mb-6" 
+              onClick={handleInvite}
+            >
+              <ExternalLink className="mr-2 h-4 w-4" />
+              Invite Friends
+            </Button>
             
             <Separator className="my-6" />
 
