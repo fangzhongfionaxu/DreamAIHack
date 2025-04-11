@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -95,6 +95,13 @@ const Auth = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-6 py-8 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+      <div className="flex flex-col items-center mb-8">
+        <img 
+          src="/assets/branding/emBrace_logo_black.png" 
+          alt="emBrace Logo" 
+          className="h-16 md:h-20 mb-2 dark:invert"
+        />
+      </div>
       <Card className="w-full max-w-md shadow-lg border-opacity-50">
         <CardHeader className="space-y-1 text-center">
           <CardTitle className="text-2xl font-bold">Welcome</CardTitle>
