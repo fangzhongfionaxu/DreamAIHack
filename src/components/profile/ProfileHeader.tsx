@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,8 @@ const ProfileHeader = () => {
   const { user, signOut } = useAuth();
   const { toast } = useToast();
   
-  const streak = 12;
+  // Updated to match the streak value in Activities.tsx (23 days)
+  const streak = 23;
 
   const getUserInitials = () => {
     if (!user) return "?";
