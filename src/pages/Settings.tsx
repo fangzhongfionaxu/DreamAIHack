@@ -11,6 +11,11 @@ import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
   const navigate = useNavigate();
+  const INVITATION_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfxLM6lGL5VGjBwZUtG_YGE8h_M0ml9O_CLbUSP54bgXPb4RA/viewform?usp=sharing";
+  
+  const handleInvite = () => {
+    window.open(INVITATION_FORM_URL, '_blank', 'noopener,noreferrer');
+  };
   
   return (
     <div className="flex flex-col min-h-screen pb-20">
@@ -38,7 +43,7 @@ const Settings = () => {
                   Share emBrace with others who might benefit
                 </p>
               </div>
-              <Button onClick={() => navigate('/referrals')} variant="outline">
+              <Button onClick={handleInvite} variant="outline">
                 <Share className="h-4 w-4 mr-2" />
                 Invite
               </Button>
