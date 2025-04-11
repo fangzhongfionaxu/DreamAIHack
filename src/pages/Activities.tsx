@@ -56,7 +56,7 @@ const defaultActivities = [
 
 const Activities = () => {
   const [activities, setActivities] = useState(defaultActivities);
-  const [streak, setStreak] = useState(12); // Updated to show plant at 40% (12/30 = 40%)
+  const [streak, setStreak] = useState(23); // Set to 23 for 75% of 30 days
   const { toast } = useToast();
 
   const handleCompleteActivity = (id: string) => {
@@ -156,7 +156,7 @@ const Activities = () => {
               <PlantProgress 
                 streak={streak}
                 maxStreak={30}
-                forceGrowthPercentage={40} // Force exactly 40% growth
+                forceGrowthPercentage={75} // Force exactly 75% growth
               />
               
               <div className="mt-6 text-center">
