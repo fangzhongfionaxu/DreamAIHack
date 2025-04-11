@@ -81,8 +81,8 @@ const AiChatInterface = () => {
   }, [messages]);
 
   return (
-    <div className="flex flex-col h-full pb-16 bg-gradient-to-br from-pastel-pink to-pastel-yellow"> 
-      <div className="flex flex-col flex-1">
+    <div className="flex flex-col h-full"> 
+      <div className="flex flex-col flex-1 bg-gradient-to-br from-pastel-pink to-pastel-yellow pb-16">
         <ScrollArea className="flex-1 p-4">
           <div className="space-y-4 pb-4">
             {messages.map((message, index) => (
