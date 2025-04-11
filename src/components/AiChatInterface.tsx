@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -6,7 +5,8 @@ import { Plus, Paperclip, ArrowUp } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -15,6 +15,7 @@ interface Message {
 }
 
 const AiChatInterface = () => {
+  const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
@@ -26,10 +27,24 @@ const AiChatInterface = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
+  const getUserInitials = () => {
+    if (!user) return "?";
+    
+    const username = user.user_metadata?.username || user.email || "";
+    
+    if (!username) return "?";
+    
+    if (username.includes(" ")) {
+      const names = username.split(" ");
+      return `${names[0].charAt(0)}${names[names.length - 1].charAt(0)}`.toUpperCase();
+    }
+    
+    return username.charAt(0).toUpperCase();
+  };
+
   const handleSend = () => {
     if (!input.trim()) return;
     
-    // Add user message to chat
     const userMessage: Message = {
       role: 'user',
       content: input,
@@ -40,17 +55,14 @@ const AiChatInterface = () => {
     setInput('');
     setIsLoading(true);
 
-    // Simulate AI response (would be replaced with actual API call in production)
     setTimeout(() => {
       let responseContent = '';
       
-      // Simple AI response simulation with safety layer
       if (input.toLowerCase().includes('diagnosis') || 
           input.toLowerCase().includes('diagnose') || 
           input.toLowerCase().includes('what do i have')) {
         responseContent = "Unfortunately, I'm not qualified to provide medical advice or diagnosis. Would you like to consult a healthcare professional instead?";
       } else {
-        // Generate simple personalized response
         if (input.toLowerCase().includes('exercise') || input.toLowerCase().includes('exercises')) {
           responseContent = "Remember to do your prescribed exercises regularly. Would you like me to set a reminder for you?";
         } else if (input.toLowerCase().includes('pain') || input.toLowerCase().includes('hurt')) {
@@ -73,7 +85,6 @@ const AiChatInterface = () => {
     }, 1000);
   };
 
-  // Auto-scroll to bottom when new messages are added
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
   
   React.useEffect(() => {
@@ -88,9 +99,15 @@ const AiChatInterface = () => {
             {messages.map((message, index) => (
               <div key={index} className={`flex items-start gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}>
                 <Avatar className="mt-1">
-                  <AvatarFallback className={message.role === 'assistant' ? 'bg-brand text-white' : 'bg-teal-500 text-white'}>
-                    {message.role === 'assistant' ? 'AI' : 'JD'}
-                  </AvatarFallback>
+                  {message.role === 'assistant' ? (
+                    <AvatarFallback className="bg-brand text-white">AI</AvatarFallback>
+                  ) : (
+                    user?.user_metadata?.avatar_url ? (
+                      <AvatarImage src={user.user_metadata.avatar_url} alt={user.user_metadata?.username || "User"} />
+                    ) : (
+                      <AvatarFallback className="bg-teal-500 text-white">{getUserInitials()}</AvatarFallback>
+                    )
+                  )}
                 </Avatar>
                 <Card 
                   className={`animate-fade-in max-w-[75%] ${
