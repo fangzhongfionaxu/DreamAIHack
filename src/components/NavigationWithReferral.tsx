@@ -1,15 +1,14 @@
-
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Home, Calendar, MessageSquare, Settings, User, Share } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { useMediaQuery } from '@/hooks/use-mobile';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const NavigationWithReferral = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isMobile = useIsMobile();
 
   const navItems = [
     {
