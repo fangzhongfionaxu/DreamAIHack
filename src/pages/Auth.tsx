@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -33,7 +34,7 @@ const Auth = () => {
       await signIn(values.email, values.password);
       toast({
         title: "Sign in successful",
-        description: "Hey there 👋 Welcome to emBrace 💙\nWe're so glad you're here — a community where support and healing come first 🌱\n\nBy signing in, you agree to our community values:\n✨ Stay engaged\n��� Do no harm\n🤝 Care and respect for others\n🔐 Protect privacy\n🧠 Use technology wisely\n\nLet's grow together! You're never alone here 💫🤗",
+        description: "Hey there 👋 Welcome to emBrace 💙\nWe're so glad you're here — a community where support and healing come first 🌱\n\nBy signing in, you agree to our community values:\n✨ Stay engaged\n❤️ Do no harm\n🤝 Care and respect for others\n🔐 Protect privacy\n🧠 Use technology wisely\n\nLet's grow together! You're never alone here 💫🤗",
         action: <Button onClick={() => document.querySelector('[toast-close]')?.dispatchEvent(new MouseEvent('click'))}>OK</Button>,
       });
     } catch (error) {
