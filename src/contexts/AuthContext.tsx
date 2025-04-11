@@ -35,6 +35,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           // Using setTimeout to avoid Supabase deadlocks
           setTimeout(() => {
             navigate('/');
+            
+            // Update login count
+            if (session?.user) {
+              updateLoginCount(session.user.id);
+            }
           }, 0);
         } else if (event === 'SIGNED_OUT') {
           // Using setTimeout to avoid Supabase deadlocks
@@ -56,6 +61,42 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       subscription.unsubscribe();
     };
   }, [navigate]);
+
+  // Function to update login count
+  const updateLoginCount = async (userId: string) => {
+    try {
+      // Check if user exists in table
+      const { data: existingUser } = await supabase
+        .from('user_logins')
+        .select('login_count')
+        .eq('user_id', userId)
+        .single();
+      
+      if (existingUser) {
+        // Increment login count
+        await supabase
+          .from('user_logins')
+          .update({ 
+            login_count: existingUser.login_count + 1,
+            last_login: new Date()
+          })
+          .eq('user_id', userId);
+      } else {
+        // Create new record
+        await supabase
+          .from('user_logins')
+          .insert([
+            { 
+              user_id: userId, 
+              login_count: 1,
+              last_login: new Date()
+            }
+          ]);
+      }
+    } catch (error) {
+      console.error("Error updating login count:", error);
+    }
+  };
 
   const signIn = async (email: string, password: string) => {
     try {

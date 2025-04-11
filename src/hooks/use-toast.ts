@@ -6,9 +6,9 @@ import type {
   ToastProps,
 } from "@/components/ui/toast"
 
-const TOAST_LIMIT = 1
+const TOAST_LIMIT = 2  // Increased limit to allow multiple toasts
 // Extended duration for welcome toast (10 seconds)
-const TOAST_REMOVE_DELAY = 10000
+const TOAST_REMOVE_DELAY = 15000  // Increased to give users more time to read
 
 type ToasterToast = ToastProps & {
   id: string

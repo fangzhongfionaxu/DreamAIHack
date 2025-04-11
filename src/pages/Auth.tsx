@@ -32,14 +32,37 @@ const Auth = () => {
     try {
       setIsSubmitting(true);
       await signIn(values.email, values.password);
-      const { dismiss } = toast({
+      
+      // Show welcome toast
+      const { dismiss: dismissWelcome } = toast({
         title: "Sign in successful",
         description: "Hey there 👋 Welcome to emBrace 💙\nWe're so glad you're here — a community where support and healing come first 🌱\n\nBy signing in, you agree to our community values:\n✨ Stay engaged\n❤️ Do no harm\n🤝 Care and respect for others\n🔐 Protect privacy\n🧠 Use technology wisely\n\nLet's grow together! You're never alone here 💫🤗",
         action: <Button onClick={(e) => { 
           e.preventDefault();
-          dismiss();
+          dismissWelcome();
         }}>OK</Button>,
       });
+      
+      // Check if this is a returning user
+      const { data } = await supabase
+        .from('user_logins')
+        .select('login_count')
+        .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
+        .single();
+      
+      // If login count is greater than 1, show feedback request toast
+      if (data && data.login_count > 1) {
+        // Show after a short delay to ensure toasts don't overlap
+        setTimeout(() => {
+          toast({
+            title: "💬 We'd Love Your Feedback!",
+            description: "Help us make this app even better 💙\nTake 2 minutes to share your thoughts and you could win a $30 gift card! 🎁\n\nYour voice helps shape a more supportive, healing experience for everyone 🌱",
+            action: <Button onClick={() => window.open("https://docs.google.com/forms/d/e/1FAIpQLSf6pokmMXJw31zakPOrJmm6CLNfs2bW1myNirN9zwZaaxADkw/viewform?usp=dialog", "_blank")}>
+              Submit feedback now
+            </Button>,
+          });
+        }, 1000);
+      }
     } catch (error) {
       console.error("Sign in error:", error);
       if (error instanceof Error) {
