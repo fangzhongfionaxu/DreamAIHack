@@ -22,7 +22,7 @@ const LeafPair: React.FC<LeafPairProps> = ({
   return (
     <>
       {/* Left leaf - properly mirrored */}
-      <div className="absolute z-15" 
+      <div className="absolute z-15 animate-in fade-in duration-700 hover:rotate-3 transition-transform" 
           style={{ 
             bottom: `${bottomPosition}px`, 
             left: 'calc(50%)', 
@@ -33,7 +33,7 @@ const LeafPair: React.FC<LeafPairProps> = ({
       </div>
       
       {/* Right leaf */}
-      <div className="absolute z-15" 
+      <div className="absolute z-15 animate-in fade-in duration-700 hover:rotate-[-3deg] transition-transform" 
           style={{ 
             bottom: `${bottomPosition}px`, 
             left: 'calc(50%)', 

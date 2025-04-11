@@ -56,7 +56,7 @@ const defaultActivities = [
 
 const Activities = () => {
   const [activities, setActivities] = useState(defaultActivities);
-  const [streak, setStreak] = useState(30); // Updated to 30 days for full growth
+  const [streak, setStreak] = useState(10); // Updated to show 10 days
   const { toast } = useToast();
 
   const handleCompleteActivity = (id: string) => {
@@ -91,7 +91,7 @@ const Activities = () => {
         <h1 className="text-2xl font-semibold text-brand-dark">Activities</h1>
       </div>
       
-      <Tabs defaultValue="streak" className="flex-1"> {/* Changed default tab to streak */}
+      <Tabs defaultValue="streak" className="flex-1">
         <div className="px-4 py-2 border-b sticky top-0 bg-background z-10">
           <TabsList className="w-full">
             <TabsTrigger value="today" className="flex-1">Today</TabsTrigger>
@@ -140,7 +140,7 @@ const Activities = () => {
               
               <div className="mt-6 text-center">
                 <p className="text-sm text-muted-foreground mb-2">
-                  Congratulations! You've completed a full 30-day streak!
+                  Keep going! You're on day 10 of your 30-day journey.
                 </p>
                 <Button className="bg-brand hover:bg-brand-dark">
                   Share Your Progress
