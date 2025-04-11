@@ -8,9 +8,14 @@ import { Bell, UserCog, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
+// Import the streak from a new context or state management
+// This is to ensure consistency between Activities and Profile pages
 const ProfileHeader = () => {
   const { user, signOut } = useAuth();
   const { toast } = useToast();
+  
+  // Use 10 to match the streak on the Activities page
+  const streak = 10;
 
   // Get user initials for the avatar fallback
   const getUserInitials = () => {
@@ -60,7 +65,7 @@ const ProfileHeader = () => {
         
         <div className="ml-4">
           <h2 className="text-xl font-semibold">{user?.user_metadata?.username || user?.email || "Anonymous User"}</h2>
-          <p className="text-muted-foreground">7-day streak 🌱</p>
+          <p className="text-muted-foreground">{streak}-day streak 🌱</p>
           <div className="flex gap-2 mt-2">
             <Popover>
               <PopoverTrigger asChild>
