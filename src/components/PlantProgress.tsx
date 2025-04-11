@@ -6,7 +6,7 @@ import StreakCounter from './plant/StreakCounter';
 
 interface PlantProgressProps {
   streak: number;
-  maxStreak: number;
+  maxStreak?: number;
   className?: string;
   forceGrowthPercentage?: number;
 }
