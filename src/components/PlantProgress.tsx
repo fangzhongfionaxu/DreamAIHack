@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Leaf, LeafyGreen, Sprout } from 'lucide-react';
+import { Flower, Leaf } from 'lucide-react';
 
 interface PlantProgressProps {
   streak: number;
@@ -27,16 +27,25 @@ const PlantProgress: React.FC<PlantProgressProps> = ({
 
   return (
     <div className={cn("relative h-64 w-full flex items-end justify-center", className)}>
-      {/* Soil base with texture */}
-      <div className="absolute bottom-0 w-full h-12 bg-gradient-to-b from-amber-800/30 to-amber-900/40 rounded-md overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          {[...Array(20)].map((_, i) => (
+      {/* Flower pot */}
+      <div className="absolute bottom-0 w-20 h-16 flex items-center justify-center">
+        <div className="absolute bottom-0 w-20 h-14 bg-gradient-to-r from-amber-700 to-amber-500 rounded-t-full overflow-hidden">
+          <div className="absolute top-0 w-22 h-2 bg-amber-800 rounded-t-full"></div>
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-24 h-4 bg-amber-900 rounded-full"></div>
+        </div>
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-24 h-3 bg-amber-900/60 blur-sm rounded-full"></div>
+      </div>
+      
+      {/* Soil */}
+      <div className="absolute bottom-12 w-16 h-6 bg-gradient-to-b from-amber-900 to-amber-800 rounded-t-xl overflow-hidden">
+        <div className="absolute inset-0 opacity-30">
+          {[...Array(15)].map((_, i) => (
             <div 
               key={i} 
               className="absolute rounded-full bg-amber-950" 
               style={{
-                width: `${Math.random() * 5 + 2}px`,
-                height: `${Math.random() * 5 + 2}px`,
+                width: `${Math.random() * 4 + 2}px`,
+                height: `${Math.random() * 4 + 2}px`,
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
               }}
@@ -45,143 +54,142 @@ const PlantProgress: React.FC<PlantProgressProps> = ({
         </div>
       </div>
       
-      {/* Plant stem - realistic with gradients and slight curve */}
+      {/* Plant stem - straight stem with slight natural curve */}
       {showSeedling && (
         <div 
           className="absolute transition-all duration-700 ease-out"
           style={{ 
-            bottom: '12px',
-            left: 'calc(50% - 1px)',
-            height: `${Math.max(5, (growthPercentage / 100) * 150)}px`,
-            width: '3px',
-            background: 'linear-gradient(to right, #2A9A67, #3FB784, #2A9A67)',
-            transform: `rotate(${Math.sin(growthPercentage / 100) * 5}deg)`,
+            bottom: '18px',
+            left: 'calc(50%)',
+            height: `${Math.max(5, (growthPercentage / 100) * 160)}px`,
+            width: '2px',
+            background: 'linear-gradient(to right, #1a7a47, #2A9A67, #1a7a47)',
+            transform: `rotate(${Math.sin(growthPercentage / 30) * 3}deg)`,
             transformOrigin: 'bottom center',
-            borderRadius: '2px',
             zIndex: 10
           }}
         />
       )}
       
-      {/* Small seed/seedling */}
-      {showSeedling && (
-        <div className="absolute bottom-8 z-20" style={{ transform: 'translateX(-50%)' }}>
-          <Sprout 
-            className="text-plant-dark animate-grow"
-            size={16} 
-          />
-        </div>
-      )}
-      
-      {/* Small leaves near bottom */}
+      {/* Small leaves near bottom - better aligned to the stem */}
       {showSprout && (
         <>
           <div className="absolute z-20" 
               style={{ 
-                bottom: '35px', 
-                left: 'calc(50% - 15px)', 
-                transform: 'rotate(-30deg) scale(0.9)',
+                bottom: '40px', 
+                left: 'calc(50% - 2px)', 
+                transform: 'rotate(-40deg) translateX(-8px)',
                 transformOrigin: 'center right'
               }}>
-            <Leaf className="text-plant-light fill-plant-light/30 animate-grow" size={14} />
+            <Leaf className="text-green-700 fill-green-600/70 animate-grow" size={14} />
           </div>
           <div className="absolute z-20" 
               style={{ 
-                bottom: '35px', 
-                left: 'calc(50% + 5px)', 
-                transform: 'rotate(30deg) scale(0.9) scaleX(-1)',
+                bottom: '40px', 
+                left: 'calc(50% + 2px)', 
+                transform: 'rotate(40deg) scaleX(-1) translateX(8px)',
                 transformOrigin: 'center left'
               }}>
-            <Leaf className="text-plant-light fill-plant-light/30 animate-grow" size={14} />
+            <Leaf className="text-green-700 fill-green-600/70 animate-grow" size={14} />
           </div>
         </>
       )}
       
-      {/* Medium-sized leaves */}
+      {/* Medium-sized leaves - better aligned */}
       {showSmallPlant && (
         <>
           <div className="absolute z-10" 
               style={{ 
-                bottom: '60px', 
-                left: 'calc(50% - 22px)', 
-                transform: 'rotate(-40deg) scale(1.2)',
+                bottom: '70px', 
+                left: 'calc(50% - 2px)', 
+                transform: 'rotate(-30deg) translateX(-14px)',
                 transformOrigin: 'center right'
               }}>
-            <Leaf className="text-plant fill-plant/40 animate-grow" size={18} />
+            <Leaf className="text-green-600 fill-green-500/70 animate-grow" size={20} />
           </div>
           <div className="absolute z-10" 
               style={{ 
-                bottom: '60px', 
-                left: 'calc(50% + 8px)', 
-                transform: 'rotate(40deg) scale(1.2) scaleX(-1)',
+                bottom: '70px', 
+                left: 'calc(50% + 2px)', 
+                transform: 'rotate(30deg) scaleX(-1) translateX(14px)',
                 transformOrigin: 'center left'
               }}>
-            <Leaf className="text-plant fill-plant/40 animate-grow" size={18} />
+            <Leaf className="text-green-600 fill-green-500/70 animate-grow" size={20} />
           </div>
         </>
       )}
       
-      {/* Larger leaves */}
+      {/* Larger leaves - better aligned */}
       {showMediumPlant && (
         <>
           <div className="absolute z-10" 
               style={{ 
-                bottom: '80px', 
-                left: 'calc(50% - 28px)', 
-                transform: 'rotate(-30deg) scale(1.5)',
+                bottom: '100px', 
+                left: 'calc(50% - 2px)', 
+                transform: 'rotate(-25deg) translateX(-18px)',
                 transformOrigin: 'center right'
               }}>
-            <Leaf className="text-plant-dark fill-plant-dark/40 animate-grow" size={20} />
+            <Leaf className="text-green-600 fill-green-500/80 animate-grow" size={24} />
           </div>
           <div className="absolute z-10" 
               style={{ 
-                bottom: '80px', 
-                left: 'calc(50% + 10px)', 
-                transform: 'rotate(30deg) scale(1.5) scaleX(-1)',
+                bottom: '100px', 
+                left: 'calc(50% + 2px)', 
+                transform: 'rotate(25deg) scaleX(-1) translateX(18px)',
                 transformOrigin: 'center left'
               }}>
-            <Leaf className="text-plant-dark fill-plant-dark/40 animate-grow" size={20} />
+            <Leaf className="text-green-600 fill-green-500/80 animate-grow" size={24} />
           </div>
         </>
       )}
       
-      {/* Top leaves/plant crown */}
+      {/* Top leaves/plant crown - better aligned */}
       {showLargePlant && (
-        <div className="absolute" 
-            style={{ 
-              bottom: '110px', 
-              left: '50%',
-              transform: 'translateX(-50%) scale(1.5)',
-              zIndex: 5
-            }}>
-          <LeafyGreen className="text-plant-dark fill-plant/30 animate-grow" size={36} />
-        </div>
-      )}
-      
-      {/* Flowers - appear at the end */}
-      {showFlowers && (
         <>
-          <div className="absolute h-5 w-5 rounded-full bg-pastel-pink animate-pulse-soft z-30"
-               style={{ bottom: '135px', left: 'calc(50% - 10px)' }}></div>
-          <div className="absolute h-4 w-4 rounded-full bg-pastel-yellow animate-pulse-soft z-30"
-               style={{ bottom: '145px', left: 'calc(50% + 5px)' }}></div>
-          <div className="absolute h-4 w-4 rounded-full bg-pastel-pink animate-pulse-soft z-30"
-               style={{ bottom: '150px', left: 'calc(50% - 5px)' }}></div>
-               
-          {/* Flower details */}
-          <div className="absolute h-2 w-2 rounded-full bg-yellow-300 z-40"
-               style={{ bottom: '136px', left: 'calc(50% - 8px)' }}></div>
-          <div className="absolute h-2 w-2 rounded-full bg-yellow-300 z-40"
-               style={{ bottom: '146px', left: 'calc(50% + 6px)' }}></div>
-          <div className="absolute h-2 w-2 rounded-full bg-yellow-300 z-40"
-               style={{ bottom: '151px', left: 'calc(50% - 4px)' }}></div>
+          <div className="absolute z-10" 
+              style={{ 
+                bottom: '130px', 
+                left: 'calc(50% - 2px)', 
+                transform: 'rotate(-20deg) translateX(-15px)',
+                transformOrigin: 'center right'
+              }}>
+            <Leaf className="text-green-700 fill-green-600/90 animate-grow" size={28} />
+          </div>
+          <div className="absolute z-10" 
+              style={{ 
+                bottom: '130px', 
+                left: 'calc(50% + 2px)', 
+                transform: 'rotate(20deg) scaleX(-1) translateX(15px)',
+                transformOrigin: 'center left'
+              }}>
+            <Leaf className="text-green-700 fill-green-600/90 animate-grow" size={28} />
+          </div>
         </>
       )}
       
-      {/* Streak count display */}
-      <div className="absolute bottom-0 left-0 right-0 text-center pb-14">
-        <span className="text-xl font-bold text-brand-dark">{streak}</span>
-        <span className="text-sm text-muted-foreground"> / {maxStreak} days</span>
+      {/* Red Flower - using the flower component */}
+      {showFlowers && (
+        <div className="absolute" 
+            style={{ 
+              bottom: '150px', 
+              left: '50%',
+              transform: 'translateX(-50%)',
+              zIndex: 30
+            }}>
+          <Flower className="text-red-500 fill-[#ea384c] w-16 h-16" strokeWidth={1.5} />
+          
+          {/* Flower center */}
+          <div className="absolute h-4 w-4 rounded-full bg-slate-900 z-40"
+               style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}></div>
+        </div>
+      )}
+      
+      {/* Semi-transparent box behind the streak counter */}
+      <div className="absolute bottom-0 left-0 right-0 flex justify-center">
+        <div className="bg-white bg-opacity-70 px-6 py-2 rounded-full shadow-sm">
+          <span className="text-3xl font-bold text-blue-900">{streak}</span>
+          <span className="text-lg text-blue-800"> / {maxStreak} days</span>
+        </div>
       </div>
     </div>
   );
