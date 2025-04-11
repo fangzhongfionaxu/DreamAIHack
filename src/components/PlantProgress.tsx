@@ -71,21 +71,21 @@ const PlantProgress: React.FC<PlantProgressProps> = ({
         />
       )}
       
-      {/* Small leaves near bottom - now properly attached to stem */}
+      {/* Small leaves near bottom */}
       {showSprout && (
         <>
-          {/* Left leaf */}
-          <div className="absolute z-20" 
+          {/* Left leaf - mirrored */}
+          <div className="absolute z-5" 
               style={{ 
                 bottom: '40px', 
                 left: 'calc(50% - 1px)', 
-                transform: 'translateX(-100%) rotate(-40deg)',
+                transform: 'translateX(-100%) rotate(-40deg) scaleX(-1)',
                 transformOrigin: 'right center'
               }}>
             <Leaf className="text-green-700 fill-green-600/70 animate-grow" size={14} />
           </div>
           {/* Right leaf */}
-          <div className="absolute z-20" 
+          <div className="absolute z-5" 
               style={{ 
                 bottom: '40px', 
                 left: 'calc(50% + 1px)', 
@@ -97,21 +97,21 @@ const PlantProgress: React.FC<PlantProgressProps> = ({
         </>
       )}
       
-      {/* Medium-sized leaves - now properly attached to stem */}
+      {/* Medium-sized leaves */}
       {showSmallPlant && (
         <>
-          {/* Left leaf */}
-          <div className="absolute z-10" 
+          {/* Left leaf - mirrored */}
+          <div className="absolute z-5" 
               style={{ 
                 bottom: '70px', 
                 left: 'calc(50% - 1px)', 
-                transform: 'translateX(-100%) rotate(-30deg)',
+                transform: 'translateX(-100%) rotate(-30deg) scaleX(-1)',
                 transformOrigin: 'right center'
               }}>
             <Leaf className="text-green-600 fill-green-500/70 animate-grow" size={20} />
           </div>
           {/* Right leaf */}
-          <div className="absolute z-10" 
+          <div className="absolute z-5" 
               style={{ 
                 bottom: '70px', 
                 left: 'calc(50% + 1px)', 
@@ -123,21 +123,21 @@ const PlantProgress: React.FC<PlantProgressProps> = ({
         </>
       )}
       
-      {/* Larger leaves - now properly attached to stem */}
+      {/* Larger leaves */}
       {showMediumPlant && (
         <>
-          {/* Left leaf */}
-          <div className="absolute z-10" 
+          {/* Left leaf - mirrored */}
+          <div className="absolute z-5" 
               style={{ 
                 bottom: '100px', 
                 left: 'calc(50% - 1px)', 
-                transform: 'translateX(-100%) rotate(-25deg)',
+                transform: 'translateX(-100%) rotate(-25deg) scaleX(-1)',
                 transformOrigin: 'right center'
               }}>
             <Leaf className="text-green-600 fill-green-500/80 animate-grow" size={24} />
           </div>
           {/* Right leaf */}
-          <div className="absolute z-10" 
+          <div className="absolute z-5" 
               style={{ 
                 bottom: '100px', 
                 left: 'calc(50% + 1px)', 
@@ -149,21 +149,21 @@ const PlantProgress: React.FC<PlantProgressProps> = ({
         </>
       )}
       
-      {/* Top leaves/plant crown - now properly attached to stem */}
+      {/* Top leaves/plant crown */}
       {showLargePlant && (
         <>
-          {/* Left leaf */}
-          <div className="absolute z-10" 
+          {/* Left leaf - mirrored */}
+          <div className="absolute z-5" 
               style={{ 
                 bottom: '130px', 
                 left: 'calc(50% - 1px)', 
-                transform: 'translateX(-100%) rotate(-20deg)',
+                transform: 'translateX(-100%) rotate(-20deg) scaleX(-1)',
                 transformOrigin: 'right center'
               }}>
             <Leaf className="text-green-700 fill-green-600/90 animate-grow" size={28} />
           </div>
           {/* Right leaf */}
-          <div className="absolute z-10" 
+          <div className="absolute z-5" 
               style={{ 
                 bottom: '130px', 
                 left: 'calc(50% + 1px)', 
@@ -177,12 +177,11 @@ const PlantProgress: React.FC<PlantProgressProps> = ({
       
       {/* Red Flower - using the flower component */}
       {showFlowers && (
-        <div className="absolute" 
+        <div className="absolute z-5" 
             style={{ 
               bottom: '150px', 
               left: '50%',
               transform: 'translateX(-50%)',
-              zIndex: 30
             }}>
           <Flower className="text-red-500 fill-[#ea384c] w-16 h-16" strokeWidth={1.5} />
           
@@ -193,7 +192,7 @@ const PlantProgress: React.FC<PlantProgressProps> = ({
       )}
       
       {/* Semi-transparent box behind the streak counter */}
-      <div className="absolute bottom-0 left-0 right-0 flex justify-center">
+      <div className="absolute bottom-0 left-0 right-0 flex justify-center z-20">
         <div className="bg-white bg-opacity-70 px-6 py-2 rounded-full shadow-sm">
           <span className="text-3xl font-bold text-blue-900">{streak}</span>
           <span className="text-lg text-blue-800"> / {maxStreak} days</span>
