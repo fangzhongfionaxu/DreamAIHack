@@ -31,31 +31,13 @@ const PlantImage: React.FC<PlantImageProps> = ({ growthPercentage }) => {
     imageName = "plant-100.png";
   }
 
-  // Try different possible paths
-  const possiblePaths = [
-    `/assets/plants/${imageName}`,  // If assets is directly in public
-    `/public/assets/plants/${imageName}`, // If using public in the path
-    `assets/plants/${imageName}`,   // Without leading slash
-  ];
+  // In Vite, when accessing files from the public directory, 
+  // you don't include "public" in the path
+  const imagePath = `/assets/plants/${imageName}`;
 
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    const currentSrc = e.currentTarget.src;
-    console.error(`Failed to load image: ${currentSrc}`);
-    
-    // Try the next possible path
-    const currentPathIndex = possiblePaths.findIndex(path => 
-      currentSrc.endsWith(path) || currentSrc.includes(path));
-    
-    const nextPathIndex = currentPathIndex + 1;
-    
-    if (nextPathIndex < possiblePaths.length) {
-      console.log(`Trying next path: ${possiblePaths[nextPathIndex]}`);
-      e.currentTarget.src = possiblePaths[nextPathIndex];
-    } else {
-      // If all paths fail, hide the image
-      console.error("All image paths failed");
-      setImageError(true);
-    }
+  const handleImageError = () => {
+    console.error(`Failed to load image: ${imagePath}`);
+    setImageError(true);
   };
 
   if (imageError) {
@@ -69,7 +51,7 @@ const PlantImage: React.FC<PlantImageProps> = ({ growthPercentage }) => {
   return (
     <div className="flex items-center justify-center py-4 h-48">
       <img 
-        src={possiblePaths[0]} 
+        src={imagePath} 
         alt={`Plant at ${growthPercentage}% growth`}
         className="max-h-full transition-all duration-700 ease-in-out"
         onError={handleImageError}
