@@ -34,7 +34,8 @@ const Auth = () => {
       await signIn(values.email, values.password);
       toast({
         title: "Sign in successful",
-        description: "Welcome back!",
+        description: "Hey there 👋 Welcome to our care community 💙\nWe're so glad you're here — a place where support, kindness, and healing come first 🌱\n\nBy signing in, you agree to our community values:\n✨ Stay engaged\n🧡 Do no harm\n🤝 Care & respect for others\n🔐 Protect privacy\n🧠 Use AI wisely\n🧒 Keep it safe for kids\n\nLet's grow together — with empathy, courage, and compassion 💫\nYou're never alone here 🤗",
+        action: <Button onClick={() => document.querySelector('[toast-close]')?.click()}>OK</Button>,
       });
     } catch (error) {
       console.error("Sign in error:", error);
