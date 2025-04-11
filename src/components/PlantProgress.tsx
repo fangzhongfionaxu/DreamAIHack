@@ -71,96 +71,88 @@ const PlantProgress: React.FC<PlantProgressProps> = ({
         />
       )}
       
-      {/* Small leaves near bottom - better aligned to the stem */}
+      {/* Small leaves near bottom - properly attached to stem */}
       {showSprout && (
         <>
           <div className="absolute z-20" 
               style={{ 
                 bottom: '40px', 
-                left: 'calc(50% - 2px)', 
-                transform: 'rotate(-40deg) translateX(-8px)',
-                transformOrigin: 'center right'
+                left: 'calc(50% - 1px)', 
+                transform: 'rotate(-40deg) translateX(-4px)'
               }}>
             <Leaf className="text-green-700 fill-green-600/70 animate-grow" size={14} />
           </div>
           <div className="absolute z-20" 
               style={{ 
                 bottom: '40px', 
-                left: 'calc(50% + 2px)', 
-                transform: 'rotate(40deg) scaleX(-1) translateX(8px)',
-                transformOrigin: 'center left'
+                left: 'calc(50% + 1px)', 
+                transform: 'rotate(40deg) scaleX(-1) translateX(4px)'
               }}>
             <Leaf className="text-green-700 fill-green-600/70 animate-grow" size={14} />
           </div>
         </>
       )}
       
-      {/* Medium-sized leaves - better aligned */}
+      {/* Medium-sized leaves - properly attached to stem */}
       {showSmallPlant && (
         <>
           <div className="absolute z-10" 
               style={{ 
                 bottom: '70px', 
-                left: 'calc(50% - 2px)', 
-                transform: 'rotate(-30deg) translateX(-14px)',
-                transformOrigin: 'center right'
+                left: 'calc(50% - 1px)', 
+                transform: 'rotate(-30deg) translateX(-6px)'
               }}>
             <Leaf className="text-green-600 fill-green-500/70 animate-grow" size={20} />
           </div>
           <div className="absolute z-10" 
               style={{ 
                 bottom: '70px', 
-                left: 'calc(50% + 2px)', 
-                transform: 'rotate(30deg) scaleX(-1) translateX(14px)',
-                transformOrigin: 'center left'
+                left: 'calc(50% + 1px)', 
+                transform: 'rotate(30deg) scaleX(-1) translateX(6px)'
               }}>
             <Leaf className="text-green-600 fill-green-500/70 animate-grow" size={20} />
           </div>
         </>
       )}
       
-      {/* Larger leaves - better aligned */}
+      {/* Larger leaves - properly attached to stem */}
       {showMediumPlant && (
         <>
           <div className="absolute z-10" 
               style={{ 
                 bottom: '100px', 
-                left: 'calc(50% - 2px)', 
-                transform: 'rotate(-25deg) translateX(-18px)',
-                transformOrigin: 'center right'
+                left: 'calc(50% - 1px)', 
+                transform: 'rotate(-25deg) translateX(-8px)'
               }}>
             <Leaf className="text-green-600 fill-green-500/80 animate-grow" size={24} />
           </div>
           <div className="absolute z-10" 
               style={{ 
                 bottom: '100px', 
-                left: 'calc(50% + 2px)', 
-                transform: 'rotate(25deg) scaleX(-1) translateX(18px)',
-                transformOrigin: 'center left'
+                left: 'calc(50% + 1px)', 
+                transform: 'rotate(25deg) scaleX(-1) translateX(8px)'
               }}>
             <Leaf className="text-green-600 fill-green-500/80 animate-grow" size={24} />
           </div>
         </>
       )}
       
-      {/* Top leaves/plant crown - better aligned */}
+      {/* Top leaves/plant crown - properly attached to stem */}
       {showLargePlant && (
         <>
           <div className="absolute z-10" 
               style={{ 
                 bottom: '130px', 
-                left: 'calc(50% - 2px)', 
-                transform: 'rotate(-20deg) translateX(-15px)',
-                transformOrigin: 'center right'
+                left: 'calc(50% - 1px)', 
+                transform: 'rotate(-20deg) translateX(-6px)'
               }}>
             <Leaf className="text-green-700 fill-green-600/90 animate-grow" size={28} />
           </div>
           <div className="absolute z-10" 
               style={{ 
                 bottom: '130px', 
-                left: 'calc(50% + 2px)', 
-                transform: 'rotate(20deg) scaleX(-1) translateX(15px)',
-                transformOrigin: 'center left'
+                left: 'calc(50% + 1px)', 
+                transform: 'rotate(20deg) scaleX(-1) translateX(6px)'
               }}>
             <Leaf className="text-green-700 fill-green-600/90 animate-grow" size={28} />
           </div>
