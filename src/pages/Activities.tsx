@@ -56,7 +56,7 @@ const defaultActivities = [
 
 const Activities = () => {
   const [activities, setActivities] = useState(defaultActivities);
-  const [streak, setStreak] = useState(10); // Updated to show 10 days
+  const [streak, setStreak] = useState(12); // Updated to show plant at 40% (12/30 = 40%)
   const { toast } = useToast();
 
   const handleCompleteActivity = (id: string) => {
@@ -153,11 +153,15 @@ const Activities = () => {
                 Your Growth Journey
               </h3>
               
-              <PlantProgress streak={streak} maxStreak={30} />
+              <PlantProgress 
+                streak={streak}
+                maxStreak={30}
+                forceGrowthPercentage={40} // Force exactly 40% growth
+              />
               
               <div className="mt-6 text-center">
                 <p className="text-sm text-muted-foreground mb-2">
-                  Keep going! You're on day 10 of your 30-day journey.
+                  Keep going! You're on day {streak} of your 30-day journey.
                 </p>
                 <Button className="bg-brand hover:bg-brand-dark">
                   Share Your Progress

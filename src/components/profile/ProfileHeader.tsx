@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -8,31 +7,24 @@ import { Bell, UserCog, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
-// Import the streak from a new context or state management
-// This is to ensure consistency between Activities and Profile pages
 const ProfileHeader = () => {
   const { user, signOut } = useAuth();
   const { toast } = useToast();
   
-  // Use 10 to match the streak on the Activities page
-  const streak = 10;
+  const streak = 12;
 
-  // Get user initials for the avatar fallback
   const getUserInitials = () => {
     if (!user) return "?";
     
-    // Try to get username from user metadata if available
     const username = user.user_metadata?.username || user.email || "";
     
     if (!username) return "?";
     
-    // Get first letter of username or first and last name if it contains a space
     if (username.includes(" ")) {
       const names = username.split(" ");
       return `${names[0].charAt(0)}${names[names.length - 1].charAt(0)}`.toUpperCase();
     }
     
-    // Just get first letter if no space
     return username.charAt(0).toUpperCase();
   };
 

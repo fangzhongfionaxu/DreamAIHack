@@ -11,15 +11,20 @@ interface PlantProgressProps {
   streak: number;
   maxStreak: number;
   className?: string;
+  forceGrowthPercentage?: number;
 }
 
 const PlantProgress: React.FC<PlantProgressProps> = ({ 
   streak, 
   maxStreak = 30, 
-  className 
+  className,
+  forceGrowthPercentage
 }) => {
   // Calculate growth percentage (0-100)
-  const growthPercentage = Math.min((streak / maxStreak) * 100, 100);
+  // Use the forceGrowthPercentage if provided, otherwise calculate from streak
+  const growthPercentage = forceGrowthPercentage !== undefined 
+    ? forceGrowthPercentage
+    : Math.min((streak / maxStreak) * 100, 100);
   
   // Determine which plant stages to show based on growth
   const showSeedling = growthPercentage >= 5;

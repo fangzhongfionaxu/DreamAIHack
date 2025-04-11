@@ -17,35 +17,35 @@ const PlantLeaves: React.FC<PlantLeavesProps> = ({
 }) => {
   return (
     <>
-      {/* Small leaves near bottom */}
+      {/* Small leaves near bottom - more vibrant colors */}
       {showSprout && (
         <LeafPair
           bottomPosition={40}
-          size={14}
+          size={16}
           horizontalOffset={10}
           angle={40}
-          color="text-green-700"
-          fillColor="fill-green-600/70"
+          color="text-green-600"
+          fillColor="fill-green-500/80"
         />
       )}
       
-      {/* Medium-sized leaves */}
+      {/* Medium-sized leaves - adjusted positioning */}
       {showSmallPlant && (
         <LeafPair
-          bottomPosition={70}
-          size={20}
+          bottomPosition={75}
+          size={22}
           horizontalOffset={16}
           angle={30}
           color="text-green-600"
-          fillColor="fill-green-500/70"
+          fillColor="fill-green-500/90"
         />
       )}
       
       {/* Larger leaves */}
       {showMediumPlant && (
         <LeafPair
-          bottomPosition={100}
-          size={24}
+          bottomPosition={110}
+          size={26}
           horizontalOffset={20}
           angle={25}
           color="text-green-600"
@@ -56,8 +56,8 @@ const PlantLeaves: React.FC<PlantLeavesProps> = ({
       {/* Top leaves/plant crown */}
       {showLargePlant && (
         <LeafPair
-          bottomPosition={130}
-          size={28}
+          bottomPosition={145}
+          size={30}
           horizontalOffset={22}
           angle={20}
           color="text-green-700"
