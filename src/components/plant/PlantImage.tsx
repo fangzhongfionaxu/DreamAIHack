@@ -31,19 +31,20 @@ const PlantImage: React.FC<PlantImageProps> = ({ growthPercentage }) => {
     imageName = "plant-100.png";
   }
 
-  // In Vite, when accessing files from the public directory, 
-  // you don't include "public" in the path
+  // For Vite, assets in the public folder are served at the root path
+  // We don't include 'public' in the path when referencing these assets
   const imagePath = `/assets/plants/${imageName}`;
-
+  
   const handleImageError = () => {
-    console.error(`Failed to load image: ${imagePath}`);
+    console.log(`Failed to load image from path: ${imagePath}`);
     setImageError(true);
   };
 
   if (imageError) {
     return (
-      <div className="flex items-center justify-center py-4 h-48 bg-gray-100">
-        <p className="text-gray-500">Image not found</p>
+      <div className="flex flex-col items-center justify-center py-4 h-48 bg-gray-100 rounded-lg">
+        <p className="text-gray-500 mb-2">Image not found</p>
+        <p className="text-xs text-gray-400">Looking for: {imagePath}</p>
       </div>
     );
   }
