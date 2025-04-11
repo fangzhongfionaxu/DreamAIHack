@@ -5,7 +5,7 @@ const FlowerPot: React.FC = () => {
   return (
     <>
       {/* Flower pot */}
-      <div className="absolute bottom-0 w-20 h-16 flex items-center justify-center">
+      <div className="absolute bottom-0 w-20 h-16 flex items-center justify-center z-10">
         <div className="absolute bottom-0 w-20 h-14 bg-gradient-to-r from-amber-700 to-amber-500 rounded-t-full overflow-hidden">
           <div className="absolute top-0 w-22 h-2 bg-amber-800 rounded-t-full"></div>
           <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-24 h-4 bg-amber-900 rounded-full"></div>
@@ -14,7 +14,7 @@ const FlowerPot: React.FC = () => {
       </div>
       
       {/* Soil */}
-      <div className="absolute bottom-12 w-16 h-6 bg-gradient-to-b from-amber-900 to-amber-800 rounded-t-xl overflow-hidden">
+      <div className="absolute bottom-12 w-16 h-6 bg-gradient-to-b from-amber-900 to-amber-800 rounded-t-xl overflow-hidden z-10">
         <div className="absolute inset-0 opacity-30">
           {[...Array(15)].map((_, i) => (
             <div 

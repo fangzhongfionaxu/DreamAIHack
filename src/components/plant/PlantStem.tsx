@@ -21,7 +21,7 @@ const PlantStem: React.FC<PlantStemProps> = ({ growthPercentage, showSeedling })
       {/* Plant stem - straight stem with slight natural curve */}
       {showSeedling && (
         <div 
-          className="absolute z-10 transition-all duration-1000 ease-out animate-grow"
+          className="absolute z-0 transition-all duration-1000 ease-out animate-grow"
           style={{ 
             bottom: '18px',
             left: 'calc(50%)',

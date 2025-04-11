@@ -26,6 +26,7 @@ const PlantLeaves: React.FC<PlantLeavesProps> = ({
           angle={40}
           color="text-green-600"
           fillColor="fill-green-500/80"
+          zIndex={1}
         />
       )}
       
@@ -38,6 +39,7 @@ const PlantLeaves: React.FC<PlantLeavesProps> = ({
           angle={30}
           color="text-green-600"
           fillColor="fill-green-500/90"
+          zIndex={1}
         />
       )}
       
@@ -50,6 +52,7 @@ const PlantLeaves: React.FC<PlantLeavesProps> = ({
           angle={25}
           color="text-green-600"
           fillColor="fill-green-500/80"
+          zIndex={1}
         />
       )}
       
@@ -62,6 +65,7 @@ const PlantLeaves: React.FC<PlantLeavesProps> = ({
           angle={20}
           color="text-green-700"
           fillColor="fill-green-600/90"
+          zIndex={1}
         />
       )}
     </>
