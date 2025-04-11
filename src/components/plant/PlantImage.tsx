@@ -11,22 +11,22 @@ const PlantImage: React.FC<PlantImageProps> = ({ growthPercentage }) => {
   
   if (growthPercentage < 5) {
     // 0% - Empty pot
-    imagePath = "/assets/plants/plant-0.png";
+    imagePath = "/lovable-uploads/6a00a18f-9fce-4161-a12b-61fd2e8e5319.png";
   } else if (growthPercentage < 20) {
     // 10% - Seedling
-    imagePath = "/assets/plants/plant-10.png";
+    imagePath = "/lovable-uploads/35033a9b-7096-4b9f-9e31-9b4a3955b306.png";
   } else if (growthPercentage < 50) {
     // 25% - Small sprout with leaves
-    imagePath = "/assets/plants/plant-25.png";
+    imagePath = "/lovable-uploads/8cd1c5fd-285c-490d-aeaf-96665efee047.png";
   } else if (growthPercentage < 75) {
     // 50% - Medium plant
-    imagePath = "/assets/plants/plant-50.png";
+    imagePath = "/lovable-uploads/ca5d4df5-a91f-48d7-86a0-4e0753851179.png";
   } else if (growthPercentage < 95) {
     // 75% - Larger plant with more leaves
-    imagePath = "/assets/plants/plant-75.png";
+    imagePath = "/lovable-uploads/7a4ad5b7-6fc8-42b2-a3a8-81c24e18d97f.png";
   } else {
     // 100% - Fully bloomed flower
-    imagePath = "/assets/plants/plant-100.png";
+    imagePath = "/lovable-uploads/1898e3b9-8830-4525-9ec2-4d31cd5b47d1.png";
   }
 
   return (
