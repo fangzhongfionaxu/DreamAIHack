@@ -31,8 +31,8 @@ const PlantImage: React.FC<PlantImageProps> = ({ growthPercentage }) => {
     imageName = "plant-100.png";
   }
 
-  // For Vite, assets in the public folder are served at the root path
-  // We don't include 'public' in the path when referencing these assets
+  // Assets in the public folder are served from the root path
+  // The correct path is just "/assets/plants/..." without "public"
   const imagePath = `/assets/plants/${imageName}`;
   
   const handleImageError = () => {
