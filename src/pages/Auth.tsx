@@ -14,38 +14,11 @@ import { StatusAlerts } from "@/components/auth/StatusAlerts";
 const Auth = () => {
   const [activeTab, setActiveTab] = useState<string>("signin");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [tableCheckStatus, setTableCheckStatus] = useState<string>("");
   const [dbError, setDbError] = useState<string | null>(null);
   const [dbSuccess, setDbSuccess] = useState<string | null>(null);
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-
-  useEffect(() => {
-    // Check if profiles table exists
-    const checkProfilesTable = async () => {
-      try {
-        setTableCheckStatus("Checking database tables...");
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('id')
-          .limit(1);
-          
-        if (error) {
-          console.error("Table check error:", error);
-          setTableCheckStatus(`Database error: ${error.message}`);
-          return;
-        }
-        
-        setTableCheckStatus("Database tables exist and are accessible.");
-      } catch (err) {
-        console.error("Table check exception:", err);
-        setTableCheckStatus(`Exception checking tables: ${err instanceof Error ? err.message : String(err)}`);
-      }
-    };
-
-    checkProfilesTable();
-  }, []);
 
   // Redirect if already logged in
   if (user) {
@@ -131,7 +104,6 @@ const Auth = () => {
         </CardHeader>
         <CardContent>
           <StatusAlerts 
-            tableCheckStatus={tableCheckStatus}
             dbError={dbError}
             dbSuccess={dbSuccess}
           />
