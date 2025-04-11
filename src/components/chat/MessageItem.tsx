@@ -43,7 +43,7 @@ const MessageItem = ({ role, content, timestamp, user }: MessageItemProps) => {
       <Card 
         className={`animate-fade-in max-w-[75%] ${
           role === 'user' 
-            ? 'bg-brand/10 border-brand/20' 
+            ? 'bg-teal-500/10 border-teal-500/20 text-foreground' 
             : 'bg-white'
         }`}
       >
