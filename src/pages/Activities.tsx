@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Navigation from "@/components/Navigation";
 import PlantProgress from "@/components/PlantProgress";
 import ActivityItem from "@/components/ActivityItem";
-import { CheckSquare, FileText, Activity, Calendar } from "lucide-react";
+import { CheckSquare, FileText, Activity, Calendar, Plus } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 // Sample activity data
@@ -85,6 +85,14 @@ const Activities = () => {
     }
   };
 
+  const handleAddActivity = () => {
+    toast({
+      title: "Add New Activity",
+      description: "This feature would allow you to create a custom activity.",
+      duration: 3000,
+    });
+  };
+
   return (
     <div className="flex flex-col min-h-screen pb-20">
       <div className="p-4 border-b bg-white">
@@ -114,6 +122,15 @@ const Activities = () => {
               />
             ))}
           </div>
+          
+          {/* Add Activity Floating Button */}
+          <Button 
+            onClick={handleAddActivity}
+            className="fixed bottom-24 right-4 h-14 w-14 rounded-full bg-brand hover:bg-brand-dark shadow-lg z-20"
+            size="icon"
+          >
+            <Plus className="h-6 w-6" />
+          </Button>
           
           <Card className="mt-6 overflow-hidden">
             <CardContent className="p-0">

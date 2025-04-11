@@ -4,18 +4,62 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Bell, UserCog } from "lucide-react";
+import { Bell, UserCog, LogOut } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const ProfileHeader = () => {
+  const { user, signOut } = useAuth();
+  const { toast } = useToast();
+
+  // Get user initials for the avatar fallback
+  const getUserInitials = () => {
+    if (!user) return "?";
+    
+    // Try to get username from user metadata if available
+    const username = user.user_metadata?.username || user.email || "";
+    
+    if (!username) return "?";
+    
+    // Get first letter of username or first and last name if it contains a space
+    if (username.includes(" ")) {
+      const names = username.split(" ");
+      return `${names[0].charAt(0)}${names[names.length - 1].charAt(0)}`.toUpperCase();
+    }
+    
+    // Just get first letter if no space
+    return username.charAt(0).toUpperCase();
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast({
+        title: "Signed out successfully",
+        duration: 3000,
+      });
+    } catch (error) {
+      toast({
+        title: "Error signing out",
+        description: "Please try again",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <CardContent className="p-6">
       <div className="flex items-center">
         <Avatar className="h-20 w-20 border-4 border-brand">
-          <AvatarFallback className="bg-teal-500 text-white text-xl">JD</AvatarFallback>
+          {user?.user_metadata?.avatar_url ? (
+            <AvatarImage src={user.user_metadata.avatar_url} alt={user.user_metadata?.username || "User"} />
+          ) : (
+            <AvatarFallback className="bg-teal-500 text-white text-xl">{getUserInitials()}</AvatarFallback>
+          )}
         </Avatar>
         
         <div className="ml-4">
-          <h2 className="text-xl font-semibold">Jane Doe</h2>
+          <h2 className="text-xl font-semibold">{user?.user_metadata?.username || user?.email || "Anonymous User"}</h2>
           <p className="text-muted-foreground">7-day streak 🌱</p>
           <div className="flex gap-2 mt-2">
             <Popover>
@@ -37,6 +81,21 @@ const ProfileHeader = () => {
               </PopoverTrigger>
               <PopoverContent className="w-auto p-2">
                 <p className="text-sm">Notifications</p>
+              </PopoverContent>
+            </Popover>
+            
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button 
+                  size="icon" 
+                  className="h-9 w-9 bg-red-500 hover:bg-red-600 text-white" 
+                  onClick={handleSignOut}
+                >
+                  <LogOut className="h-4 w-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-2">
+                <p className="text-sm">Sign Out</p>
               </PopoverContent>
             </Popover>
           </div>
