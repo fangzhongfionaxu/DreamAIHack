@@ -7,6 +7,7 @@ import TreatmentSettings from "@/components/settings/TreatmentSettings";
 import AIAssistantSettings from "@/components/settings/AIAssistantSettings";
 import PrivacySettings from "@/components/settings/PrivacySettings";
 import HelpSupport from "@/components/settings/HelpSupport";
+import FeedbackSettings from "@/components/settings/FeedbackSettings";
 
 const Settings = () => {
   return (
@@ -17,6 +18,7 @@ const Settings = () => {
       
       <div className="p-4 space-y-4 flex-1 bg-gradient-to-br from-pastel-pink to-pastel-yellow">
         <ReferralSettings />
+        <FeedbackSettings />
         <NotificationSettings />
         <TreatmentSettings />
         <AIAssistantSettings />
