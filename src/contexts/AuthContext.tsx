@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -85,20 +84,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           .from('user_logins')
           .update({ 
             login_count: existingUser.login_count + 1,
-            last_login: new Date()
+            last_login: new Date().toISOString()  // Convert Date to ISO string format
           })
           .eq('user_id', userId);
       } else {
         // Create new record
         await supabase
           .from('user_logins')
-          .insert([
-            { 
-              user_id: userId, 
-              login_count: 1,
-              last_login: new Date()
-            }
-          ]);
+          .insert({  // Fix: Use a single object, not an array for single insert
+            user_id: userId, 
+            login_count: 1,
+            last_login: new Date().toISOString()  // Convert Date to ISO string format
+          });
       }
     } catch (error) {
       console.error("Error updating login count:", error);
