@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { MessageSquare } from "lucide-react";
 
 const FeedbackSettings = () => {
-  const FEEDBACK_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfxLM6lGL5VGjBwZUtG_YGE8h_M0ml9O_CLbUSP54bgXPb4RA/viewform?usp=sharing";
+  const FEEDBACK_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSf6pokmMXJw31zakPOrJmm6CLNfs2bW1myNirN9zwZaaxADkw/viewform?usp=dialog";
   
   const handleSubmitFeedback = () => {
     window.open(FEEDBACK_FORM_URL, '_blank', 'noopener,noreferrer');
