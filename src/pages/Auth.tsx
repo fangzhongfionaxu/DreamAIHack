@@ -11,6 +11,13 @@ import { SignInForm, SignInFormValues } from "@/components/auth/SignInForm";
 import { SignUpForm, SignUpFormValues } from "@/components/auth/SignUpForm";
 import { StatusAlerts } from "@/components/auth/StatusAlerts";
 
+// Define type for user_logins table since it's not in the generated types
+interface UserLogin {
+  user_id: string;
+  login_count: number;
+  last_login: string;
+}
+
 const Auth = () => {
   const [activeTab, setActiveTab] = useState<string>("signin");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -48,7 +55,7 @@ const Auth = () => {
         .from('user_logins')
         .select('login_count')
         .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
-        .single();
+        .single() as { data: UserLogin | null };
       
       // If login count is greater than 1, show feedback request toast
       if (data && data.login_count > 1) {

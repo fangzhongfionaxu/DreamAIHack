@@ -36,6 +36,24 @@ export type Database = {
         }
         Relationships: []
       }
+      user_logins: {
+        Row: {
+          last_login: string
+          login_count: number
+          user_id: string
+        }
+        Insert: {
+          last_login?: string
+          login_count?: number
+          user_id: string
+        }
+        Update: {
+          last_login?: string
+          login_count?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

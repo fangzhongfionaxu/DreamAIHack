@@ -14,6 +14,13 @@ interface AuthContextProps {
   loading: boolean;
 }
 
+// Define type for user_logins table since it's not in the generated types
+interface UserLogin {
+  user_id: string;
+  login_count: number;
+  last_login: string;
+}
+
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -65,12 +72,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Function to update login count
   const updateLoginCount = async (userId: string) => {
     try {
-      // Check if user exists in table
+      // Check if user exists in table - use type casting to avoid TypeScript errors
       const { data: existingUser } = await supabase
         .from('user_logins')
         .select('login_count')
         .eq('user_id', userId)
-        .single();
+        .single() as { data: UserLogin | null };
       
       if (existingUser) {
         // Increment login count
