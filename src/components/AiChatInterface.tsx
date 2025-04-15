@@ -61,9 +61,9 @@ const AiChatInterface = () => {
   return (
     <div className="flex flex-col h-full"> 
       <div className="flex flex-col flex-1 bg-gradient-to-br from-pastel-pink to-pastel-yellow pb-16">
-        <div className="p-4 bg-white/50 text-sm text-gray-700 text-center">
-          <strong>**Training in progress**</strong> Our AI assistant is still learning! 
-          Mistakes may occur and we appreciate your patience. 
+        <div className="p-2 sm:p-4 bg-white/50 text-xs sm:text-sm text-gray-700 text-center">
+          <strong className="block mb-1 text-sm sm:text-base">**Training in progress**</strong> 
+          Our AI assistant is still learning! Mistakes may occur and we appreciate your patience. 
           Do verify the accuracy of results before relying on them.
         </div>
         <ScrollArea className="flex-1 p-4">
