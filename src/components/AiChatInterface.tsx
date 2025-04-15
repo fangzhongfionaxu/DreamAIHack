@@ -61,10 +61,12 @@ const AiChatInterface = () => {
   return (
     <div className="flex flex-col h-full"> 
       <div className="flex flex-col flex-1 bg-gradient-to-br from-pastel-pink to-pastel-yellow pb-16">
-        <div className="p-2 sm:p-4 bg-white/50 text-xs sm:text-sm text-gray-700 text-center">
-          <strong className="block mb-1 text-sm sm:text-base">**Training in progress**</strong> 
-          Our AI assistant is still learning! Mistakes may occur and we appreciate your patience. 
-          Do verify the accuracy of results before relying on them.
+        <div className="p-2 sm:p-4 bg-white/50 text-xs sm:text-sm text-gray-700 text-center space-y-2">
+          <strong className="block text-sm sm:text-base">**Training in progress**</strong> 
+          <p className="text-xs sm:text-sm">
+            Our AI assistant is still learning! Mistakes may occur and we appreciate your patience. 
+            Do verify the accuracy of results before relying on them.
+          </p>
         </div>
         <ScrollArea className="flex-1 p-4">
           <div className="space-y-4 pb-4">
@@ -95,3 +97,4 @@ const AiChatInterface = () => {
 };
 
 export default AiChatInterface;
+
