@@ -28,7 +28,7 @@ const Index = () => {
       <div className="flex-1 overflow-hidden">
         {user ? (
           <div className="h-full flex flex-col">
-            <h1 className="text-2xl font-bold p-4 pb-0 flex items-center gap-2">
+            <h1 className="text-2xl font-bold p-4 pb-6 flex items-center gap-2">
               <Avatar className="h-8 w-8 border-2 border-brand">
                 {user?.user_metadata?.avatar_url ? (
                   <AvatarImage src={user.user_metadata.avatar_url} alt={user.user_metadata?.username || "User"} />
