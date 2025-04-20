@@ -22,13 +22,14 @@ export const callClaudeApi = async (prompt: string): Promise<string> => {
   console.log("Claude API request body:", JSON.stringify(requestBody, null, 2));
   
   try {
-    // Replace placeholder with actual secret value at runtime
-    // The secret is injected when deployed
+    // Access environment variables using Vite's import.meta.env
+    const apiKey = import.meta.env.VITE_CLAUDE_API_KEY || "secret:CLAUDE_API_KEY";
+    
     const response = await fetch(CLAUDE_API_ENDPOINT, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.CLAUDE_API_KEY || "secret:CLAUDE_API_KEY",
+        "x-api-key": apiKey,
         "anthropic-version": "2023-06-01"
       },
       body: JSON.stringify(requestBody)

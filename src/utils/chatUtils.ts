@@ -4,10 +4,9 @@ import { toast } from "@/components/ui/use-toast";
 
 // Function to check if the API key is set
 const isApiKeyConfigured = (): boolean => {
-  // The value will be replaced at runtime with the actual secret
-  // If no secret is configured, it will remain as the placeholder string
-  return process.env.CLAUDE_API_KEY !== undefined && 
-         process.env.CLAUDE_API_KEY !== "CLAUDE_API_KEY";
+  // In Vite, environment variables are accessed via import.meta.env
+  return import.meta.env.VITE_CLAUDE_API_KEY !== undefined && 
+         import.meta.env.VITE_CLAUDE_API_KEY !== "CLAUDE_API_KEY";
 };
 
 export const generateResponse = async (input: string): Promise<string> => {
