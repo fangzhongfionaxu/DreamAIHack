@@ -53,6 +53,12 @@ function tryExtractHabitsFromText(text: string): any[] | null {
   return null;
 }
 
+// Utility: Remove all JSON blocks matched by tryExtractHabitsFromText regex from the AI text
+function removeJsonBlocks(text: string): string {
+  // Remove both ```json blocks and bare JSON objects/arrays
+  return text.replace(/```json\s*[\s\S]+?```|({[\s\S]+?})|(\[[\s\S]+?\])/g, '').trim();
+}
+
 serve(async (req: Request) => {
   // Handle CORS preflight request
   const corsResponse = handleCors(req);
@@ -138,7 +144,7 @@ serve(async (req: Request) => {
       );
     }
 
-    const aiText = data.content[0].text;
+    let aiText = data.content[0].text;
 
     // --- STEP 1: Try to parse JSON with habits from aiText ---
     let insertedHabitIds: string[] = [];
@@ -206,7 +212,10 @@ serve(async (req: Request) => {
       console.log("No structured habits JSON detected in Claude output.");
     }
 
-    // Return AI response text
+    // Remove JSON blocks from the AI text so that user doesn't see them
+    aiText = removeJsonBlocks(aiText);
+
+    // Return AI response text only (JSON removed)
     return new Response(
       JSON.stringify({ text: aiText }),
       { headers: corsHeaders }
