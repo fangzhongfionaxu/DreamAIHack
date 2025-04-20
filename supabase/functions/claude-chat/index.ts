@@ -63,18 +63,13 @@ serve(async (req: Request) => {
     // Log request (without API key)
     console.log(`Sending request to Claude API for prompt: ${prompt.substring(0, 50)}...`);
 
-    // Create request body with system prompt
+    // Create request body with system prompt as a top-level parameter
+    // This is the fix - we're moving the system prompt from being a message to a top-level parameter
     const requestBody = {
       model: CLAUDE_MODEL,
+      system: SYSTEM_PROMPT,
       messages: [
-        {
-          role: "system",
-          content: SYSTEM_PROMPT
-        },
-        {
-          role: "user",
-          content: prompt
-        }
+        { role: 'user', content: prompt }
       ],
       max_tokens: 500
     };
