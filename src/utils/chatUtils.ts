@@ -1,4 +1,8 @@
-export const generateResponse = (input: string): string => {
+
+import { callClaudeAPI, extractJsonFromText } from './claudeUtils';
+
+// This is a temporary function that will be used if the Claude API key is not set
+const generateLocalResponse = (input: string): string => {
   // Check for inability to answer
   const unknownQueries = [
     'diagnosis', 'diagnose', 'medical advice', 
@@ -19,4 +23,28 @@ export const generateResponse = (input: string): string => {
   } else {
     return "I'm here to support you with your treatment plan. Is there something specific you'd like to talk about?";
   }
+};
+
+export const generateResponse = async (
+  input: string, 
+  messageHistory: Array<{role: 'user' | 'assistant', content: string, timestamp: Date}> = [],
+  apiKey?: string
+): Promise<string> => {
+  // If no API key is provided, use the local response generator
+  if (!apiKey) {
+    return generateLocalResponse(input);
+  }
+
+  try {
+    // Call the Claude API
+    const response = await callClaudeAPI(input, messageHistory, apiKey);
+    return response;
+  } catch (error) {
+    console.error("Error generating response with Claude:", error);
+    return generateLocalResponse(input);
+  }
+};
+
+export const processResponseForHabits = (response: string): any[] | null => {
+  return extractJsonFromText(response);
 };
