@@ -6,29 +6,38 @@ const CLAUDE_MODEL = "claude-3-haiku-20240307";
 export const callClaudeApi = async (prompt: string): Promise<string> => {
   console.log("Making request to Claude API...");
   
+  // Create request body
+  const requestBody = {
+    model: CLAUDE_MODEL,
+    messages: [
+      {
+        role: "user",
+        content: prompt
+      }
+    ],
+    max_tokens: 500
+  };
+  
+  // Log request (without API key)
+  console.log("Claude API request body:", JSON.stringify(requestBody, null, 2));
+  
   try {
+    // Replace placeholder with actual secret value at runtime
+    // The secret is injected when deployed
     const response = await fetch(CLAUDE_API_ENDPOINT, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": "secret:CLAUDE_API_KEY",
+        "x-api-key": process.env.CLAUDE_API_KEY || "secret:CLAUDE_API_KEY",
         "anthropic-version": "2023-06-01"
       },
-      body: JSON.stringify({
-        model: CLAUDE_MODEL,
-        messages: [
-          {
-            role: "user",
-            content: prompt
-          }
-        ],
-        max_tokens: 500
-      })
+      body: JSON.stringify(requestBody)
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Claude API error:", response.status, errorText);
+      console.error("Claude API error status:", response.status);
+      console.error("Claude API error response:", errorText);
       
       let errorData;
       try {
@@ -42,7 +51,7 @@ export const callClaudeApi = async (prompt: string): Promise<string> => {
     }
 
     const data = await response.json();
-    console.log("Claude API response received", data);
+    console.log("Claude API response received successfully");
     
     if (!data.content || !data.content[0] || !data.content[0].text) {
       console.error("Unexpected Claude API response format:", data);
