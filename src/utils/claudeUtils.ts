@@ -23,7 +23,17 @@ export const callClaudeApi = async (prompt: string): Promise<string> => {
   
   try {
     // Access environment variables using Vite's import.meta.env
-    const apiKey = import.meta.env.VITE_CLAUDE_API_KEY || "secret:CLAUDE_API_KEY";
+    const apiKey = import.meta.env.VITE_CLAUDE_API_KEY;
+    
+    console.log("API Key Check:", {
+      apiKeyDefined: apiKey !== undefined,
+      apiKeyLength: apiKey?.length,
+      apiKeyStartsWith: apiKey?.substring(0, 5)
+    });
+
+    if (!apiKey) {
+      throw new Error("Claude API key is not configured");
+    }
     
     const response = await fetch(CLAUDE_API_ENDPOINT, {
       method: "POST",

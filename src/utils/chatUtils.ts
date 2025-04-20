@@ -5,8 +5,14 @@ import { toast } from "@/components/ui/use-toast";
 // Function to check if the API key is set
 const isApiKeyConfigured = (): boolean => {
   // In Vite, environment variables are accessed via import.meta.env
-  return import.meta.env.VITE_CLAUDE_API_KEY !== undefined && 
-         import.meta.env.VITE_CLAUDE_API_KEY !== "CLAUDE_API_KEY";
+  const apiKey = import.meta.env.VITE_CLAUDE_API_KEY;
+  console.log("Claude API Key Check:", {
+    apiKeyDefined: apiKey !== undefined,
+    apiKeyLength: apiKey?.length,
+    apiKeyStartsWith: apiKey?.substring(0, 5)
+  });
+  
+  return apiKey !== undefined && apiKey !== "CLAUDE_API_KEY";
 };
 
 export const generateResponse = async (input: string): Promise<string> => {
