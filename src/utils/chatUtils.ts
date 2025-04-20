@@ -1,4 +1,5 @@
 import { callClaudeAPI, extractJsonFromText } from './claudeUtils';
+import { toast } from '@/hooks/use-toast';
 
 // This is a temporary function that will be used if the Claude API key is not set
 const generateLocalResponse = (input: string): string => {
@@ -30,12 +31,26 @@ export const generateResponse = async (
   apiKey?: string
 ): Promise<string> => {
   try {
-    // Always try to use the Supabase secret first (if available via server-side)
-    // First attempt using the server-side environment variable if available
-    const response = await callClaudeAPI(input, messageHistory, apiKey || 'USE_SUPABASE_SECRET');
-    return response;
+    // If apiKey is provided, use it directly
+    if (apiKey) {
+      const response = await callClaudeAPI(input, messageHistory, apiKey);
+      return response;
+    } else {
+      // No API key available, use local response
+      toast({
+        title: "Using local responses",
+        description: "No Claude API key is available. Using pre-defined responses instead.",
+        variant: "default",
+      });
+      return generateLocalResponse(input);
+    }
   } catch (error) {
     console.error("Error generating response with Claude:", error);
+    toast({
+      title: "Error",
+      description: "Failed to get a response from Claude. Please try again later.",
+      variant: "destructive",
+    });
     // Fall back to local response if there was an error
     return generateLocalResponse(input);
   }

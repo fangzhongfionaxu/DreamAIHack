@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -26,32 +27,10 @@ const AiChatInterface = () => {
   const { toast } = useToast();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [apiKey, setApiKey] = useState<string | null>(localStorage.getItem('claude_api_key'));
-  const [hasCheckedSupabaseSecret, setHasCheckedSupabaseSecret] = useState(false);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
-
-  useEffect(() => {
-    const checkSupabaseSecret = async () => {
-      try {
-        const response = await fetch('/api/check-claude-key', {
-          method: 'GET'
-        });
-        
-        if (response.ok) {
-          setHasCheckedSupabaseSecret(true);
-        } else {
-          setHasCheckedSupabaseSecret(false);
-        }
-      } catch (error) {
-        console.error("Error checking for Claude API key in environment:", error);
-        setHasCheckedSupabaseSecret(false);
-      }
-    };
-    
-    checkSupabaseSecret();
-  }, []);
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -72,10 +51,8 @@ const AiChatInterface = () => {
         content: msg.content,
         timestamp: msg.timestamp
       }));
-
-      const effectiveApiKey = hasCheckedSupabaseSecret ? null : apiKey;
       
-      const responseContent = await generateResponse(input, messageHistory, effectiveApiKey || undefined);
+      const responseContent = await generateResponse(input, messageHistory, apiKey || undefined);
       
       const habitData = processResponseForHabits(responseContent);
       if (habitData) {
@@ -111,7 +88,7 @@ const AiChatInterface = () => {
       setApiKey(key);
       toast({
         title: "API Key Saved",
-        description: "Your Claude API key has been saved.",
+        description: "Your Claude API key has been saved. Try sending a message now!",
       });
     }
   };
@@ -126,7 +103,7 @@ const AiChatInterface = () => {
             Do verify the accuracy of results before relying on them.
           </p>
           
-          {!apiKey && !hasCheckedSupabaseSecret && (
+          {!apiKey && (
             <div className="mt-2 p-2 bg-white/70 rounded-md">
               <form onSubmit={handleApiKeySubmit} className="flex flex-col sm:flex-row gap-2 items-center">
                 <input 

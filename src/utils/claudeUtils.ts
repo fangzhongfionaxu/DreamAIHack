@@ -41,25 +41,13 @@ export const callClaudeAPI = async (
   apiKey: string
 ): Promise<string> => {
   try {
-    if (!apiKey || apiKey === 'USE_SUPABASE_SECRET') {
-      // Make a request to a server endpoint that can access the secret
-      const response = await fetch('/api/claude', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: userMessage,
-          history: messageHistory
-        })
-      });
+    // Only attempt server-side API call if explicitly requested
+    if (apiKey === 'USE_SUPABASE_SECRET') {
+      throw new Error('Server-side endpoint not available');
+    }
 
-      if (!response.ok) {
-        throw new Error('Failed to call Claude API via server endpoint');
-      }
-
-      const data = await response.json();
-      return data.response;
+    if (!apiKey) {
+      throw new Error('No API key provided');
     }
 
     // Format message history in the format Claude API expects
@@ -100,11 +88,6 @@ export const callClaudeAPI = async (
     return data.content[0].text;
   } catch (error) {
     console.error('Error calling Claude API:', error);
-    toast({
-      title: "Error",
-      description: "Failed to get a response from Claude. Please try again later.",
-      variant: "destructive",
-    });
     throw error; // Re-throw to let the calling function handle the error
   }
 };
