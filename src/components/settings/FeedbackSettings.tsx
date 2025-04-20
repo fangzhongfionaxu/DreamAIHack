@@ -22,7 +22,7 @@ const FeedbackSettings = () => {
       <CardContent>
         <div className="flex justify-between items-center">
           <div>
-            <p className="font-medium">Help us improve emBrace</p>
+            <p className="text-sm text-muted-foreground">Help us improve emBrace</p>
           </div>
           <Button onClick={handleSubmitFeedback} variant="outline">
             <MessageSquare className="h-4 w-4 mr-2" />
