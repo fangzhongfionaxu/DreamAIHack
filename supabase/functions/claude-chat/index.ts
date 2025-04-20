@@ -9,12 +9,18 @@ The user will talk to you like you are their accountability buddy. Respond to th
 
 Identify each relevant habit mentioned by the user.
 Normalize the habit names (e.g., "wore my back brace" → "brace", "took a walk" → "walk").
-For each habit, record a structured JSON object with:
+For each habit, create a structured JSON object with:
 "habit" (normalized string)
 "completed" (true/false)
 "streak_days" (integer, assume +1 if completed today)
 
-Only use the JSON format shown above. Do not display the JSON object in the output but store the output in the Supabase backend.
+Return the habits as an ARRAY of JSON objects. For example:
+[
+  {"habit": "brace", "completed": true, "streak_days": 1},
+  {"habit": "walk", "completed": false, "streak_days": 0}
+]
+
+Only use the JSON format shown above. Do not display the JSON array in your output but store it in the Supabase backend.
 Only include the most relevant habits mentioned.`;
 
 // CORS headers for browser access
@@ -37,19 +43,29 @@ function handleCors(req: Request) {
 // Utility: Extract habits array from any JSON present in Claude's output
 function tryExtractHabitsFromText(text: string): any[] | null {
   if (!text) return null;
-  // Look for a JSON array or object in the text output
-  const regex = /```json\s*([\s\S]+?)```|({[\s\S]+?})|(\[[\s\S]+?\])/g;
+  
+  // Look for JSON arrays or objects in the text output
+  const regex = /```json\s*([\s\S]+?)```|(\[[\s\S]+?\])|({[\s\S]+?})/g;
   let match: RegExpExecArray | null;
+  
   while ((match = regex.exec(text))) {
-    let json = match[1] || match[2] || match[3];
+    let jsonText = match[1] || match[2] || match[3];
+    
     try {
-      const data = JSON.parse(json.trim());
+      // Try to parse the JSON
+      const data = JSON.parse(jsonText.trim());
+      
+      // If it's already an array, return it
       if (Array.isArray(data)) return data;
-      if (typeof data === "object" && data.habit) return [data];
+      
+      // If it's a single object with habit field, wrap in an array
+      if (typeof data === "object" && data !== null && data.habit) return [data];
     } catch (e) {
-      // Ignore parse errors: continue searching
+      // Ignore parse errors and continue searching
+      console.log("Failed to parse potential JSON:", e);
     }
   }
+  
   return null;
 }
 
@@ -145,12 +161,14 @@ serve(async (req: Request) => {
     }
 
     let aiText = data.content[0].text;
+    console.log("Original Claude output:", aiText);
 
     // --- STEP 1: Try to parse JSON with habits from aiText ---
     let insertedHabitIds: string[] = [];
     let habitsToInsert = tryExtractHabitsFromText(aiText);
+    console.log("Extracted habits:", habitsToInsert);
 
-    if (habitsToInsert && Array.isArray(habitsToInsert)) {
+    if (habitsToInsert && Array.isArray(habitsToInsert) && habitsToInsert.length > 0) {
       // Insert each habit via Supabase REST API
       try {
         const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
@@ -181,18 +199,18 @@ serve(async (req: Request) => {
                 "Authorization": `Bearer ${SERVICE_ROLE_KEY}`,
                 "Prefer": "return=representation"
               },
-              body: JSON.stringify([{
+              body: JSON.stringify({
                 user_id,
                 habit: habit.habit,
                 completed: habit.completed,
                 streak_days: habit.streak_days
-              }])
+              })
             });
 
             if (insertRes.ok) {
               const insertData = await insertRes.json();
-              if (Array.isArray(insertData) && insertData[0] && insertData[0].id) {
-                insertedHabitIds.push(insertData[0].id);
+              if (insertData && insertData.id) {
+                insertedHabitIds.push(insertData.id);
                 insertResults.push({ habit: habit.habit, status: "success" });
               } else {
                 insertResults.push({ habit: habit.habit, status: "unknown_id" });
