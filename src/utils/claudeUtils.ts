@@ -30,6 +30,7 @@ export const getApiKey = (apiKey?: string): string | null => {
 export const saveApiKey = (apiKey: string): void => {
   localStorage.setItem('claude_api_key', apiKey);
   storedApiKey = apiKey;
+  console.log("API key saved successfully");
 };
 
 // Function to remove API key from localStorage
@@ -48,9 +49,12 @@ export const callClaudeApi = async (prompt: string, apiKey?: string): Promise<st
   const key = getApiKey(apiKey);
   
   if (!key) {
+    console.error("Claude API call failed: No API key provided");
     throw new Error("No API key provided");
   }
 
+  console.log("Making request to Claude API...");
+  
   try {
     const response = await fetch(CLAUDE_API_ENDPOINT, {
       method: "POST",
@@ -72,13 +76,29 @@ export const callClaudeApi = async (prompt: string, apiKey?: string): Promise<st
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error("Claude API error:", errorData);
-      throw new Error(`API request failed with status ${response.status}`);
+      const errorText = await response.text();
+      console.error("Claude API error:", response.status, errorText);
+      
+      let errorData;
+      try {
+        errorData = JSON.parse(errorText);
+      } catch (e) {
+        errorData = { error: errorText };
+      }
+      
+      const errorMessage = errorData.error?.message || `API request failed with status ${response.status}`;
+      throw new Error(errorMessage);
     }
 
     const data = await response.json();
-    return data.content?.[0]?.text || "I couldn't generate a response. Please try again.";
+    console.log("Claude API response received", data);
+    
+    if (!data.content || !data.content[0] || !data.content[0].text) {
+      console.error("Unexpected Claude API response format:", data);
+      throw new Error("Unexpected API response format");
+    }
+    
+    return data.content[0].text;
   } catch (error) {
     console.error("Error calling Claude API:", error);
     throw error;

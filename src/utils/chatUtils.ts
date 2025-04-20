@@ -1,20 +1,37 @@
 
 import { callClaudeApi, getApiKey } from './claudeUtils';
+import { toast } from "@/components/ui/use-toast";
 
 export const generateResponse = async (input: string): Promise<string> => {
   const apiKey = getApiKey();
   
+  console.log("Generating response for:", input);
+  console.log("API key available:", !!apiKey);
+  
   // If we have an API key, use Claude API
   if (apiKey) {
     try {
-      return await callClaudeApi(input);
+      console.log("Attempting to call Claude API");
+      const response = await callClaudeApi(input);
+      console.log("Claude API response received successfully");
+      return response;
     } catch (error) {
       console.error("Error generating response with Claude:", error);
+      
+      // Show error toast to user
+      toast({
+        title: "Claude API Error",
+        description: error instanceof Error ? error.message : "Failed to communicate with Claude",
+        variant: "destructive",
+      });
+      
       // Fall back to preset responses if API fails
+      console.log("Falling back to preset responses");
       return generateFallbackResponse(input);
     }
   } else {
     // No API key, use fallback responses
+    console.log("No API key available, using fallback responses");
     return generateFallbackResponse(input);
   }
 };

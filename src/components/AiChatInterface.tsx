@@ -6,10 +6,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import MessageItem from './chat/MessageItem';
 import MessageInput from './chat/MessageInput';
 import { generateResponse } from '@/utils/chatUtils';
-import { getApiKey, saveApiKey, isApiKeyValid } from '@/utils/claudeUtils';
+import { getApiKey, saveApiKey, removeApiKey, isApiKeyValid } from '@/utils/claudeUtils';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { AlertTriangle } from "lucide-react";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -110,7 +111,16 @@ const AiChatInterface = () => {
     setApiKey('');
     toast({
       title: "Success",
-      description: "API key saved successfully",
+      description: "Claude API key saved successfully",
+    });
+  };
+  
+  const handleRemoveApiKey = () => {
+    removeApiKey();
+    setHasStoredApiKey(false);
+    toast({
+      title: "API Key Removed",
+      description: "Using fallback responses now",
     });
   };
 
@@ -125,9 +135,12 @@ const AiChatInterface = () => {
           </p>
         </div>
         
-        {!hasStoredApiKey && (
+        {!hasStoredApiKey ? (
           <Card className="mx-4 my-2 p-3 bg-white/80">
-            <h3 className="font-medium mb-2">Claude API Setup</h3>
+            <h3 className="font-medium mb-2 flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4 text-yellow-500" />
+              Claude API Setup Required
+            </h3>
             <p className="text-sm text-muted-foreground mb-3">
               Please enter your Claude API key to enable the AI assistant. 
               Get your key from <a href="https://console.anthropic.com/" className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">Anthropic Console</a>.
@@ -141,6 +154,16 @@ const AiChatInterface = () => {
                 className="flex-1"
               />
               <Button onClick={handleSaveApiKey}>Save</Button>
+            </div>
+          </Card>
+        ) : (
+          <Card className="mx-4 my-2 p-3 bg-white/80">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-green-600 font-medium flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-green-500 inline-block"></span>
+                Claude API Connected
+              </span>
+              <Button variant="outline" size="sm" onClick={handleRemoveApiKey}>Remove API Key</Button>
             </div>
           </Card>
         )}
