@@ -22,7 +22,7 @@ const ReferralSettings = () => {
       <CardContent>
         <div className="flex justify-between items-center">
           <div>
-            <p className="font-medium">Share with someone who might benefit from emBrace</p>
+            <p className="text-sm text-muted-foreground">Share with someone who might benefit from emBrace</p>
           </div>
           <Button onClick={handleInvite} variant="outline">
             <Share className="h-4 w-4 mr-2" />
