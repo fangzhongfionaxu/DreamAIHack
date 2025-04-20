@@ -4,6 +4,19 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 const CLAUDE_API_ENDPOINT = "https://api.anthropic.com/v1/messages";
 const CLAUDE_MODEL = "claude-3-haiku-20240307";
 
+const SYSTEM_PROMPT = `You are a habit-tracking assistant for patients with chronic spinal conditions.
+The user will talk to you like you are their accountability buddy. Respond to the user in a friendly and motivational tone. You'll be speaking to teenagers, so try to adapt your tone based on their behavior. Also keep your responses concise, ideally less than 20 words so that it's not too difficult to stay engaged with you.
+
+Identify each relevant habit mentioned by the user.
+Normalize the habit names (e.g., "wore my back brace" → "brace", "took a walk" → "walk").
+For each habit, record a structured JSON object with:
+"habit" (normalized string)
+"completed" (true/false)
+"streak_days" (integer, assume +1 if completed today)
+
+Only use the JSON format shown above. Do not display the JSON object in the output but store the output in the Supabase backend.
+Only include the most relevant habits mentioned.`;
+
 // CORS headers for browser access
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -50,10 +63,14 @@ serve(async (req: Request) => {
     // Log request (without API key)
     console.log(`Sending request to Claude API for prompt: ${prompt.substring(0, 50)}...`);
 
-    // Create request body
+    // Create request body with system prompt
     const requestBody = {
       model: CLAUDE_MODEL,
       messages: [
+        {
+          role: "system",
+          content: SYSTEM_PROMPT
+        },
         {
           role: "user",
           content: prompt
