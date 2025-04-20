@@ -6,6 +6,10 @@ import { useAuth } from "@/contexts/AuthContext";
 import MessageItem from './chat/MessageItem';
 import MessageInput from './chat/MessageInput';
 import { generateResponse } from '@/utils/chatUtils';
+import { getApiKey, saveApiKey, isApiKeyValid } from '@/utils/claudeUtils';
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -24,6 +28,8 @@ const AiChatInterface = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [apiKey, setApiKey] = useState('');
+  const [hasStoredApiKey, setHasStoredApiKey] = useState(false);
   const { toast } = useToast();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -31,7 +37,13 @@ const AiChatInterface = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSend = () => {
+  useEffect(() => {
+    // Check if API key exists in localStorage
+    const savedKey = getApiKey();
+    setHasStoredApiKey(!!savedKey);
+  }, []);
+
+  const handleSend = async () => {
     if (!input.trim()) return;
     
     const userMessage: Message = {
@@ -44,8 +56,8 @@ const AiChatInterface = () => {
     setInput('');
     setIsLoading(true);
 
-    setTimeout(() => {
-      const responseContent = generateResponse(input);
+    try {
+      const responseContent = await generateResponse(input);
       
       const aiMessage: Message = {
         role: 'assistant',
@@ -54,8 +66,52 @@ const AiChatInterface = () => {
       };
       
       setMessages(prevMessages => [...prevMessages, aiMessage]);
+    } catch (error) {
+      console.error('Error generating response:', error);
+      toast({
+        title: "Error",
+        description: "Failed to generate a response. Please try again.",
+        variant: "destructive"
+      });
+      
+      const errorMessage: Message = {
+        role: 'assistant',
+        content: "I'm having trouble connecting right now. Please try again later.",
+        timestamp: new Date()
+      };
+      
+      setMessages(prevMessages => [...prevMessages, errorMessage]);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
+  };
+
+  const handleSaveApiKey = () => {
+    if (!apiKey.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter an API key",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!isApiKeyValid(apiKey)) {
+      toast({
+        title: "Invalid API Key",
+        description: "Please enter a valid Claude API key starting with 'sk-'",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    saveApiKey(apiKey);
+    setHasStoredApiKey(true);
+    setApiKey('');
+    toast({
+      title: "Success",
+      description: "API key saved successfully",
+    });
   };
 
   return (
@@ -68,6 +124,27 @@ const AiChatInterface = () => {
             Do verify the accuracy of results before relying on them.
           </p>
         </div>
+        
+        {!hasStoredApiKey && (
+          <Card className="mx-4 my-2 p-3 bg-white/80">
+            <h3 className="font-medium mb-2">Claude API Setup</h3>
+            <p className="text-sm text-muted-foreground mb-3">
+              Please enter your Claude API key to enable the AI assistant. 
+              Get your key from <a href="https://console.anthropic.com/" className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">Anthropic Console</a>.
+            </p>
+            <div className="flex gap-2">
+              <Input
+                type="password"
+                placeholder="Enter Claude API Key"
+                value={apiKey}
+                onChange={(e) => setApiKey(e.target.value)}
+                className="flex-1"
+              />
+              <Button onClick={handleSaveApiKey}>Save</Button>
+            </div>
+          </Card>
+        )}
+        
         <ScrollArea className="flex-1 p-4">
           <div className="space-y-4 pb-4">
             {messages.map((message, index) => (
@@ -97,4 +174,3 @@ const AiChatInterface = () => {
 };
 
 export default AiChatInterface;
-

@@ -1,4 +1,26 @@
-export const generateResponse = (input: string): string => {
+
+import { callClaudeApi, getApiKey } from './claudeUtils';
+
+export const generateResponse = async (input: string): Promise<string> => {
+  const apiKey = getApiKey();
+  
+  // If we have an API key, use Claude API
+  if (apiKey) {
+    try {
+      return await callClaudeApi(input);
+    } catch (error) {
+      console.error("Error generating response with Claude:", error);
+      // Fall back to preset responses if API fails
+      return generateFallbackResponse(input);
+    }
+  } else {
+    // No API key, use fallback responses
+    return generateFallbackResponse(input);
+  }
+};
+
+// Function with the original preset responses as a fallback
+const generateFallbackResponse = (input: string): string => {
   // Check for inability to answer
   const unknownQueries = [
     'diagnosis', 'diagnose', 'medical advice', 
