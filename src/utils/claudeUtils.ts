@@ -1,58 +1,9 @@
 
-import { toast } from "@/components/ui/use-toast";
-
 const CLAUDE_API_ENDPOINT = "https://api.anthropic.com/v1/messages";
 const CLAUDE_MODEL = "claude-3-haiku-20240307";
 
-let storedApiKey: string | null = null;
-
-// Function to get API key from localStorage or the one passed in
-export const getApiKey = (apiKey?: string): string | null => {
-  if (apiKey) {
-    return apiKey;
-  }
-  
-  if (storedApiKey) {
-    return storedApiKey;
-  }
-  
-  // Try to get from localStorage
-  const savedKey = localStorage.getItem('claude_api_key');
-  if (savedKey) {
-    storedApiKey = savedKey;
-    return savedKey;
-  }
-  
-  return null;
-};
-
-// Function to save API key to localStorage
-export const saveApiKey = (apiKey: string): void => {
-  localStorage.setItem('claude_api_key', apiKey);
-  storedApiKey = apiKey;
-  console.log("API key saved successfully");
-};
-
-// Function to remove API key from localStorage
-export const removeApiKey = (): void => {
-  localStorage.removeItem('claude_api_key');
-  storedApiKey = null;
-};
-
-// Function to check if API key is valid
-export const isApiKeyValid = (apiKey: string): boolean => {
-  return apiKey && apiKey.startsWith('sk-') && apiKey.length > 20;
-};
-
-// Function to call Claude API
-export const callClaudeApi = async (prompt: string, apiKey?: string): Promise<string> => {
-  const key = getApiKey(apiKey);
-  
-  if (!key) {
-    console.error("Claude API call failed: No API key provided");
-    throw new Error("No API key provided");
-  }
-
+// Function to call Claude API using project-wide API key
+export const callClaudeApi = async (prompt: string): Promise<string> => {
   console.log("Making request to Claude API...");
   
   try {
@@ -60,7 +11,7 @@ export const callClaudeApi = async (prompt: string, apiKey?: string): Promise<st
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": key,
+        "x-api-key": "secret:CLAUDE_API_KEY",
         "anthropic-version": "2023-06-01"
       },
       body: JSON.stringify({
