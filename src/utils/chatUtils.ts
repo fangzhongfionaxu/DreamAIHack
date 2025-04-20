@@ -1,4 +1,3 @@
-
 import { callClaudeAPI, extractJsonFromText } from './claudeUtils';
 
 // This is a temporary function that will be used if the Claude API key is not set
@@ -30,17 +29,14 @@ export const generateResponse = async (
   messageHistory: Array<{role: 'user' | 'assistant', content: string, timestamp: Date}> = [],
   apiKey?: string
 ): Promise<string> => {
-  // If no API key is provided, use the local response generator
-  if (!apiKey) {
-    return generateLocalResponse(input);
-  }
-
   try {
-    // Call the Claude API
-    const response = await callClaudeAPI(input, messageHistory, apiKey);
+    // Always try to use the Supabase secret first (if available via server-side)
+    // First attempt using the server-side environment variable if available
+    const response = await callClaudeAPI(input, messageHistory, apiKey || 'USE_SUPABASE_SECRET');
     return response;
   } catch (error) {
     console.error("Error generating response with Claude:", error);
+    // Fall back to local response if there was an error
     return generateLocalResponse(input);
   }
 };

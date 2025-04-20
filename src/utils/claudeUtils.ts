@@ -41,6 +41,27 @@ export const callClaudeAPI = async (
   apiKey: string
 ): Promise<string> => {
   try {
+    if (!apiKey || apiKey === 'USE_SUPABASE_SECRET') {
+      // Make a request to a server endpoint that can access the secret
+      const response = await fetch('/api/claude', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: userMessage,
+          history: messageHistory
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to call Claude API via server endpoint');
+      }
+
+      const data = await response.json();
+      return data.response;
+    }
+
     // Format message history in the format Claude API expects
     const formattedHistory = messageHistory.map(msg => ({
       role: msg.role,
@@ -84,7 +105,7 @@ export const callClaudeAPI = async (
       description: "Failed to get a response from Claude. Please try again later.",
       variant: "destructive",
     });
-    return "I'm sorry, I encountered an error processing your request. Please try again later.";
+    throw error; // Re-throw to let the calling function handle the error
   }
 };
 
