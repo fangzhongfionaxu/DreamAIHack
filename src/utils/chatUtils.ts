@@ -1,38 +1,50 @@
 
-import { callClaudeApi } from './claudeUtils';
 import { toast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
-// Function to check if the API key is set
-const isApiKeyConfigured = (): boolean => {
-  // In Vite, environment variables are accessed via import.meta.env
-  const apiKey = import.meta.env.VITE_CLAUDE_API_KEY;
-  console.log("Claude API Key Check:", {
-    apiKeyDefined: apiKey !== undefined,
-    apiKeyLength: apiKey?.length,
-    apiKeyStartsWith: apiKey?.substring(0, 5)
-  });
-  
-  return apiKey !== undefined && apiKey !== "CLAUDE_API_KEY";
+// Function to check if we can connect to the Claude API
+const canConnectToClaudeApi = async (): Promise<boolean> => {
+  try {
+    // Make a simple call to check if the edge function exists and is properly configured
+    const { error } = await supabase.functions.invoke("claude-chat", {
+      body: { prompt: "test" },
+    });
+    
+    if (error) {
+      console.error("Error checking Claude API connection:", error);
+      return false;
+    }
+    
+    return true;
+  } catch (error) {
+    console.error("Error checking Claude API connection:", error);
+    return false;
+  }
 };
 
 export const generateResponse = async (input: string): Promise<string> => {
   console.log("Generating response for:", input);
   
-  if (!isApiKeyConfigured()) {
-    console.warn("Claude API key not configured, unable to generate response");
-    toast({
-      title: "API Key Missing",
-      description: "The Claude API key is not configured. Please contact the administrator.",
-      variant: "destructive",
-    });
-    return "I'm sorry, but I'm not properly configured yet. The administrator needs to set up the Claude API key for me to work correctly.";
-  }
-  
   try {
-    console.log("Attempting to call Claude API");
-    const response = await callClaudeApi(input);
+    console.log("Calling Claude API via edge function");
+    
+    // Call the Claude API via our edge function
+    const { data, error } = await supabase.functions.invoke("claude-chat", {
+      body: { prompt: input },
+    });
+    
+    if (error) {
+      console.error("Error from Claude edge function:", error);
+      throw new Error(error.message || "Failed to communicate with Claude");
+    }
+    
+    if (!data || !data.text) {
+      console.error("Unexpected response format:", data);
+      throw new Error("Received an invalid response format");
+    }
+    
     console.log("Claude API response received successfully");
-    return response;
+    return data.text;
   } catch (error) {
     console.error("Error generating response with Claude:", error);
     
