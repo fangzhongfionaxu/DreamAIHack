@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Share } from "lucide-react";
 
 const ReferralSettings = () => {
@@ -18,17 +18,11 @@ const ReferralSettings = () => {
           <Share className="h-5 w-5" />
           Referrals
         </CardTitle>
-        <CardDescription>
-          Invite friends and family to join emBrace
-        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex justify-between items-center">
           <div>
             <p className="font-medium">Refer Friends</p>
-            <p className="text-sm text-muted-foreground">
-              Share emBrace with others who might benefit
-            </p>
           </div>
           <Button onClick={handleInvite} variant="outline">
             <Share className="h-4 w-4 mr-2" />
