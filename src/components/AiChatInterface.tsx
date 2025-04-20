@@ -18,7 +18,7 @@ const AiChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: "Hi there! I'm your health buddy. How is your day?",
+      content: "**Training in progress**\nOur AI assistant is still learning! Mistakes may occur and we appreciate your patience. Do verify the accuracy of results before relying on them",
       timestamp: new Date()
     }
   ]);
