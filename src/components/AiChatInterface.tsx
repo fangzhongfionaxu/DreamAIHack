@@ -18,7 +18,7 @@ const AiChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: "**Training in progress**\nOur AI assistant is still learning! Mistakes may occur and we appreciate your patience. Do verify the accuracy of results before relying on them",
+      content: "Hi there! I'm your health buddy. How is your day?",
       timestamp: new Date()
     }
   ]);
@@ -83,9 +83,9 @@ const AiChatInterface = () => {
     <div className="flex flex-col h-full"> 
       <div className="flex flex-col flex-1 bg-gradient-to-br from-pastel-pink to-pastel-yellow pb-16">
         <div className="p-2 sm:p-4 bg-white/50 text-xs sm:text-sm text-gray-700 text-center space-y-2">
-          <strong className="block text-sm sm:text-base">**Health Companion AI**</strong> 
+          <strong className="block text-sm sm:text-base">**AI Assistant**</strong> 
           <p className="text-xs sm:text-sm">
-            Your personalized wellness support is here. Let's work together on your health journey.
+            I'm here to help answer your health and wellness questions. How can I assist you today?
           </p>
         </div>
         
