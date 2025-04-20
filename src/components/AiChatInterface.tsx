@@ -40,12 +40,17 @@ const AiChatInterface = () => {
       timestamp: new Date()
     };
     
+    console.log("Sending message:", input); // Enhanced logging
+    
     setMessages(prevMessages => [...prevMessages, userMessage]);
     setInput('');
     setIsLoading(true);
 
     try {
+      console.log("Calling generateResponse with input:", input); // Verbose logging
       const responseContent = await generateResponse(input);
+      
+      console.log("Received response:", responseContent); // Log received response
       
       const aiMessage: Message = {
         role: 'assistant',
@@ -55,16 +60,16 @@ const AiChatInterface = () => {
       
       setMessages(prevMessages => [...prevMessages, aiMessage]);
     } catch (error) {
-      console.error('Error generating response:', error);
+      console.error('Detailed error generating response:', error);
       toast({
-        title: "Error",
-        description: "Failed to generate a response. Please try again.",
+        title: "AI Assistant Error",
+        description: error instanceof Error ? error.message : "Failed to generate response",
         variant: "destructive"
       });
       
       const errorMessage: Message = {
         role: 'assistant',
-        content: "I'm having trouble connecting right now. Please try again later.",
+        content: "I'm experiencing difficulties right now. Please try again later.",
         timestamp: new Date()
       };
       
