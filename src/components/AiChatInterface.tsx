@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/contexts/AuthContext";
 import MessageItem from './chat/MessageItem';
 import MessageInput from './chat/MessageInput';
-import { generateResponse, processResponseForHabits } from '@/utils/chatUtils';
+import { generateResponse } from '@/utils/chatUtils';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -26,13 +26,12 @@ const AiChatInterface = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [apiKey, setApiKey] = useState<string | null>(localStorage.getItem('claude_api_key'));
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSend = async () => {
+  const handleSend = () => {
     if (!input.trim()) return;
     
     const userMessage: Message = {
@@ -45,19 +44,8 @@ const AiChatInterface = () => {
     setInput('');
     setIsLoading(true);
 
-    try {
-      const messageHistory = messages.map(msg => ({
-        role: msg.role,
-        content: msg.content,
-        timestamp: msg.timestamp
-      }));
-      
-      const responseContent = await generateResponse(input, messageHistory, apiKey || undefined);
-      
-      const habitData = processResponseForHabits(responseContent);
-      if (habitData) {
-        console.log('Extracted habit data:', habitData);
-      }
+    setTimeout(() => {
+      const responseContent = generateResponse(input);
       
       const aiMessage: Message = {
         role: 'assistant',
@@ -66,31 +54,8 @@ const AiChatInterface = () => {
       };
       
       setMessages(prevMessages => [...prevMessages, aiMessage]);
-    } catch (error) {
-      console.error('Error in chat interaction:', error);
-      toast({
-        title: "Error",
-        description: "Failed to get a response. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleApiKeySubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const key = formData.get('api_key') as string;
-    
-    if (key) {
-      localStorage.setItem('claude_api_key', key);
-      setApiKey(key);
-      toast({
-        title: "API Key Saved",
-        description: "Your Claude API key has been saved. Try sending a message now!",
-      });
-    }
+    }, 1000);
   };
 
   return (
@@ -102,28 +67,7 @@ const AiChatInterface = () => {
             Our AI assistant is still learning! Mistakes may occur and we appreciate your patience. 
             Do verify the accuracy of results before relying on them.
           </p>
-          
-          {!apiKey && (
-            <div className="mt-2 p-2 bg-white/70 rounded-md">
-              <form onSubmit={handleApiKeySubmit} className="flex flex-col sm:flex-row gap-2 items-center">
-                <input 
-                  type="password" 
-                  name="api_key" 
-                  placeholder="Enter your Claude API key" 
-                  className="border p-1 text-sm rounded flex-1" 
-                />
-                <button 
-                  type="submit" 
-                  className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm"
-                >
-                  Save Key
-                </button>
-              </form>
-              <p className="text-xs mt-1">API key is stored locally and never sent to our servers.</p>
-            </div>
-          )}
         </div>
-        
         <ScrollArea className="flex-1 p-4">
           <div className="space-y-4 pb-4">
             {messages.map((message, index) => (
@@ -153,3 +97,4 @@ const AiChatInterface = () => {
 };
 
 export default AiChatInterface;
+
