@@ -1,27 +1,21 @@
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const CLAUDE_API_ENDPOINT = "https://api.anthropic.com/v1/messages";
 const CLAUDE_MODEL = "claude-3-haiku-20240307";
 
 const SYSTEM_PROMPT = `You are a habit-tracking assistant for patients with chronic spinal conditions.
-The user will talk to you like you are their accountability buddy. Respond to the user in a friendly and motivational tone. You'll be speaking to teenagers, so try to adapt your tone based on their behavior. Also keep your responses concise, ideally less than 20 words so that it's not too difficult to stay engaged with you.
+The user will talk to you like you are their accountability buddy. Respond to the user in a friendly and motivational tone. You'll be speaking to teenagers, so try to adapt your tone based on their behavior. Also keep your responses concise, ideally less than 20 words so that it's not too difficult to stay engaged with you. You are not allowed to diagnose or provide medical advice. If there are any messages that sound troubling, especially for a vulnerable teenager, you are obligated to flag it to the user to seek additional help and highlight that you are not qualified to handle emergencies.
 
 Identify each relevant habit mentioned by the user.
 Normalize the habit names (e.g., "wore my back brace" → "brace", "took a walk" → "walk").
-For each habit, create a structured JSON object with:
+For each habit, record a structured JSON object with:
 "habit" (normalized string)
 "completed" (true/false)
 "streak_days" (integer, assume +1 if completed today)
 
-Return the habits as an ARRAY of JSON objects. For example:
-[
-  {"habit": "brace", "completed": true, "streak_days": 1},
-  {"habit": "walk", "completed": false, "streak_days": 0}
-]
-
-Only use the JSON format shown above. Do not display the JSON array in your output but store it in the Supabase backend.
-Only include the most relevant habits mentioned.`;
+Only use the JSON format shown above. Do not display the JSON object in the output but store the output in the Supabase backend.
+Only include the most relevant habits mentioned.
+`;
 
 // CORS headers for browser access
 const corsHeaders = {
@@ -43,30 +37,36 @@ function handleCors(req: Request) {
 // Utility: Extract habits array from any JSON present in Claude's output
 function tryExtractHabitsFromText(text: string): any[] | null {
   if (!text) return null;
-  
+
   // Look for JSON arrays or objects in the text output
   const regex = /```json\s*([\s\S]+?)```|(\[[\s\S]+?\])|({[\s\S]+?})/g;
   let match: RegExpExecArray | null;
-  
+  let habits: any[] = [];
+
   while ((match = regex.exec(text))) {
     let jsonText = match[1] || match[2] || match[3];
-    
+
     try {
-      // Try to parse the JSON
       const data = JSON.parse(jsonText.trim());
-      
-      // If it's already an array, return it
-      if (Array.isArray(data)) return data;
-      
-      // If it's a single object with habit field, wrap in an array
-      if (typeof data === "object" && data !== null && data.habit) return [data];
+      // If it's already an array, add all items (robustly check for array)
+      if (Array.isArray(data)) {
+        for (const entry of data) {
+          if (entry && typeof entry.habit === "string" && typeof entry.completed === "boolean" && typeof entry.streak_days === "number") {
+            habits.push(entry);
+          }
+        }
+      } else if (typeof data === "object" && data !== null && data.habit) {
+        // If it's a single habit object, add it
+        habits.push(data);
+      }
+      // else: ignore malformed data
     } catch (e) {
       // Ignore parse errors and continue searching
       console.log("Failed to parse potential JSON:", e);
     }
   }
-  
-  return null;
+
+  return habits.length > 0 ? habits : null;
 }
 
 // Utility: Remove all JSON blocks matched by tryExtractHabitsFromText regex from the AI text
@@ -179,6 +179,7 @@ serve(async (req: Request) => {
         } else {
           const insertResults = [];
 
+          // Corrected loop to run for each valid habit object
           for (const habit of habitsToInsert) {
             // Sanity check the structure
             if (
@@ -190,7 +191,7 @@ serve(async (req: Request) => {
               continue;
             }
 
-            // Insert into habits table
+            // Insert into habits table (one POST per habit)
             const insertRes = await fetch(`${SUPABASE_URL}/rest/v1/habits`, {
               method: "POST",
               headers: {
@@ -209,7 +210,11 @@ serve(async (req: Request) => {
 
             if (insertRes.ok) {
               const insertData = await insertRes.json();
-              if (insertData && insertData.id) {
+              // insertData can be array or object, check for id inside
+              if (Array.isArray(insertData) && insertData[0]?.id) {
+                insertedHabitIds.push(insertData[0].id);
+                insertResults.push({ habit: habit.habit, status: "success" });
+              } else if (insertData && insertData.id) {
                 insertedHabitIds.push(insertData.id);
                 insertResults.push({ habit: habit.habit, status: "success" });
               } else {
