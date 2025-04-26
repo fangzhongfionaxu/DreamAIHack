@@ -22,7 +22,7 @@ const PrivacySettings = () => {
           <div>
             <p className="font-medium">Data Sharing</p>
             <p className="text-sm text-muted-foreground">
-              Share anonymized data to improve treatment
+              Share anonymized data to improve experience
             </p>
           </div>
           <Switch defaultChecked />
@@ -30,9 +30,9 @@ const PrivacySettings = () => {
         
         <div className="flex justify-between items-center">
           <div>
-            <p className="font-medium">Treatment Progress Visibility</p>
+            <p className="font-medium">Progress Visibility</p>
             <p className="text-sm text-muted-foreground">
-              Allow friends to see your treatment progress
+              Allow friends to see your progress
             </p>
           </div>
           <Switch />
