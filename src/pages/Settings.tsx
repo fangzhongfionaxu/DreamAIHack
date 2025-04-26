@@ -27,7 +27,7 @@ const Settings = () => {
         
         <div className="flex justify-center pt-2 pb-6">
           <p className="text-sm text-muted-foreground">
-            Embrace Habits v1.0 • HIPAA Compliant
+            Embrace v1.0 • Building healthier habits
           </p>
         </div>
       </div>
