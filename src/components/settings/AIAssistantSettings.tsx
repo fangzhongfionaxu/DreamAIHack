@@ -17,19 +17,7 @@ const AIAssistantSettings = () => {
           Configure how your AI assistant interacts with you
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex justify-between items-center">
-          <div>
-            <p className="font-medium">Default Persona</p>
-            <p className="text-sm text-muted-foreground">
-              Choose your preferred assistant style
-            </p>
-          </div>
-          <Button variant="outline" size="sm">
-            Warm
-          </Button>
-        </div>
-        
+      <CardContent className="space-y-4">        
         <div className="flex justify-between items-center">
           <div>
             <p className="font-medium">Auto-adjust Persona</p>
