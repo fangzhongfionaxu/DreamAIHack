@@ -28,9 +28,9 @@ const InterestsStep = ({ value, onChange }: InterestsStepProps) => {
           <span className="text-3xl">✨</span>
         </div>
         
-        <div className="bg-slate-800/50 rounded-2xl p-6 inline-block border border-slate-700">
-          <h2 className="text-2xl font-bold mb-2">I'm interested in...</h2>
-          <p className="text-gray-400">Select all that apply</p>
+        <div className="bg-gray-200 rounded-2xl p-6 inline-block border border-gray-300">
+          <h2 className="text-2xl font-bold mb-2 text-gray-800">I'm interested in...</h2>
+          <p className="text-gray-600">Select all that apply</p>
         </div>
       </div>
 
@@ -41,15 +41,15 @@ const InterestsStep = ({ value, onChange }: InterestsStepProps) => {
             onClick={() => toggleInterest(option.value)}
             className={`w-full p-4 rounded-xl border-2 transition-all ${
               value.includes(option.value)
-                ? 'border-purple-500 bg-purple-500/20'
-                : 'border-slate-600 bg-slate-800/50 hover:bg-slate-700/50'
+                ? 'border-purple-500 bg-purple-100'
+                : 'border-gray-300 bg-gray-100 hover:bg-gray-50'
             }`}
           >
             <div className="flex items-center gap-4">
               <span className="text-2xl">{option.icon}</span>
-              <span className="text-lg font-medium text-left flex-1">{option.label}</span>
+              <span className="text-lg font-medium text-left flex-1 text-gray-800">{option.label}</span>
               <div className={`w-6 h-6 rounded border-2 ${
-                value.includes(option.value) ? 'border-purple-500 bg-purple-500' : 'border-slate-400'
+                value.includes(option.value) ? 'border-purple-500 bg-purple-500' : 'border-gray-400'
               }`}>
                 {value.includes(option.value) && (
                   <div className="w-full h-full rounded bg-purple-500 flex items-center justify-center">

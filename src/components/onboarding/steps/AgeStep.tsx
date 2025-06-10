@@ -26,22 +26,22 @@ const AgeStep = ({ value, onChange }: AgeStepProps) => {
           <span className="text-3xl">🎂</span>
         </div>
         
-        <div className="bg-slate-800/50 rounded-2xl p-6 inline-block border border-slate-700">
-          <h2 className="text-2xl font-bold mb-2">I am ___ years old</h2>
+        <div className="bg-gray-200 rounded-2xl p-6 inline-block border border-gray-300">
+          <h2 className="text-2xl font-bold mb-2 text-gray-800">I am ___ years old</h2>
         </div>
       </div>
 
       <div className="space-y-4 max-w-md mx-auto">
         <Select value={value} onValueChange={onChange}>
-          <SelectTrigger className="h-16 text-lg bg-slate-800/50 border-slate-600 hover:bg-slate-700/50 rounded-xl">
+          <SelectTrigger className="h-16 text-lg bg-gray-100 border-gray-300 hover:bg-gray-50 rounded-xl text-gray-800">
             <SelectValue placeholder="Select your age range" />
           </SelectTrigger>
-          <SelectContent className="bg-slate-800 border-slate-600">
+          <SelectContent className="bg-white border-gray-300">
             {ageRanges.map((range) => (
               <SelectItem 
                 key={range} 
                 value={range}
-                className="text-white hover:bg-slate-700 focus:bg-slate-700"
+                className="text-gray-800 hover:bg-gray-100 focus:bg-gray-100"
               >
                 {range}
               </SelectItem>

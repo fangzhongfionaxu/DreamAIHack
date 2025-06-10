@@ -15,16 +15,16 @@ const ConsentStep = ({ value, onChange }: ConsentStepProps) => {
           <span className="text-3xl">📝</span>
         </div>
         
-        <div className="bg-slate-800/50 rounded-2xl p-6 inline-block border border-slate-700">
-          <h2 className="text-2xl font-bold mb-2">Almost there!</h2>
-          <p className="text-gray-400">Please review and accept our terms</p>
+        <div className="bg-gray-200 rounded-2xl p-6 inline-block border border-gray-300">
+          <h2 className="text-2xl font-bold mb-2 text-gray-800">Almost there!</h2>
+          <p className="text-gray-600">Please review and accept our terms</p>
         </div>
       </div>
 
       <div className="space-y-6 max-w-md mx-auto">
-        <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-600 text-left">
-          <h3 className="font-semibold mb-3">Terms & Conditions Summary</h3>
-          <ul className="text-sm text-gray-400 space-y-2">
+        <div className="bg-gray-100 rounded-xl p-6 border border-gray-300 text-left">
+          <h3 className="font-semibold mb-3 text-gray-800">Terms & Conditions Summary</h3>
+          <ul className="text-sm text-gray-600 space-y-2">
             <li>• We respect your privacy and protect your data</li>
             <li>• Your health information is kept confidential</li>
             <li>• You can delete your account at any time</li>
@@ -42,14 +42,14 @@ const ConsentStep = ({ value, onChange }: ConsentStepProps) => {
           />
           <label
             htmlFor="consent"
-            className="text-sm text-left leading-relaxed cursor-pointer"
+            className="text-sm text-left leading-relaxed cursor-pointer text-gray-800"
           >
             I agree to the{' '}
-            <a href="#" className="text-blue-400 hover:underline">
+            <a href="#" className="text-blue-600 hover:underline">
               Terms & Conditions
             </a>{' '}
             and{' '}
-            <a href="#" className="text-blue-400 hover:underline">
+            <a href="#" className="text-blue-600 hover:underline">
               Privacy Policy
             </a>
             . I understand this app is for tracking purposes and should not replace professional medical advice.
