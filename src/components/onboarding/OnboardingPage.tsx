@@ -20,8 +20,10 @@ const OnboardingPage = () => {
       duration: 3000,
     });
 
-    // Redirect to the main app
-    navigate('/');
+    // Redirect to the main app after a short delay
+    setTimeout(() => {
+      navigate('/');
+    }, 1000);
   };
 
   return <OnboardingWorkflow onComplete={handleOnboardingComplete} />;

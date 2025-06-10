@@ -11,6 +11,7 @@ import GenderStep from "./steps/GenderStep";
 import AgeStep from "./steps/AgeStep";
 import ConsentStep from "./steps/ConsentStep";
 import WelcomeStep from "./steps/WelcomeStep";
+import CelebrationStep from "./steps/CelebrationStep";
 import { useToast } from "@/hooks/use-toast";
 
 export interface OnboardingData {
@@ -36,7 +37,7 @@ const OnboardingWorkflow = ({ onComplete }: { onComplete: (data: OnboardingData)
   });
   const { toast } = useToast();
 
-  const totalSteps = 8;
+  const totalSteps = 9; // Now including welcome + 7 questions + celebration
   const progress = ((currentStep + 1) / totalSteps) * 100;
 
   const updateData = (field: keyof OnboardingData, value: any) => {
@@ -56,7 +57,7 @@ const OnboardingWorkflow = ({ onComplete }: { onComplete: (data: OnboardingData)
   };
 
   const handleComplete = () => {
-    if (!data.consentsToTerms) {
+    if (currentStep === 7 && !data.consentsToTerms) {
       toast({
         title: "Terms & Conditions Required",
         description: "Please accept the terms and conditions to continue.",
@@ -64,7 +65,13 @@ const OnboardingWorkflow = ({ onComplete }: { onComplete: (data: OnboardingData)
       });
       return;
     }
-    onComplete(data);
+    
+    if (currentStep === 8) {
+      // Final step - complete onboarding
+      onComplete(data);
+    } else {
+      nextStep();
+    }
   };
 
   const canContinue = () => {
@@ -77,6 +84,7 @@ const OnboardingWorkflow = ({ onComplete }: { onComplete: (data: OnboardingData)
       case 5: return data.gender !== '';
       case 6: return data.ageRange !== '';
       case 7: return data.consentsToTerms;
+      case 8: return true; // Celebration step
       default: return false;
     }
   };
@@ -134,27 +142,38 @@ const OnboardingWorkflow = ({ onComplete }: { onComplete: (data: OnboardingData)
             onChange={(value) => updateData('consentsToTerms', value)}
           />
         );
+      case 8:
+        return <CelebrationStep />;
       default:
         return null;
     }
   };
 
+  const getButtonText = () => {
+    if (currentStep === 8) return 'START YOUR JOURNEY';
+    if (currentStep === 7) return 'CONTINUE';
+    return 'CONTINUE';
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-orange-50 to-yellow-100 text-gray-800 flex flex-col">
       {/* Header with progress */}
       <div className="p-4 flex items-center gap-4">
-        {currentStep > 0 && (
+        {currentStep > 0 && currentStep < 8 && (
           <Button
             variant="ghost"
             size="icon"
             onClick={prevStep}
-            className="text-white hover:bg-white/10"
+            className="text-gray-600 hover:bg-white/50"
           >
             <ArrowLeft className="h-6 w-6" />
           </Button>
         )}
         <div className="flex-1">
-          <Progress value={progress} className="h-2" />
+          <Progress 
+            value={progress} 
+            className="h-2 bg-white/30"
+          />
         </div>
       </div>
 
@@ -166,11 +185,11 @@ const OnboardingWorkflow = ({ onComplete }: { onComplete: (data: OnboardingData)
       {/* Continue button */}
       <div className="p-6">
         <Button
-          onClick={currentStep === totalSteps - 1 ? handleComplete : nextStep}
+          onClick={handleComplete}
           disabled={!canContinue()}
-          className="w-full h-14 text-lg font-semibold bg-green-500 hover:bg-green-600 text-white rounded-xl"
+          className="w-full h-14 text-lg font-semibold bg-teal-500 hover:bg-teal-600 text-white rounded-xl shadow-lg"
         >
-          {currentStep === totalSteps - 1 ? 'GET STARTED' : 'CONTINUE'}
+          {getButtonText()}
         </Button>
       </div>
     </div>
