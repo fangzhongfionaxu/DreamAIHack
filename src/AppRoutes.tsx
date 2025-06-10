@@ -9,11 +9,13 @@ import Activities from '@/pages/Activities';
 import Profile from '@/pages/Profile';
 import Settings from '@/pages/Settings';
 import Referrals from '@/pages/Referrals';
+import OnboardingPage from '@/components/onboarding/OnboardingPage';
 
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/auth" element={<Auth />} />
+      <Route path="/onboarding" element={<OnboardingPage />} />
       <Route
         path="/"
         element={
