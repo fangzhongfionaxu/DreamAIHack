@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -127,7 +128,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       setLoading(true);
       // Properly pass username to user_metadata to ensure it's available in the trigger function
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -139,10 +140,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       if (error) throw error;
       
-      toast({
-        title: "Account created successfully",
-        description: "You can now sign in with your credentials.",
-      });
+      // If signup is successful and user is confirmed, redirect to onboarding
+      if (data.user && !data.user.email_confirmed_at) {
+        toast({
+          title: "Account created successfully",
+          description: "Please check your email to confirm your account, then sign in to start your onboarding.",
+        });
+      } else if (data.user && data.user.email_confirmed_at) {
+        // User is immediately confirmed (email confirmation disabled)
+        toast({
+          title: "Account created successfully",
+          description: "Welcome! Let's get you set up.",
+        });
+        
+        // Redirect to onboarding for new users
+        setTimeout(() => {
+          navigate('/onboarding');
+        }, 100);
+      }
       
     } catch (error: any) {
       toast({

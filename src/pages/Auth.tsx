@@ -98,12 +98,7 @@ const Auth = () => {
     try {
       setIsSubmitting(true);
       await signUp(values.email, values.password, values.username);
-      setDbSuccess("Account created successfully! You can now sign in.");
-      setActiveTab("signin");
-      toast({
-        title: "Account created",
-        description: "Please sign in with your new account.",
-      });
+      // Note: The redirect to onboarding is now handled in the AuthContext
     } catch (error) {
       console.error("Sign up error:", error);
       if (error instanceof Error) {
