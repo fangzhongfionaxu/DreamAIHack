@@ -27,7 +27,7 @@ const AIAssistantSettings = () => {
         
         <div className="flex justify-between items-center">
           <div>
-            <p className="font-medium">Proactive Reminders</p>
+            <p className="font-medium">Remember me</p>
             <p className="text-sm text-muted-foreground">
               AI will proactively remind you about activities
             </p>
