@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Bar, BarChart, CartesianGrid, ReferenceLine, XAxis, YAxis } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartConfig } from "@/components/ui/chart";
@@ -33,7 +34,7 @@ const chartConfig = {
     color: "#6BAFB2",
   },
   close: {
-    label: "Close to Goal",
+    label: "Close",
     color: "#F5E2AE",
   },
   below: {
@@ -41,6 +42,26 @@ const chartConfig = {
     color: "#DCC1BA",
   },
 } satisfies ChartConfig;
+
+const CustomLegend = () => (
+  <div className="flex justify-center items-center gap-x-6 mt-4 text-sm">
+    {Object.entries(chartConfig)
+      .filter(([key]) => key !== 'hours')
+      .map(([key, config]) => {
+        if (!config.label || !config.color) return null;
+        
+        return (
+          <div key={key} className="flex items-center gap-1.5">
+            <div
+              className="w-2.5 h-2.5 shrink-0 rounded-full"
+              style={{ backgroundColor: config.color }}
+            />
+            <span className="text-muted-foreground">{config.label}</span>
+          </div>
+        );
+      })}
+  </div>
+);
 
 const BraceTimeChart = () => {
   const totalHours = chartData.reduce((acc, item) => acc + item.hours, 0);
@@ -80,9 +101,10 @@ const BraceTimeChart = () => {
             stroke="hsl(var(--border))"
             strokeDasharray="3 3"
           />
-          <Bar dataKey="hours" radius={[8, 8, 0, 0]} />
+          <Bar dataKey="hours" radius={[8, 8, 0, 0]} maxBarSize={30} />
         </BarChart>
       </ChartContainer>
+      <CustomLegend />
     </React.Fragment>
   );
 };
