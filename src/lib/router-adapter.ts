@@ -2,6 +2,7 @@
 // Router adapter - abstracts routing library specifics
 import { useNavigate as useReactRouterNavigate, useLocation as useReactRouterLocation, Link as ReactRouterLink } from "react-router-dom";
 import type { ComponentProps } from "react";
+import React from "react";
 
 // Standardized navigation interface
 export interface NavigationOptions {
@@ -31,8 +32,8 @@ export function useLocation() {
 }
 
 // Wrapped Link component
-export const Link = (props: ComponentProps<typeof ReactRouterLink>) => (
-  <ReactRouterLink {...props} />
-);
+export const Link = (props: ComponentProps<typeof ReactRouterLink>) => {
+  return React.createElement(ReactRouterLink, props);
+};
 
 export type LinkProps = ComponentProps<typeof Link>;

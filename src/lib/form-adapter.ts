@@ -4,6 +4,7 @@ import { useForm as useReactHookForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { FieldValues, UseFormProps, FieldPath, Control } from "react-hook-form";
 import type { ZodSchema } from "zod";
+import React from "react";
 
 export interface FormOptions<T extends FieldValues> extends Omit<UseFormProps<T>, 'resolver'> {
   schema?: ZodSchema<T>;
