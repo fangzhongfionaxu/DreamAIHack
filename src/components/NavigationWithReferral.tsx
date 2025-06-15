@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, Calendar, MessageSquare, Settings, User, Share } from 'lucide-react';
+import { Home, Calendar, MessageSquare, User, Share } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -35,11 +35,6 @@ const NavigationWithReferral = () => {
       name: 'Profile',
       path: '/profile',
       icon: <User className="h-5 w-5" />,
-    },
-    {
-      name: 'Settings',
-      path: '/settings',
-      icon: <Settings className="h-5 w-5" />,
     },
   ];
 

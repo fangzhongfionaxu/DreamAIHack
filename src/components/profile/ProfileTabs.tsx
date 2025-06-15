@@ -3,6 +3,7 @@ import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AchievementsTab from './AchievementsTab';
 import SocialTab from './SocialTab';
+import SettingsTab from './SettingsTab';
 
 const ProfileTabs = () => {
   return (
@@ -14,6 +15,9 @@ const ProfileTabs = () => {
         <TabsTrigger value="social" className="flex-1">
           Friends
         </TabsTrigger>
+        <TabsTrigger value="settings" className="flex-1">
+          Settings
+        </TabsTrigger>
       </TabsList>
       
       <TabsContent value="achievements" className="mt-4">
@@ -22,6 +26,10 @@ const ProfileTabs = () => {
       
       <TabsContent value="social" className="mt-4">
         <SocialTab />
+      </TabsContent>
+
+      <TabsContent value="settings" className="mt-4">
+        <SettingsTab />
       </TabsContent>
     </Tabs>
   );

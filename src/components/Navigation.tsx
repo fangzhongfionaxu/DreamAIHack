@@ -1,7 +1,6 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Activity, User, Settings } from "lucide-react";
+import { MessageSquare, Activity, User } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -71,17 +70,6 @@ const Navigation = () => {
             )}
           </Button>
           <span className="text-xs text-muted-foreground">Profile</span>
-        </Link>
-
-        <Link to="/settings" className="flex flex-col items-center gap-1">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className={`h-10 w-10 ${location.pathname === '/settings' ? 'bg-brand/10 text-brand-dark' : 'text-brand hover:text-brand-dark hover:bg-brand/10'}`}
-          >
-            <Settings className="h-6 w-6" />
-          </Button>
-          <span className="text-xs text-muted-foreground">Settings</span>
         </Link>
       </div>
     </div>

@@ -7,7 +7,6 @@ import Index from '@/pages/Index';
 import NotFound from '@/pages/NotFound';
 import Activities from '@/pages/Activities';
 import Profile from '@/pages/Profile';
-import Settings from '@/pages/Settings';
 import Referrals from '@/pages/Referrals';
 import OnboardingPage from '@/components/onboarding/OnboardingPage';
 
@@ -37,14 +36,6 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <Profile />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/settings"
-        element={
-          <ProtectedRoute>
-            <Settings />
           </ProtectedRoute>
         }
       />
