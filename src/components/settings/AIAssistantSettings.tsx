@@ -18,9 +18,7 @@ const AIAssistantSettings = () => {
         <div className="flex justify-between items-center">
           <div>
             <p className="font-medium">Adaptive Learning</p>
-            <p className="text-sm text-muted-foreground">
-              Allow AI to adjust its style based on your interactions
-            </p>
+            <p className="text-sm text-muted-foreground">Allow AI to learn and adjust based on your interactions</p>
           </div>
           <Switch defaultChecked />
         </div>
