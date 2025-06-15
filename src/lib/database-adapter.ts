@@ -1,4 +1,5 @@
 
+
 // Database adapter - abstracts database operations
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
@@ -66,7 +67,7 @@ export class DatabaseAdapter {
   ): Promise<TableRow<T>> {
     const { data: result, error } = await supabase
       .from(table)
-      .insert(data)
+      .insert(data as any)
       .select()
       .single();
 
@@ -84,7 +85,7 @@ export class DatabaseAdapter {
   ): Promise<TableRow<T>> {
     const { data: result, error } = await supabase
       .from(table)
-      .update(data)
+      .update(data as any)
       .eq('id', id)
       .select()
       .single();
@@ -107,3 +108,4 @@ export class DatabaseAdapter {
     }
   }
 }
+
