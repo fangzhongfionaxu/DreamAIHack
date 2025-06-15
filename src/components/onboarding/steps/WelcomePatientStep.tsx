@@ -20,7 +20,7 @@ const WelcomePatientStep = () => {
         </div>
         
         <div className="bg-white/60 rounded-2xl p-6 border border-teal-200 shadow-sm">
-          <div className="flex items-center gap-4 justify-center">
+          <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-teal-500 rounded-xl flex items-center justify-center">
               <span className="text-2xl">🌱</span>
             </div>
@@ -32,7 +32,7 @@ const WelcomePatientStep = () => {
         </div>
         
         <div className="bg-white/60 rounded-2xl p-6 border border-pink-200 shadow-sm">
-          <div className="flex items-center gap-4 justify-center">
+          <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-pink-500 rounded-xl flex items-center justify-center">
               <span className="text-2xl">💝</span>
             </div>
