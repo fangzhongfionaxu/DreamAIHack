@@ -4,15 +4,23 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Award } from "lucide-react";
 
+interface LeaderboardUser {
+  id: string;
+  name: string;
+  avatar: string;
+  streak: number;
+  reactions: Record<string, number>;
+}
+
 // Sample leaderboard data, sorted by streak descending
-const initialLeaderboard = [
+const initialLeaderboard: LeaderboardUser[] = [
   { id: "3", name: "Taylor", avatar: "", streak: 24, reactions: { '🎉': 1 } },
   { id: "1", name: "Alex", avatar: "", streak: 14, reactions: {} },
   { id: "2", name: "Jordan", avatar: "", streak: 9, reactions: {} },
 ].sort((a, b) => b.streak - a.streak);
 
 const StreakLeaders = () => {
-  const [leaderboard, setLeaderboard] = useState(initialLeaderboard);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardUser[]>(initialLeaderboard);
 
   const handleAddReaction = (userId: string, emoji: string) => {
     setLeaderboard(prevLeaderboard =>
@@ -45,13 +53,7 @@ const StreakLeaders = () => {
 };
 
 interface LeaderboardItemProps {
-  user: {
-    id: string;
-    name: string;
-    avatar: string;
-    streak: number;
-    reactions: Record<string, number>;
-  };
+  user: LeaderboardUser;
   rank: number;
   onAddReaction: (userId: string, emoji: string) => void;
 }
