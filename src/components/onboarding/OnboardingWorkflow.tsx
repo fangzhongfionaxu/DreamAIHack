@@ -138,6 +138,7 @@ const OnboardingWorkflow = ({ onComplete }: { onComplete: (data: Partial<Onboard
 
   const getButtonText = () => {
     if (currentStep === totalSteps - 1) return 'FINISH';
+    if (data.userType === 'patient' && currentStep === 5) return "LET'S GO"; // WelcomePatientStep
     if (data.userType === 'patient' && currentStep === 6) return "START YOUR JOURNEY"; // Optional Survey
     return 'CONTINUE';
   };
