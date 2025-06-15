@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Bar, BarChart, CartesianGrid, ReferenceLine, XAxis, YAxis } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartConfig } from "@/components/ui/chart";
@@ -44,38 +43,47 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const BraceTimeChart = () => {
+  const totalHours = chartData.reduce((acc, item) => acc + item.hours, 0);
+  const averageHours = (totalHours / chartData.length).toFixed(1);
+
   return (
-    <ChartContainer config={chartConfig} className="min-h-[250px] w-full">
-      <BarChart accessibilityLayer data={chartData} margin={{ top: 20, right: 10, left: -10, bottom: 5 }}>
-        <CartesianGrid vertical={false} />
-        <XAxis
-          dataKey="day"
-          tickLine={false}
-          tickMargin={10}
-          axisLine={false}
-          tickFormatter={(value) => value.slice(0, 3)}
-        />
-        <YAxis
-          dataKey="hours"
-          tickLine={false}
-          axisLine={false}
-          tickMargin={10}
-          domain={[0, 24]}
-          ticks={[0, 6, 12, 18, 24]}
-        />
-        <ChartTooltip
-          cursor={false}
-          content={<ChartTooltipContent indicator="dot" />}
-        />
-        <ReferenceLine
-          y={braceGoal}
-          label={{ value: 'Goal', position: 'insideTopRight', fill: 'hsl(var(--muted-foreground))', fontSize: 12, dy: -5 }}
-          stroke="hsl(var(--border))"
-          strokeDasharray="3 3"
-        />
-        <Bar dataKey="hours" radius={[8, 8, 0, 0]} />
-      </BarChart>
-    </ChartContainer>
+    <React.Fragment>
+      <div className="flex flex-row items-baseline gap-2 mb-4">
+        <p className="text-3xl font-bold tracking-tight">{averageHours}</p>
+        <p className="text-sm text-muted-foreground">average hours/day</p>
+      </div>
+      <ChartContainer config={chartConfig} className="min-h-[250px] w-full">
+        <BarChart accessibilityLayer data={chartData} margin={{ top: 20, right: 10, left: -10, bottom: 5 }}>
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="day"
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+            tickFormatter={(value) => value.slice(0, 3)}
+          />
+          <YAxis
+            dataKey="hours"
+            tickLine={false}
+            axisLine={false}
+            tickMargin={10}
+            domain={[0, 24]}
+            ticks={[0, 6, 12, 18, 24]}
+          />
+          <ChartTooltip
+            cursor={false}
+            content={<ChartTooltipContent indicator="dot" />}
+          />
+          <ReferenceLine
+            y={braceGoal}
+            label={{ value: 'Goal', position: 'insideTopRight', fill: 'hsl(var(--muted-foreground))', fontSize: 12, dy: -5 }}
+            stroke="hsl(var(--border))"
+            strokeDasharray="3 3"
+          />
+          <Bar dataKey="hours" radius={[8, 8, 0, 0]} />
+        </BarChart>
+      </ChartContainer>
+    </React.Fragment>
   );
 };
 
