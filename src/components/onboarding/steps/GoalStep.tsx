@@ -29,13 +29,13 @@ const GoalStep = ({ value, onChange }: GoalStepProps) => {
           value={[value]}
           onValueChange={(newValue) => onChange(newValue[0])}
           min={1}
-          max={23}
+          max={24}
           step={1}
           className="w-full"
         />
         <div className="flex justify-between text-gray-500 px-2">
           <span>1hr</span>
-          <span>23hrs</span>
+          <span>24hrs</span>
         </div>
       </div>
     </div>
