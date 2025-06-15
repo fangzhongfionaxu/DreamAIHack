@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Navigation from "@/components/Navigation";
 import PlantProgress from "@/components/PlantProgress";
+import MotivationalChatBubble from "@/components/plant/MotivationalChatBubble";
 import { useStreak } from "@/contexts/StreakContext";
 import AchievementsTab from "@/components/profile/AchievementsTab";
 
@@ -35,6 +36,11 @@ const Activities = () => {
               <h3 className="text-xl font-semibold text-brand-dark text-center mb-4">
                 Your Growth Journey
               </h3>
+              
+              {/* Chat Bubble positioned directly below the heading and centered */}
+              <div className="flex justify-center mb-4">
+                <MotivationalChatBubble />
+              </div>
               
               <PlantProgress 
                 streak={streak}

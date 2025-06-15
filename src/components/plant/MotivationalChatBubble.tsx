@@ -43,9 +43,9 @@ const MotivationalChatBubble: React.FC<MotivationalChatBubbleProps> = ({ classNa
 
   return (
     <div className={`relative ${className}`}>
-      {/* Message Card positioned to the left of the bubble */}
+      {/* Message Card positioned above the bubble */}
       {isOpen && (
-        <Card className="absolute top-1/2 right-16 transform -translate-y-1/2 w-64 shadow-lg animate-fade-in z-30 bg-white">
+        <Card className="absolute bottom-16 left-1/2 transform -translate-x-1/2 w-64 shadow-lg animate-fade-in z-30 bg-white">
           <CardContent className="p-4 relative">
             <Button
               variant="ghost"
@@ -58,8 +58,8 @@ const MotivationalChatBubble: React.FC<MotivationalChatBubbleProps> = ({ classNa
             <p className="text-sm text-gray-700 pr-6 leading-relaxed">
               {currentMessage}
             </p>
-            {/* Speech bubble tail pointing right */}
-            <div className="absolute top-1/2 left-full transform -translate-y-1/2 w-0 h-0 border-t-8 border-b-8 border-l-8 border-transparent border-l-white"></div>
+            {/* Speech bubble tail pointing down */}
+            <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-white"></div>
           </CardContent>
         </Card>
       )}
