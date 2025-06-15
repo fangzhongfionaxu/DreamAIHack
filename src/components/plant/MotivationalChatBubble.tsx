@@ -43,19 +43,9 @@ const MotivationalChatBubble: React.FC<MotivationalChatBubbleProps> = ({ classNa
 
   return (
     <div className={`relative ${className}`}>
-      {/* Chat Bubble */}
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={handleBubbleClick}
-        className="rounded-full bg-brand hover:bg-brand-dark text-white border-none shadow-lg animate-pulse-soft"
-      >
-        <MessageCircle className="h-5 w-5" />
-      </Button>
-
-      {/* Message Card */}
+      {/* Message Card positioned above the bubble */}
       {isOpen && (
-        <Card className="absolute bottom-12 left-1/2 transform -translate-x-1/2 w-64 shadow-lg animate-fade-in z-10">
+        <Card className="absolute bottom-16 left-1/2 transform -translate-x-1/2 w-64 shadow-lg animate-fade-in z-30 bg-white">
           <CardContent className="p-4 relative">
             <Button
               variant="ghost"
@@ -68,11 +58,21 @@ const MotivationalChatBubble: React.FC<MotivationalChatBubbleProps> = ({ classNa
             <p className="text-sm text-gray-700 pr-6 leading-relaxed">
               {currentMessage}
             </p>
-            {/* Speech bubble tail */}
-            <div className="absolute bottom-[-8px] left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-white"></div>
+            {/* Speech bubble tail pointing down */}
+            <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-white"></div>
           </CardContent>
         </Card>
       )}
+
+      {/* Chat Bubble */}
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={handleBubbleClick}
+        className="rounded-full bg-brand hover:bg-brand-dark text-white border-none shadow-lg animate-pulse-soft"
+      >
+        <MessageCircle className="h-5 w-5" />
+      </Button>
     </div>
   );
 };

@@ -26,11 +26,11 @@ const PlantProgress: React.FC<PlantProgressProps> = ({
 
   return (
     <div className={cn("relative h-64 w-full flex flex-col items-center justify-center", className)}>
+      {/* Chat Bubble positioned above the plant */}
+      <MotivationalChatBubble className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20" />
+      
       <PlantImage growthPercentage={growthPercentage} />
       <StreakCounter streak={streak} maxStreak={maxStreak} />
-      
-      {/* Chat Bubble positioned near the plant */}
-      <MotivationalChatBubble className="absolute top-8 right-8" />
     </div>
   );
 };
