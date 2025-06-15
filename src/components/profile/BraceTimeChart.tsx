@@ -41,21 +41,31 @@ const chartConfig = {
     label: "Below Goal",
     color: "#DCC1BA",
   },
+  goal: {
+    label: "Goal",
+    color: "#3166A3",
+  },
 } satisfies ChartConfig;
 
 const CustomLegend = () => (
   <div className="flex justify-center items-center gap-x-6 mt-4 text-sm">
     {Object.entries(chartConfig)
-      .filter(([key]) => key !== 'hours')
+      .filter(([key, config]) => key !== 'hours' && config.color)
       .map(([key, config]) => {
         if (!config.label || !config.color) return null;
         
+        const isGoal = key === 'goal';
+
         return (
           <div key={key} className="flex items-center gap-1.5">
-            <div
-              className="w-2.5 h-2.5 shrink-0 rounded-full"
-              style={{ backgroundColor: config.color }}
-            />
+            {isGoal ? (
+              <div className="w-3 border-t-2 border-dashed" style={{ borderColor: config.color }} />
+            ) : (
+              <div
+                className="w-2.5 h-2.5 shrink-0 rounded-full"
+                style={{ backgroundColor: config.color }}
+              />
+            )}
             <span className="text-muted-foreground">{config.label}</span>
           </div>
         );
@@ -97,8 +107,7 @@ const BraceTimeChart = () => {
           />
           <ReferenceLine
             y={braceGoal}
-            label={{ value: 'Goal', position: 'insideTopRight', fill: 'hsl(var(--muted-foreground))', fontSize: 12, dy: -5 }}
-            stroke="hsl(var(--border))"
+            stroke="#3166A3"
             strokeDasharray="3 3"
           />
           <Bar dataKey="hours" radius={[8, 8, 0, 0]} maxBarSize={30} />
