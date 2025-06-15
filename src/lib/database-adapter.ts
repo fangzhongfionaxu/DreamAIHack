@@ -5,9 +5,6 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 
 type TableName = keyof Database['public']['Tables'];
-type TableRow<T extends TableName> = Database['public']['Tables'][T]['Row'];
-type TableInsert<T extends TableName> = Database['public']['Tables'][T]['Insert'];
-type TableUpdate<T extends TableName> = Database['public']['Tables'][T]['Update'];
 
 export interface QueryOptions {
   select?: string;
@@ -25,7 +22,7 @@ export class DatabaseAdapter {
   static async query<T extends TableName>(
     table: T, 
     options: QueryOptions = {}
-  ): Promise<TableRow<T>[]> {
+  ): Promise<Database['public']['Tables'][T]['Row'][]> {
     let query = supabase
       .from(table)
       .select(options.select || '*');
@@ -58,16 +55,16 @@ export class DatabaseAdapter {
       throw new Error(`Database query failed: ${error.message}`);
     }
     
-    return data as TableRow<T>[];
+    return data || [];
   }
 
   static async insert<T extends TableName>(
     table: T, 
-    data: TableInsert<T>
-  ): Promise<TableRow<T>> {
+    data: Database['public']['Tables'][T]['Insert']
+  ): Promise<Database['public']['Tables'][T]['Row']> {
     const { data: result, error } = await supabase
       .from(table)
-      .insert(data as any)
+      .insert(data)
       .select()
       .single();
 
@@ -75,17 +72,17 @@ export class DatabaseAdapter {
       throw new Error(`Database insert failed: ${error.message}`);
     }
 
-    return result as TableRow<T>;
+    return result;
   }
 
   static async update<T extends TableName>(
     table: T, 
     id: string, 
-    data: TableUpdate<T>
-  ): Promise<TableRow<T>> {
+    data: Database['public']['Tables'][T]['Update']
+  ): Promise<Database['public']['Tables'][T]['Row']> {
     const { data: result, error } = await supabase
       .from(table)
-      .update(data as any)
+      .update(data)
       .eq('id', id)
       .select()
       .single();
@@ -94,7 +91,7 @@ export class DatabaseAdapter {
       throw new Error(`Database update failed: ${error.message}`);
     }
 
-    return result as TableRow<T>;
+    return result;
   }
 
   static async delete<T extends TableName>(table: T, id: string): Promise<void> {
