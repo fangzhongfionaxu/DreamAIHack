@@ -1,13 +1,10 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { MessageSquare } from "lucide-react";
-
 const AIAssistantSettings = () => {
-  return (
-    <Card>
+  return <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <MessageSquare className="h-5 w-5" />
@@ -20,7 +17,7 @@ const AIAssistantSettings = () => {
       <CardContent className="space-y-4">        
         <div className="flex justify-between items-center">
           <div>
-            <p className="font-medium">Auto-adjust Persona</p>
+            <p className="font-medium">Adaptive interactions</p>
             <p className="text-sm text-muted-foreground">
               Allow AI to adjust its style based on your interactions
             </p>
@@ -38,8 +35,6 @@ const AIAssistantSettings = () => {
           <Switch defaultChecked />
         </div>
       </CardContent>
-    </Card>
-  );
+    </Card>;
 };
-
 export default AIAssistantSettings;
