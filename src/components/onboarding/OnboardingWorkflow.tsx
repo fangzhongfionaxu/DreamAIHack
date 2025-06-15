@@ -1,5 +1,3 @@
-
-```tsx
 import React, { useState, useMemo, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -162,4 +160,3 @@ const OnboardingWorkflow = ({ onComplete }: { onComplete: (data: Partial<Onboard
 };
 
 export default OnboardingWorkflow;
-```
