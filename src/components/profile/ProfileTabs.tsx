@@ -1,25 +1,17 @@
 
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AchievementsTab from './AchievementsTab';
 import SettingsTab from './SettingsTab';
 
 const ProfileTabs = () => {
   return (
-    <Tabs defaultValue="achievements" className="mb-4">
+    <Tabs defaultValue="settings" className="mb-4">
       <TabsList className="w-full">
-        <TabsTrigger value="achievements" className="flex-1">
-          Achievements
-        </TabsTrigger>
         <TabsTrigger value="settings" className="flex-1">
           Settings
         </TabsTrigger>
       </TabsList>
       
-      <TabsContent value="achievements" className="mt-4">
-        <AchievementsTab />
-      </TabsContent>
-
       <TabsContent value="settings" className="mt-4">
         <SettingsTab />
       </TabsContent>
