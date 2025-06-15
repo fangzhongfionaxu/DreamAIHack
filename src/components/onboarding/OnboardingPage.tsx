@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import OnboardingWorkflow, { OnboardingData } from './OnboardingWorkflow';
 import { useToast } from "@/hooks/use-toast";
@@ -20,10 +20,8 @@ const OnboardingPage = () => {
       duration: 3000,
     });
 
-    // Redirect to the main app after a short delay
-    setTimeout(() => {
-      navigate('/');
-    }, 1000);
+    // Redirect to the main app immediately
+    navigate('/');
   };
 
   return <OnboardingWorkflow onComplete={handleOnboardingComplete} />;
