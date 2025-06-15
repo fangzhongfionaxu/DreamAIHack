@@ -76,13 +76,13 @@ export class DatabaseAdapter {
 
   static async update<T extends TableName>(
     table: T, 
-    id: string, 
+    id: any, 
     data: any
   ): Promise<any> {
     const { data: result, error } = await supabase
       .from(table)
       .update(data)
-      .eq('id', id)
+      .eq('id' as any, id)
       .select()
       .single();
 
@@ -93,11 +93,11 @@ export class DatabaseAdapter {
     return result;
   }
 
-  static async delete<T extends TableName>(table: T, id: string): Promise<void> {
+  static async delete<T extends TableName>(table: T, id: any): Promise<void> {
     const { error } = await supabase
       .from(table)
       .delete()
-      .eq('id', id);
+      .eq('id' as any, id);
 
     if (error) {
       throw new Error(`Database delete failed: ${error.message}`);

@@ -3,6 +3,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import PlantImage from './plant/PlantImage';
 import StreakCounter from './plant/StreakCounter';
+import MotivationalChatBubble from './plant/MotivationalChatBubble';
 
 interface PlantProgressProps {
   streak: number;
@@ -27,6 +28,9 @@ const PlantProgress: React.FC<PlantProgressProps> = ({
     <div className={cn("relative h-64 w-full flex flex-col items-center justify-center", className)}>
       <PlantImage growthPercentage={growthPercentage} />
       <StreakCounter streak={streak} maxStreak={maxStreak} />
+      
+      {/* Chat Bubble positioned near the plant */}
+      <MotivationalChatBubble className="absolute top-8 right-8" />
     </div>
   );
 };
