@@ -72,7 +72,7 @@ const StreakLeaders = () => {
             return (
               <div key={user.id} className="w-full flex items-center justify-between p-3 rounded-xl bg-blue-100/50 border border-blue-200 shadow-sm">
                 <div className="flex items-center gap-3">
-                    <div className="w-6 text-center font-medium text-blue-700">{index + 1}</div>
+                    <div className="w-6 text-center">{getRankIcon(index + 1)}</div>
                     <Avatar className="h-10 w-10">
                         <AvatarFallback className="bg-blue-200 text-blue-800 font-semibold">
                             {user.name.charAt(0)}
