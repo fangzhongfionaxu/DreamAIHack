@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Award } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 interface LeaderboardUser {
   id: string;
@@ -43,7 +44,7 @@ const StreakLeaders = () => {
           Streak Leaders
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-2">
+      <CardContent className="p-4 space-y-2">
         {leaderboard.map((user, index) => (
           <LeaderboardItem key={user.id} user={user} rank={index + 1} onAddReaction={handleAddReaction} />
         ))}
@@ -58,6 +59,8 @@ interface LeaderboardItemProps {
   onAddReaction: (userId: string, emoji: string) => void;
 }
 
+const availableReactions = ['👏', '🎉', '💪', '🔥', '⭐', '💯'];
+
 const getRankIcon = (rank: number) => {
   if (rank === 1) return <Award className="h-6 w-6 text-yellow-500" />;
   if (rank === 2) return <Award className="h-6 w-6 text-gray-400" />;
@@ -66,6 +69,13 @@ const getRankIcon = (rank: number) => {
 };
 
 const LeaderboardItem = ({ user, rank, onAddReaction }: LeaderboardItemProps) => {
+  const [popoverOpen, setPopoverOpen] = useState(false);
+
+  const handleReactionClick = (emoji: string) => {
+    onAddReaction(user.id, emoji);
+    setPopoverOpen(false);
+  };
+
   return (
     <div className="flex items-center justify-between p-3 rounded-xl bg-white/70 shadow-sm">
       <div className="flex items-center gap-3">
@@ -80,15 +90,33 @@ const LeaderboardItem = ({ user, rank, onAddReaction }: LeaderboardItemProps) =>
         </div>
       </div>
       <div className="flex items-center gap-2">
-        {Object.entries(user.reactions).length > 0 && 
-            Object.entries(user.reactions).map(([emoji, count]) => (
+        {Object.entries(user.reactions).map(([emoji, count]) => (
             <Button variant="outline" size="sm" key={emoji} className="rounded-full bg-white/50 hover:bg-white/80 px-3 h-8 border-gray-300" onClick={() => onAddReaction(user.id, emoji)}>
                 {emoji} <span className="text-xs ml-1.5 font-semibold">{count}</span>
             </Button>
         ))}
-        <Button variant="outline" size="icon" className="rounded-full bg-white/50 hover:bg-white/80 h-8 w-8 border-gray-300" onClick={() => onAddReaction(user.id, '😊')}>
-          <span>😊</span>
-        </Button>
+        <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+          <PopoverTrigger asChild>
+            <Button variant="outline" size="icon" className="rounded-full bg-white/50 hover:bg-white/80 h-8 w-8 border-gray-300">
+              <span>😊</span>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-2" side="top" align="end">
+            <div className="grid grid-cols-3 gap-1">
+              {availableReactions.map(emoji => (
+                <Button
+                  key={emoji}
+                  variant="ghost"
+                  size="icon"
+                  className="text-xl rounded-full"
+                  onClick={() => handleReactionClick(emoji)}
+                >
+                  {emoji}
+                </Button>
+              ))}
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
     </div>
   );
