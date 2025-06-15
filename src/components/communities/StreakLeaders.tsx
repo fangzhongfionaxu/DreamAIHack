@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Award } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useAuth } from '@/contexts/AuthContext';
+import { useStreak } from '@/contexts/StreakContext';
 
 interface LeaderboardUser {
   id: string;
@@ -23,6 +24,7 @@ const initialLeaderboardData: LeaderboardUser[] = [
 
 const StreakLeaders = () => {
   const { user: currentUser } = useAuth();
+  const { streak: currentUserStreak } = useStreak();
   const [leaderboard, setLeaderboard] = useState<LeaderboardUser[]>(
     [...initialLeaderboardData].sort((a, b) => b.streak - a.streak)
   );
@@ -34,13 +36,13 @@ const StreakLeaders = () => {
           id: currentUser.id,
           name: currentUser.user_metadata?.username || 'You',
           avatar: currentUser.user_metadata?.avatar_url || '',
-          streak: 12, // Mock streak for current user
+          streak: currentUserStreak,
           reactions: {},
         }];
         return newLeaderboard.sort((a, b) => b.streak - a.streak);
       });
     }
-  }, [currentUser, leaderboard]);
+  }, [currentUser, leaderboard, currentUserStreak]);
 
   const handleAddReaction = (userId: string, emoji: string) => {
     setLeaderboard(prevLeaderboard =>
