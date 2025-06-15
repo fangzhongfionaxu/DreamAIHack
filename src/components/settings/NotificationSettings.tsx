@@ -1,12 +1,9 @@
-
 import React from 'react';
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Bell } from "lucide-react";
-
 const NotificationSettings = () => {
-  return (
-    <Card>
+  return <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Bell className="h-5 w-5" />
@@ -29,7 +26,7 @@ const NotificationSettings = () => {
         
         <div className="flex justify-between items-center">
           <div>
-            <p className="font-medium">Treatment Updates</p>
+            <p className="font-medium">Progress Updates</p>
             <p className="text-sm text-muted-foreground">
               Updates about your treatment progress
             </p>
@@ -47,8 +44,6 @@ const NotificationSettings = () => {
           <Switch defaultChecked />
         </div>
       </CardContent>
-    </Card>
-  );
+    </Card>;
 };
-
 export default NotificationSettings;
