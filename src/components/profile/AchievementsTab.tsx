@@ -1,65 +1,46 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import BadgeDisplay, { AchievementBadge } from "@/components/BadgeDisplay";
+import { useStreak } from "@/contexts/StreakContext";
 import { CheckCircle, Calendar, MessageSquare, Heart, Award, Shield } from "lucide-react";
 
 // Sample badge data
-const badges: AchievementBadge[] = [
-  {
-    id: "badge1",
-    name: "First Week",
-    description: "Completed a full week of activities",
-    icon: <CheckCircle />,
-    earned: true
-  },
-  {
-    id: "badge2",
-    name: "Consistent",
-    description: "Maintained a 3-day streak",
-    icon: <Calendar />,
-    earned: true
-  },
-  {
-    id: "badge3",
-    name: "Communicator",
-    description: "Had 5 conversations with the AI assistant",
-    icon: <MessageSquare />,
-    earned: true
-  },
-  {
-    id: "badge4",
-    name: "Health Streak",
-    description: "Completed 10 days of activities",
-    icon: <Heart />,
-    earned: false,
-    progress: 7,
-    maxProgress: 10
-  },
-  {
-    id: "badge5",
-    name: "Expert",
-    description: "Completed 30 days of activities",
-    icon: <Award />,
-    earned: false,
-    progress: 7,
-    maxProgress: 30
-  },
-  {
-    id: "badge6",
-    name: "Protected",
-    description: "Wore your brace for 20 days",
-    icon: <Shield />,
-    earned: false,
-    progress: 5,
-    maxProgress: 20
-  }
+const streakBadgesData = [
+  { name: 'First Milestone', requiredStreak: 1, image: '/assets/badges/badge-0.png', description: "You've started your journey!" },
+  { name: 'Consistency Champion', requiredStreak: 30, image: '/assets/badges/badge-1.png', description: '30 days in a row. Incredible!' },
+  { name: 'Health Master', requiredStreak: 60, image: '/assets/badges/badge-2.png', description: '60 days of commitment!' },
+  { name: 'Streak Pro', requiredStreak: 90, image: '/assets/badges/badge-3.png', description: '90 days! You are a pro!' },
+  { name: 'Streak Legend', requiredStreak: 120, image: '/assets/badges/badge-4.png', description: '120 days! Truly legendary!' },
+  { name: 'Ultimate Habit', requiredStreak: 150, image: '/assets/badges/badge-5.png', description: '150 days! An unbreakable habit!' },
 ];
 
 const AchievementsTab = () => {
+  const { streak } = useStreak();
+
+  const badges: AchievementBadge[] = streakBadgesData.map((badge, index) => {
+    const earned = streak >= badge.requiredStreak;
+    return {
+      id: `streak-badge-${index}`,
+      name: badge.name,
+      description: badge.description,
+      imageUrl: badge.image,
+      earned,
+      progress: streak,
+      maxProgress: badge.requiredStreak,
+    };
+  });
+
   return (
     <>
-      <BadgeDisplay badges={badges} />
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Badge Collection</CardTitle>
+          <p className="text-sm text-muted-foreground">Complete streaks to unlock badges and show your commitment to health!</p>
+        </CardHeader>
+        <CardContent>
+          <BadgeDisplay badges={badges} />
+        </CardContent>
+      </Card>
       
       <Card className="mt-4">
         <CardHeader>

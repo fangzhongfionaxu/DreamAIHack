@@ -1,15 +1,16 @@
 
 import React from 'react';
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { Lock } from 'lucide-react';
 
 export interface AchievementBadge {
   id: string;
   name: string;
   description: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
+  imageUrl?: string;
   earned: boolean;
   progress?: number;
   maxProgress?: number;
@@ -22,53 +23,58 @@ interface BadgeDisplayProps {
 
 const BadgeDisplay: React.FC<BadgeDisplayProps> = ({ badges, className }) => {
   return (
-    <Card className={cn("w-full", className)}>
-      <CardContent className="p-6">
-        <h3 className="text-lg font-semibold mb-4">Achievements</h3>
-        
-        <div className="grid grid-cols-3 gap-4">
-          {badges.map((badge) => (
-            <TooltipProvider key={badge.id}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div 
-                    className={cn(
-                      "aspect-square rounded-full p-4 flex items-center justify-center border-2 transition-all",
-                      badge.earned 
-                        ? "border-brand bg-brand/10 text-brand-dark" 
-                        : "border-muted bg-muted/30 text-muted-foreground opacity-60"
+    <div className={cn("grid grid-cols-3 gap-x-4 gap-y-6 place-items-center", className)}>
+      {badges.map((badge) => {
+        const daysToGo = badge.maxProgress && badge.progress ? badge.maxProgress - badge.progress : 0;
+        const showDaysToGo = !badge.earned && daysToGo > 0;
+
+        return (
+          <TooltipProvider key={badge.id}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex flex-col items-center text-center w-24 cursor-pointer animate-fade-in">
+                  <div className={cn(
+                    "aspect-square w-20 h-20 rounded-full flex items-center justify-center border-2 transition-all relative overflow-hidden",
+                    badge.earned ? "border-yellow-400 bg-yellow-400/10" : "border-muted bg-muted/30"
+                  )}>
+                    {badge.imageUrl && (
+                      <img
+                        src={badge.imageUrl}
+                        alt={badge.name}
+                        className={cn(
+                          "w-full h-full object-cover rounded-full transition-all", 
+                          !badge.earned && "filter grayscale brightness-50"
+                        )}
+                      />
                     )}
-                  >
-                    <div className="flex flex-col items-center">
-                      <div className="text-2xl mb-1">{badge.icon}</div>
-                      {badge.progress !== undefined && badge.maxProgress && (
-                        <div className="w-full h-1 bg-muted rounded-full mt-1">
-                          <div 
-                            className="h-full bg-brand rounded-full"
-                            style={{ width: `${(badge.progress / badge.maxProgress) * 100}%` }}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">
-                  <div className="text-center">
-                    <p className="font-semibold">{badge.name}</p>
-                    <p className="text-xs text-muted-foreground">{badge.description}</p>
-                    {badge.progress !== undefined && badge.maxProgress && (
-                      <Badge className="mt-1 bg-brand text-white">
-                        {badge.progress}/{badge.maxProgress}
-                      </Badge>
+                    {!badge.earned && (
+                      <div className="absolute inset-0 flex items-center justify-center text-white/80">
+                        <Lock size={24} />
+                      </div>
                     )}
                   </div>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+                  <p className="font-semibold text-sm mt-2 truncate w-full">{badge.name}</p>
+                  {showDaysToGo && (
+                    <p className="text-xs text-muted-foreground">{daysToGo} days to go</p>
+                  )}
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="max-w-[200px]">
+                <div className="text-center">
+                  <p className="font-semibold">{badge.name}</p>
+                  <p className="text-xs text-muted-foreground my-1">{badge.description}</p>
+                  {!badge.earned && badge.progress !== undefined && badge.maxProgress && (
+                    <Badge variant="secondary" className="mt-1">
+                      {badge.progress}/{badge.maxProgress} days
+                    </Badge>
+                  )}
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        );
+      })}
+    </div>
   );
 };
 
