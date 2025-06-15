@@ -18,7 +18,7 @@ const ThankYouStep = () => {
           </p>
         </div>
 
-        <div className="bg-white/60 rounded-2xl p-6 border border-teal-200 shadow-sm">
+        <div className="bg-white/60 rounded-2xl p-6 border border-teal-200 shadow-sm text-left">
           <p className="text-gray-700">
             If you know a patient who could benefit from emBrace, please feel free to share our app with them.
           </p>

@@ -83,7 +83,7 @@ const PermissionsStep = ({ value, onChange }: PermissionsStepProps) => {
       <div className="space-y-6 max-w-md mx-auto">
         
         {/* Notification Permission Section */}
-        <div className="bg-white/60 rounded-2xl p-6 border border-teal-200 shadow-sm space-y-3">
+        <div className="bg-white/60 rounded-2xl p-6 border border-teal-200 shadow-sm space-y-3 text-left">
           <h3 className="font-semibold text-gray-800 text-lg">Stay motivated with gentle reminders</h3>
           {notificationPermission !== 'granted' ? (
             <Button variant="outline" className="w-full bg-white hover:bg-gray-50" onClick={handleRequestNotificationPermission} disabled={notificationPermission === 'denied'}>
@@ -91,7 +91,7 @@ const PermissionsStep = ({ value, onChange }: PermissionsStepProps) => {
               {notificationPermission === 'denied' ? 'Notifications Blocked' : 'Enable Notifications'}
             </Button>
           ) : (
-             <p className="text-green-600 font-medium flex items-center justify-center">
+             <p className="text-green-600 font-medium flex items-center justify-start">
                <Check className="mr-2 h-5 w-5"/>
                Notifications Enabled
              </p>
