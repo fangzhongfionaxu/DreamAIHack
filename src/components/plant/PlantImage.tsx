@@ -9,26 +9,18 @@ const PlantImage: React.FC<PlantImageProps> = ({ growthPercentage }) => {
   const [imageError, setImageError] = useState(false);
   
   // Determine which image to show based on growth percentage
-  let imageName = "";
+  let imageName = "plant-0.png";
   
-  if (growthPercentage < 5) {
-    // 0% - Empty pot
-    imageName = "plant-0.png";
-  } else if (growthPercentage < 20) {
-    // 10% - Seedling
-    imageName = "plant-10.png";
-  } else if (growthPercentage < 50) {
-    // 25% - Small sprout with leaves
-    imageName = "plant-25.png";
-  } else if (growthPercentage < 75) {
-    // 50% - Medium plant
-    imageName = "plant-50.png";
-  } else if (growthPercentage < 95) {
-    // 75% - Larger plant with more leaves
-    imageName = "plant-75.png";
-  } else {
-    // 100% - Fully bloomed flower
+  if (growthPercentage >= 100) {
     imageName = "plant-100.png";
+  } else if (growthPercentage >= 75) {
+    imageName = "plant-75.png";
+  } else if (growthPercentage >= 50) {
+    imageName = "plant-50.png";
+  } else if (growthPercentage >= 25) {
+    imageName = "plant-25.png";
+  } else if (growthPercentage >= 10) {
+    imageName = "plant-10.png";
   }
 
   // Assets in the public folder are served from the root path

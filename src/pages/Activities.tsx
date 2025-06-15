@@ -39,7 +39,6 @@ const Activities = () => {
               <PlantProgress 
                 streak={streak}
                 maxStreak={30}
-                forceGrowthPercentage={75} // Force exactly 75% growth
               />
               
               <div className="mt-6 text-center">
