@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Award } from "lucide-react";
 
-const SocialTab = () => {
+const Challenges = () => {
   return (
     <Card>
       <CardHeader>
@@ -23,4 +23,4 @@ const SocialTab = () => {
   );
 };
 
-export default SocialTab;
+export default Challenges;

@@ -13,7 +13,7 @@ const friends = [
   { id: "3", name: "Taylor", avatar: "", streak: 24 }
 ];
 
-const CommunitiesTab = () => {
+const FriendsList = () => {
   return (
     <Card>
       <CardHeader>
@@ -66,4 +66,4 @@ const FriendItem = ({ friend }: FriendItemProps) => {
   );
 };
 
-export default CommunitiesTab;
+export default FriendsList;

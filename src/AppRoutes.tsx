@@ -9,6 +9,7 @@ import Activities from '@/pages/Activities';
 import Profile from '@/pages/Profile';
 import Referrals from '@/pages/Referrals';
 import OnboardingPage from '@/components/onboarding/OnboardingPage';
+import Communities from '@/pages/Communities';
 
 const AppRoutes = () => {
   return (
@@ -36,6 +37,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/communities"
+        element={
+          <ProtectedRoute>
+            <Communities />
           </ProtectedRoute>
         }
       />
