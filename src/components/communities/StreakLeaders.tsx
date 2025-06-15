@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Award } from "lucide-react";
@@ -57,9 +58,6 @@ const StreakLeaders = () => {
     );
   };
   
-  const currentUserData = currentUser ? leaderboard.find(u => u.id === currentUser.id) : undefined;
-  const currentUserRank = currentUserData ? leaderboard.indexOf(currentUserData) + 1 : undefined;
-
   return (
     <Card className="bg-white/80 backdrop-blur-sm border-none shadow-lg">
       <CardHeader>
@@ -70,29 +68,28 @@ const StreakLeaders = () => {
       </CardHeader>
       <CardContent className="p-4 space-y-2">
         {leaderboard.map((user, index) => {
-          if (user.id === currentUser?.id) return null; // Don't show current user in main list
+          if (user.id === currentUser?.id) {
+            return (
+              <div key={user.id} className="w-full flex items-center justify-between p-3 rounded-xl bg-blue-100/50 border border-blue-200 shadow-sm">
+                <div className="flex items-center gap-3">
+                    <div className="w-6 text-center font-medium text-blue-700">{index + 1}</div>
+                    <Avatar className="h-10 w-10">
+                        <AvatarFallback className="bg-blue-200 text-blue-800 font-semibold">
+                            {user.name.charAt(0)}
+                        </AvatarFallback>
+                        <AvatarImage src={user.avatar} />
+                    </Avatar>
+                    <div>
+                        <p className="font-semibold text-blue-900">{user.name === 'You' ? 'You' : `${user.name} (You)`}</p>
+                        <p className="text-sm text-blue-700/80">{user.streak} day streak</p>
+                    </div>
+                </div>
+              </div>
+            );
+          }
           return <LeaderboardItem key={user.id} user={user} rank={index + 1} onAddReaction={handleAddReaction} />
         })}
       </CardContent>
-      {currentUserData && currentUserRank && (
-        <CardFooter className="p-4 pt-0">
-          <div className="w-full flex items-center justify-between p-3 rounded-xl bg-blue-100/50 border border-blue-200 shadow-sm">
-            <div className="flex items-center gap-3">
-                <div className="w-6 text-center font-medium text-blue-700">{currentUserRank}</div>
-                <Avatar className="h-10 w-10">
-                    <AvatarFallback className="bg-blue-200 text-blue-800 font-semibold">
-                        {currentUserData.name.charAt(0)}
-                    </AvatarFallback>
-                    <AvatarImage src={currentUserData.avatar} />
-                </Avatar>
-                <div>
-                    <p className="font-semibold text-blue-900">{currentUserData.name === 'You' ? 'You' : `${currentUserData.name} (You)`}</p>
-                    <p className="text-sm text-blue-700/80">{currentUserData.streak} day streak</p>
-                </div>
-            </div>
-          </div>
-        </CardFooter>
-      )}
     </Card>
   );
 };
