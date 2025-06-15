@@ -27,9 +27,7 @@ const NotificationSettings = () => {
         <div className="flex justify-between items-center">
           <div>
             <p className="font-medium">Progress Updates</p>
-            <p className="text-sm text-muted-foreground">
-              Updates about your treatment progress
-            </p>
+            <p className="text-sm text-muted-foreground">Updates about your activities and progress</p>
           </div>
           <Switch defaultChecked />
         </div>
