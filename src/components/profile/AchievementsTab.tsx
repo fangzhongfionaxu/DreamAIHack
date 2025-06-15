@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import BadgeDisplay, { AchievementBadge } from "@/components/BadgeDisplay";
@@ -19,11 +20,13 @@ const AchievementsTab = () => {
 
   const badges: AchievementBadge[] = streakBadgesData.map((badge, index) => {
     const earned = streak >= badge.requiredStreak;
+    // Add a cache-busting query to ensure the latest image is loaded
+    const cacheBuster = `v=${new Date().getTime()}`; 
     return {
       id: `streak-badge-${index}`,
       name: badge.name,
       description: badge.description,
-      imageUrl: badge.image,
+      imageUrl: `${badge.image}?${cacheBuster}`,
       earned,
       progress: streak,
       maxProgress: badge.requiredStreak,
