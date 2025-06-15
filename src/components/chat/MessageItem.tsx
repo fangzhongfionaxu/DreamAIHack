@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -7,11 +6,12 @@ import { User } from '@supabase/supabase-js';
 interface MessageItemProps {
   role: 'user' | 'assistant';
   content: string;
+  imageUrl?: string;
   timestamp: Date;
   user: User | null;
 }
 
-const MessageItem = ({ role, content, timestamp, user }: MessageItemProps) => {
+const MessageItem = ({ role, content, imageUrl, timestamp, user }: MessageItemProps) => {
   const getUserInitials = () => {
     if (!user) return "?";
     
@@ -48,7 +48,10 @@ const MessageItem = ({ role, content, timestamp, user }: MessageItemProps) => {
         }`}
       >
         <div className="p-3">
-          <p>{content}</p>
+          {imageUrl && (
+            <img src={imageUrl} alt="User upload" className="rounded-md mb-2 max-w-full h-auto" />
+          )}
+          {content && <p>{content}</p>}
           <p className="text-xs text-muted-foreground mt-1">
             {timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </p>

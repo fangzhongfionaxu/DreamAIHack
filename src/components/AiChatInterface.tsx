@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useToast } from "@/components/ui/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -10,6 +9,7 @@ import { generateResponse } from '@/utils/chatUtils';
 interface Message {
   role: 'user' | 'assistant';
   content: string;
+  imageUrl?: string;
   timestamp: Date;
 }
 
@@ -19,6 +19,7 @@ const AiChatInterface = () => {
     {
       role: 'assistant',
       content: "Hi there! I'm your health buddy. How is your day?",
+      imageUrl: undefined,
       timestamp: new Date()
     }
   ]);
@@ -79,6 +80,29 @@ const AiChatInterface = () => {
     }
   };
 
+  const handleImageSend = async (imageDataUrl: string) => {
+    const userMessage: Message = {
+      role: 'user',
+      content: '',
+      imageUrl: imageDataUrl,
+      timestamp: new Date()
+    };
+    
+    setMessages(prevMessages => [...prevMessages, userMessage]);
+    setIsLoading(true);
+
+    // Simulate AI response for image
+    setTimeout(() => {
+      const aiMessage: Message = {
+        role: 'assistant',
+        content: "Thanks for sharing an image! I'm still learning to process them, but this is a great start.",
+        timestamp: new Date()
+      };
+      setMessages(prevMessages => [...prevMessages, aiMessage]);
+      setIsLoading(false);
+    }, 1500);
+  };
+
   return (
     <div className="flex flex-col h-full"> 
       <div className="flex flex-col flex-1 bg-gradient-to-br from-pastel-pink to-pastel-yellow pb-16">
@@ -96,6 +120,7 @@ const AiChatInterface = () => {
                 key={index}
                 role={message.role}
                 content={message.content}
+                imageUrl={message.imageUrl}
                 timestamp={message.timestamp}
                 user={user}
               />
@@ -110,6 +135,7 @@ const AiChatInterface = () => {
             setInput={setInput}
             handleSend={handleSend}
             isLoading={isLoading}
+            onImageSend={handleImageSend}
           />
         </div>
       </div>
