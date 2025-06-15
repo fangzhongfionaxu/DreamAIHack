@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Award } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface LeaderboardUser {
   id: string;
@@ -13,15 +14,33 @@ interface LeaderboardUser {
   reactions: Record<string, number>;
 }
 
-// Sample leaderboard data, sorted by streak descending
-const initialLeaderboard: LeaderboardUser[] = [
+// Sample leaderboard data
+const initialLeaderboardData: LeaderboardUser[] = [
   { id: "3", name: "Taylor", avatar: "", streak: 24, reactions: { '🎉': 1 } },
   { id: "1", name: "Alex", avatar: "", streak: 14, reactions: {} },
   { id: "2", name: "Jordan", avatar: "", streak: 9, reactions: {} },
-].sort((a, b) => b.streak - a.streak);
+];
 
 const StreakLeaders = () => {
-  const [leaderboard, setLeaderboard] = useState<LeaderboardUser[]>(initialLeaderboard);
+  const { user: currentUser } = useAuth();
+  const [leaderboard, setLeaderboard] = useState<LeaderboardUser[]>(
+    [...initialLeaderboardData].sort((a, b) => b.streak - a.streak)
+  );
+
+  useEffect(() => {
+    if (currentUser && !leaderboard.some(u => u.id === currentUser.id)) {
+      setLeaderboard(prevLeaderboard => {
+        const newLeaderboard = [...prevLeaderboard, {
+          id: currentUser.id,
+          name: currentUser.user_metadata?.username || 'You',
+          avatar: currentUser.user_metadata?.avatar_url || '',
+          streak: 12, // Mock streak for current user
+          reactions: {},
+        }];
+        return newLeaderboard.sort((a, b) => b.streak - a.streak);
+      });
+    }
+  }, [currentUser, leaderboard]);
 
   const handleAddReaction = (userId: string, emoji: string) => {
     setLeaderboard(prevLeaderboard =>
@@ -35,6 +54,9 @@ const StreakLeaders = () => {
       })
     );
   };
+  
+  const currentUserData = currentUser ? leaderboard.find(u => u.id === currentUser.id) : undefined;
+  const currentUserRank = currentUserData ? leaderboard.indexOf(currentUserData) + 1 : undefined;
 
   return (
     <Card className="bg-white/80 backdrop-blur-sm border-none shadow-lg">
@@ -45,10 +67,30 @@ const StreakLeaders = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="p-4 space-y-2">
-        {leaderboard.map((user, index) => (
-          <LeaderboardItem key={user.id} user={user} rank={index + 1} onAddReaction={handleAddReaction} />
-        ))}
+        {leaderboard.map((user, index) => {
+          if (user.id === currentUser?.id) return null; // Don't show current user in main list
+          return <LeaderboardItem key={user.id} user={user} rank={index + 1} onAddReaction={handleAddReaction} />
+        })}
       </CardContent>
+      {currentUserData && currentUserRank && (
+        <CardFooter className="p-4 pt-0">
+          <div className="w-full flex items-center justify-between p-3 rounded-xl bg-blue-100/50 border border-blue-200 shadow-sm">
+            <div className="flex items-center gap-3">
+                <div className="w-6 text-center font-medium text-blue-700">{currentUserRank}</div>
+                <Avatar className="h-10 w-10">
+                    <AvatarFallback className="bg-blue-200 text-blue-800 font-semibold">
+                        {currentUserData.name.charAt(0)}
+                    </AvatarFallback>
+                    <AvatarImage src={currentUserData.avatar} />
+                </Avatar>
+                <div>
+                    <p className="font-semibold text-blue-900">{currentUserData.name === 'You' ? 'You' : `${currentUserData.name} (You)`}</p>
+                    <p className="text-sm text-blue-700/80">{currentUserData.streak} day streak</p>
+                </div>
+            </div>
+          </div>
+        </CardFooter>
+      )}
     </Card>
   );
 };
