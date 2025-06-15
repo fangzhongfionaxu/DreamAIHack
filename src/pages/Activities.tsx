@@ -17,10 +17,10 @@ const Activities = () => {
         <h1 className="text-2xl font-semibold text-brand-dark">Activities</h1>
       </div>
       
-      <Tabs defaultValue="today" className="flex-1">
+      <Tabs defaultValue="streak" className="flex-1">
         <div className="px-4 py-2 border-b sticky top-0 bg-background z-10">
           <TabsList className="w-full">
-            <TabsTrigger value="today" className="flex-1">Today</TabsTrigger>
+            <TabsTrigger value="today" className="flex-1">Achievements</TabsTrigger>
             <TabsTrigger value="streak" className="flex-1">My Streak</TabsTrigger>
           </TabsList>
         </div>
