@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -47,9 +46,8 @@ const MessageInput = ({ input, setInput, handleSend, isLoading, onImageSend }: M
         
         <Button 
           onClick={() => setShowCamera(true)}
-          className="absolute bottom-2 right-12 rounded-full h-7 w-7 p-0 hover-scale transition-transform"
+          className="absolute bottom-2 right-12 rounded-full h-7 w-7 p-0 transition-transform bg-gradient-to-br from-pastel-pink to-pastel-yellow text-brand-dark animate-glow hover:scale-110"
           size="icon"
-          variant="ghost"
           disabled={isLoading}
           aria-label="Open camera"
         >

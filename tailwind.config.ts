@@ -95,14 +95,23 @@ export default {
 				'fade-in': {
 					'0%': { opacity: '0' },
 					'100%': { opacity: '1' }
-				}
+				},
+        'glow': {
+          '0%, 100%': {
+            'box-shadow': '0 0 8px hsl(var(--primary) / 0.4)'
+          },
+          '50%': {
+            'box-shadow': '0 0 16px hsl(var(--primary) / 0.6)'
+          }
+        }
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'pulse-soft': 'pulse-soft 3s infinite ease-in-out',
 				'grow': 'grow 0.3s ease-out',
-				'fade-in': 'fade-in 0.5s ease-out'
+				'fade-in': 'fade-in 0.5s ease-out',
+        'glow': 'glow 3s ease-in-out infinite'
 			}
 		}
 	},
