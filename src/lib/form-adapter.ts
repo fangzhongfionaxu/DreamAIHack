@@ -28,7 +28,7 @@ export interface FieldProps<T extends FieldValues> {
 }
 
 export function Field<T extends FieldValues>({ name, control, render }: FieldProps<T>) {
-  return React.createElement(Controller, {
+  return React.createElement(Controller<T>, {
     name,
     control,
     render: ({ field, fieldState }) => render({ field, fieldState })

@@ -1,7 +1,12 @@
 
 // Database adapter - abstracts database operations
 import { supabase } from "@/integrations/supabase/client";
-import type { PostgrestError } from "@supabase/supabase-js";
+import type { Database } from "@/integrations/supabase/types";
+
+type TableName = keyof Database['public']['Tables'];
+type TableRow<T extends TableName> = Database['public']['Tables'][T]['Row'];
+type TableInsert<T extends TableName> = Database['public']['Tables'][T]['Insert'];
+type TableUpdate<T extends TableName> = Database['public']['Tables'][T]['Update'];
 
 export interface QueryOptions {
   select?: string;
@@ -16,10 +21,10 @@ export interface QueryOptions {
 }
 
 export class DatabaseAdapter {
-  static async query<T = any>(
-    table: string, 
+  static async query<T extends TableName>(
+    table: T, 
     options: QueryOptions = {}
-  ): Promise<T[]> {
+  ): Promise<TableRow<T>[]> {
     let query = supabase
       .from(table)
       .select(options.select || '*');
@@ -27,7 +32,7 @@ export class DatabaseAdapter {
     // Apply filters
     if (options.filters) {
       options.filters.forEach(filter => {
-        query = query[filter.operator](filter.column, filter.value);
+        query = (query as any)[filter.operator](filter.column, filter.value);
       });
     }
 
@@ -52,10 +57,13 @@ export class DatabaseAdapter {
       throw new Error(`Database query failed: ${error.message}`);
     }
     
-    return data as T[];
+    return data as TableRow<T>[];
   }
 
-  static async insert<T = any>(table: string, data: Partial<T>): Promise<T> {
+  static async insert<T extends TableName>(
+    table: T, 
+    data: TableInsert<T>
+  ): Promise<TableRow<T>> {
     const { data: result, error } = await supabase
       .from(table)
       .insert(data)
@@ -66,14 +74,14 @@ export class DatabaseAdapter {
       throw new Error(`Database insert failed: ${error.message}`);
     }
 
-    return result as T;
+    return result as TableRow<T>;
   }
 
-  static async update<T = any>(
-    table: string, 
+  static async update<T extends TableName>(
+    table: T, 
     id: string, 
-    data: Partial<T>
-  ): Promise<T> {
+    data: TableUpdate<T>
+  ): Promise<TableRow<T>> {
     const { data: result, error } = await supabase
       .from(table)
       .update(data)
@@ -85,10 +93,10 @@ export class DatabaseAdapter {
       throw new Error(`Database update failed: ${error.message}`);
     }
 
-    return result as T;
+    return result as TableRow<T>;
   }
 
-  static async delete(table: string, id: string): Promise<void> {
+  static async delete<T extends TableName>(table: T, id: string): Promise<void> {
     const { error } = await supabase
       .from(table)
       .delete()

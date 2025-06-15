@@ -37,7 +37,7 @@ export class AuthAdapter {
     });
 
     if (error) throw new Error(`Sign in failed: ${error.message}`);
-    return this.transformSession(data);
+    return this.transformSession(data.session!);
   }
 
   static async signUp({ email, password, username, full_name }: SignUpCredentials) {
