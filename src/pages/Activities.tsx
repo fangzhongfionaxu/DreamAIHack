@@ -21,7 +21,7 @@ const Activities = () => {
         <div className="px-4 py-2 border-b sticky top-0 bg-background z-10">
           <TabsList className="w-full">
             <TabsTrigger value="today" className="flex-1">Achievements</TabsTrigger>
-            <TabsTrigger value="streak" className="flex-1">My Streak</TabsTrigger>
+            <TabsTrigger value="streak" className="flex-1">My Progress</TabsTrigger>
           </TabsList>
         </div>
         
