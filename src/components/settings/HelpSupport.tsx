@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { HelpCircle } from "lucide-react";
 
 const HelpSupport = () => {
@@ -12,6 +12,9 @@ const HelpSupport = () => {
           <HelpCircle className="h-5 w-5" />
           Help & Support
         </CardTitle>
+        <CardDescription>
+          Pro tip: Ask your AI Assistant any questions about the app!
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
         <Button variant="link" className="w-full justify-start p-0 h-auto text-left">

@@ -10,9 +10,6 @@ const Profile = () => {
     <div className="flex flex-col min-h-screen pb-20">
       <div className="p-4 border-b bg-white">
         <h1 className="text-2xl font-semibold text-brand-dark">Profile</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Pro tip: Ask your AI Assistant any questions about the app!
-        </p>
       </div>
       
       <div className="p-4 flex-1 bg-gradient-to-br from-pastel-pink to-pastel-yellow">
