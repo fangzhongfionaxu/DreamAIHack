@@ -1,10 +1,9 @@
-
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Bell, UserCog, LogOut, PenSquare } from "lucide-react";
+import { Bell, UserCog, LogOut, PenSquare, Upload, Camera } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useStreak } from "@/contexts/StreakContext";
@@ -21,6 +20,8 @@ const ProfileHeader = () => {
   const [username, setUsername] = useState(user?.user_metadata?.username || '');
   const [avatarUrl, setAvatarUrl] = useState(user?.user_metadata?.avatar_url || '');
   const [isLoading, setIsLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const getUserInitials = () => {
     if (!user) return "?";
@@ -50,6 +51,69 @@ const ProfileHeader = () => {
         description: "Please try again",
         variant: "destructive",
       });
+    }
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !user) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid file type",
+        description: "Please select an image file",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please select an image smaller than 5MB",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      // Create a unique filename
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}/avatar.${fileExt}`;
+
+      // Upload the file to Supabase Storage
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(fileName, file, {
+          upsert: true // This will overwrite existing files
+        });
+
+      if (uploadError) throw uploadError;
+
+      // Get the public URL for the uploaded file
+      const { data } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(fileName);
+
+      // Update the avatar URL in the component state
+      setAvatarUrl(data.publicUrl);
+
+      toast({
+        title: "Avatar uploaded successfully",
+        description: "Your profile picture has been updated",
+      });
+
+    } catch (error: any) {
+      toast({
+        title: "Error uploading avatar",
+        description: error.message || "Please try again",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -167,6 +231,36 @@ const ProfileHeader = () => {
                   <AvatarFallback className="bg-teal-500 text-white text-2xl">{getUserInitials()}</AvatarFallback>
                 )}
               </Avatar>
+              
+              <div className="flex gap-2 mt-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploading}
+                  className="flex items-center gap-2"
+                >
+                  {isUploading ? (
+                    <>
+                      <Upload className="h-4 w-4 animate-spin" />
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <Camera className="h-4 w-4" />
+                      Upload Photo
+                    </>
+                  )}
+                </Button>
+              </div>
+              
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileUpload}
+                className="hidden"
+              />
             </div>
             
             <div className="grid gap-2">
@@ -179,7 +273,7 @@ const ProfileHeader = () => {
             </div>
             
             <div className="grid gap-2">
-              <Label htmlFor="avatarUrl">Avatar URL</Label>
+              <Label htmlFor="avatarUrl">Avatar URL (Optional)</Label>
               <Input 
                 id="avatarUrl" 
                 value={avatarUrl} 
@@ -187,7 +281,7 @@ const ProfileHeader = () => {
                 placeholder="https://example.com/avatar.png"
               />
               <p className="text-xs text-muted-foreground mt-1">
-                Enter a URL to an image online or leave blank for default
+                You can upload a photo above or enter a URL to an image online
               </p>
             </div>
           </div>
