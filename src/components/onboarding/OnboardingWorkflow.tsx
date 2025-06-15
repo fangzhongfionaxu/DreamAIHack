@@ -1,4 +1,6 @@
-import React, { useState, useMemo } from 'react';
+
+```tsx
+import React, { useState, useMemo, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft } from "lucide-react";
@@ -34,7 +36,7 @@ export interface OnboardingData {
 
 const OnboardingWorkflow = ({ onComplete }: { onComplete: (data: Partial<OnboardingData>) => void }) => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [data, setData] = useState<Partial<OnboardingData>>({
+  const [data, setData] = useState<OnboardingData>({
     userType: '',
     motivations: [],
     curveDegree: '',
@@ -51,23 +53,27 @@ const OnboardingWorkflow = ({ onComplete }: { onComplete: (data: Partial<Onboard
 
   const { toast } = useToast();
 
-  const updateData = (field: keyof OnboardingData, value: any) => {
+  const updateData = useCallback((field: keyof OnboardingData, value: any) => {
     setData(prev => ({ ...prev, [field]: value }));
-  };
+  }, []);
+
+  const handleComplete = useCallback(() => {
+    onComplete(data);
+  }, [onComplete, data]);
 
   const patientSteps = useMemo(() => [
-    { component: MotivationStep, props: { value: data.motivations, onChange: (value: string[]) => updateData('motivations', value) } },
-    { component: CurrentProgressStep, props: { data: { curveDegree: data.curveDegree, currentBracingHours: data.currentBracingHours }, onChange: (field: 'curveDegree' | 'currentBracingHours', value: string) => updateData(field, value) } },
-    { component: GoalStep, props: { value: data.bracingGoal, onChange: (value: number) => updateData('bracingGoal', value) } },
-    { component: PermissionsStep, props: { value: data.consentsToTerms, onChange: (value: boolean) => updateData('consentsToTerms', value) } },
-    { component: WelcomePatientStep, props: {} },
-    { component: OptionalSurveyStep, props: { data, onChange: updateData, onSkip: () => handleComplete() } },
-  ], [data]);
+    <MotivationStep value={data.motivations} onChange={(value) => updateData('motivations', value)} />,
+    <CurrentProgressStep data={{ curveDegree: data.curveDegree, currentBracingHours: data.currentBracingHours }} onChange={(field, value) => updateData(field, value)} />,
+    <GoalStep value={data.bracingGoal} onChange={(value) => updateData('bracingGoal', value)} />,
+    <PermissionsStep value={data.consentsToTerms} onChange={(value) => updateData('consentsToTerms', value)} />,
+    <WelcomePatientStep />,
+    <OptionalSurveyStep data={data} onChange={updateData} onSkip={handleComplete} />,
+  ], [data, updateData, handleComplete]);
 
   const otherSteps = useMemo(() => [
-    { component: OtherUserSurveyStep, props: { data, onChange: updateData } },
-    { component: ThankYouStep, props: {} },
-  ], [data]);
+    <OtherUserSurveyStep data={data} onChange={updateData} />,
+    <ThankYouStep />,
+  ], [data, updateData]);
 
   const steps = data.userType === 'patient' ? patientSteps : data.userType === 'other' ? otherSteps : [];
   const totalSteps = (data.userType ? steps.length : 0) + 1;
@@ -87,10 +93,6 @@ const OnboardingWorkflow = ({ onComplete }: { onComplete: (data: Partial<Onboard
     }
   };
 
-  const handleComplete = () => {
-    onComplete(data);
-  };
-
   const handleContinue = () => {
     nextStep();
   };
@@ -107,9 +109,8 @@ const OnboardingWorkflow = ({ onComplete }: { onComplete: (data: Partial<Onboard
     }
 
     const stepIndex = currentStep - 1;
-    if (stepIndex < steps.length) {
-      const StepComponent = steps[stepIndex].component;
-      return <StepComponent {...steps[stepIndex].props} />;
+    if (stepIndex >= 0 && stepIndex < steps.length) {
+      return steps[stepIndex];
     }
 
     return null;
@@ -161,3 +162,4 @@ const OnboardingWorkflow = ({ onComplete }: { onComplete: (data: Partial<Onboard
 };
 
 export default OnboardingWorkflow;
+```
