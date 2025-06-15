@@ -28,9 +28,7 @@ const AIAssistantSettings = () => {
         <div className="flex justify-between items-center">
           <div>
             <p className="font-medium">Remember me</p>
-            <p className="text-sm text-muted-foreground">
-              AI will proactively remind you about activities
-            </p>
+            <p className="text-sm text-muted-foreground">Allow AI to remember you and your interactions</p>
           </div>
           <Switch defaultChecked />
         </div>
