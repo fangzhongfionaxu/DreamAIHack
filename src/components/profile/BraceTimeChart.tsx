@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Bar, BarChart, CartesianGrid, ReferenceLine, XAxis, YAxis } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartConfig } from "@/components/ui/chart";
@@ -49,7 +50,7 @@ const chartConfig = {
 const CustomLegend = () => (
   <div className="flex justify-center items-center gap-x-6 mt-4 text-sm">
     {Object.entries(chartConfig)
-      .filter((entry): entry is [string, { label: string; color: string }] => !!entry[1].color)
+      .filter((entry): entry is [string, { label: string; color: string }] => 'color' in entry[1])
       .map(([key, config]) => {
         const isGoal = key === 'goal';
 
