@@ -8,9 +8,10 @@ interface MotivationStepProps {
 
 const MotivationStep = ({ value, onChange }: MotivationStepProps) => {
   const interestOptions = [
-    { value: 'improving-condition', label: 'Improving my condition', icon: '📈' },
+    { value: 'improving-health', label: 'Improving my health', icon: '❤️' },
+    { value: 'challenging-myself', label: 'Challenging myself', icon: '🎯' },
     { value: 'motivational-tool', label: 'Having a motivational tool', icon: '💪' },
-    { value: 'connect-others', label: 'Getting connected with others', icon: '🤝' }
+    { value: 'connect-others', label: 'Connecting with others', icon: '🤝' }
   ];
 
   const toggleInterest = (interest: string) => {
