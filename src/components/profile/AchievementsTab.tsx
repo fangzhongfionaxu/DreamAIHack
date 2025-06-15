@@ -6,12 +6,12 @@ import { CheckCircle, Calendar, MessageSquare, Heart, Award, Shield } from "luci
 
 // Sample badge data
 const streakBadgesData = [
-  { name: 'First Milestone', requiredStreak: 1, image: '/assets/badges/badge-0.png', description: "You've started your journey!" },
-  { name: 'Consistency Champion', requiredStreak: 30, image: '/assets/badges/badge-1.png', description: '30 days in a row. Incredible!' },
-  { name: 'Health Master', requiredStreak: 60, image: '/assets/badges/badge-2.png', description: '60 days of commitment!' },
-  { name: 'Streak Pro', requiredStreak: 90, image: '/assets/badges/badge-3.png', description: '90 days! You are a pro!' },
-  { name: 'Streak Legend', requiredStreak: 120, image: '/assets/badges/badge-4.png', description: '120 days! Truly legendary!' },
-  { name: 'Ultimate Habit', requiredStreak: 150, image: '/assets/badges/badge-5.png', description: '150 days! An unbreakable habit!' },
+  { name: 'First Milestone', requiredStreak: 1, image: '/lovable-uploads/1898e3b9-8830-4525-9ec2-4d31cd5b47d1.png', description: "You've started your journey!" },
+  { name: 'Consistency Champion', requiredStreak: 30, image: '/lovable-uploads/35033a9b-7096-4b9f-9e31-9b4a3955b306.png', description: '30 days in a row. Incredible!' },
+  { name: 'Health Master', requiredStreak: 60, image: '/lovable-uploads/6a00a18f-9fce-4161-a12b-61fd2e8e5319.png', description: '60 days of commitment!' },
+  { name: 'Streak Pro', requiredStreak: 90, image: '/lovable-uploads/6ea3382b-37a4-445a-89e7-b2444fb75c5f.png', description: '90 days! You are a pro!' },
+  { name: 'Streak Legend', requiredStreak: 120, image: '/lovable-uploads/7a4ad5b7-6fc8-42b2-a3a8-81c24e18d97f.png', description: '120 days! Truly legendary!' },
+  { name: 'Ultimate Habit', requiredStreak: 150, image: '/lovable-uploads/8cd1c5fd-285c-490d-aeaf-96665efee047.png', description: '150 days! An unbreakable habit!' },
 ];
 
 const AchievementsTab = () => {
