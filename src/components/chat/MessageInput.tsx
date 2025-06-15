@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Paperclip, ArrowUp, Camera } from "lucide-react";
+import { ArrowUp, Camera } from "lucide-react";
 import CameraView from './CameraView';
 
 interface MessageInputProps {
@@ -24,13 +24,6 @@ const MessageInput = ({ input, setInput, handleSend, isLoading, onImageSend }: M
   return (
     <>
       <div className="flex gap-2 items-end relative rounded-xl bg-card border shadow-sm p-2">
-        <Button variant="ghost" size="icon" className="rounded-full h-7 w-7 p-0 absolute bottom-3 left-3">
-          <Plus className="h-4 w-4" />
-        </Button>
-        <Button variant="ghost" size="icon" className="rounded-full h-7 w-7 p-0 absolute bottom-3 left-12">
-          <Paperclip className="h-4 w-4" />
-        </Button>
-        
         <Textarea
           placeholder="Type here..."
           value={input}
@@ -41,7 +34,7 @@ const MessageInput = ({ input, setInput, handleSend, isLoading, onImageSend }: M
               handleSend();
             }
           }}
-          className="pl-20 pr-20 resize-none min-h-[40px] max-h-[200px] border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"
+          className="pl-4 pr-20 resize-none min-h-[40px] max-h-[200px] border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"
           rows={1}
         />
         
