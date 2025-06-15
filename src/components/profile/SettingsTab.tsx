@@ -2,7 +2,6 @@
 import React from 'react';
 import ReferralSettings from "@/components/settings/ReferralSettings";
 import NotificationSettings from "@/components/settings/NotificationSettings";
-import TreatmentSettings from "@/components/settings/TreatmentSettings";
 import AIAssistantSettings from "@/components/settings/AIAssistantSettings";
 import PrivacySettings from "@/components/settings/PrivacySettings";
 import HelpSupport from "@/components/settings/HelpSupport";
@@ -14,7 +13,6 @@ const SettingsTab = () => {
       <ReferralSettings />
       <FeedbackSettings />
       <NotificationSettings />
-      <TreatmentSettings />
       <AIAssistantSettings />
       <PrivacySettings />
       <HelpSupport />
