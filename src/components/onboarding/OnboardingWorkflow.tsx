@@ -1,52 +1,83 @@
-
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft } from "lucide-react";
-import CurveStep from "./steps/CurveStep";
-import BracingGoalStep from "./steps/BracingGoalStep";
-import DiscoveryStep from "./steps/DiscoveryStep";
-import InterestsStep from "./steps/InterestsStep";
-import GenderStep from "./steps/GenderStep";
-import AgeStep from "./steps/AgeStep";
-import ConsentStep from "./steps/ConsentStep";
-import WelcomeStep from "./steps/WelcomeStep";
-import CelebrationStep from "./steps/CelebrationStep";
 import { useToast } from "@/hooks/use-toast";
 
+import IdentityStep from "./steps/IdentityStep";
+import MotivationStep from "./steps/MotivationStep";
+import CurrentProgressStep from "./steps/CurrentProgressStep";
+import GoalStep from "./steps/GoalStep";
+import PermissionsStep from "./steps/PermissionsStep";
+import WelcomePatientStep from "./steps/WelcomePatientStep";
+import OptionalSurveyStep from "./steps/OptionalSurveyStep";
+import OtherUserSurveyStep from "./steps/OtherUserSurveyStep";
+import ThankYouStep from "./steps/ThankYouStep";
+
 export interface OnboardingData {
-  curvedegree: string;
-  bracingGoal: string;
-  discovery: string;
-  interests: string[];
-  gender: string;
-  ageRange: string;
+  userType: 'patient' | 'other' | '';
+  // Patient path
+  motivations: string[];
+  curveDegree: string;
+  currentBracingHours: string;
+  bracingGoal: number;
   consentsToTerms: boolean;
+  // Optional survey for patient
+  ageRange: string;
+  gender: string;
+  interests: string[];
+  discoveryMethod: string;
+  // Other path
+  otherDiscoveryMethod: string;
+  interestReason: string;
 }
 
-const OnboardingWorkflow = ({ onComplete }: { onComplete: (data: OnboardingData) => void }) => {
+const OnboardingWorkflow = ({ onComplete }: { onComplete: (data: Partial<OnboardingData>) => void }) => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [data, setData] = useState<OnboardingData>({
-    curvedegree: '',
-    bracingGoal: '',
-    discovery: '',
-    interests: [],
-    gender: '',
-    ageRange: '',
+  const [data, setData] = useState<Partial<OnboardingData>>({
+    userType: '',
+    motivations: [],
+    curveDegree: '',
+    currentBracingHours: '',
+    bracingGoal: 12,
     consentsToTerms: false,
+    ageRange: '',
+    gender: '',
+    interests: [],
+    discoveryMethod: '',
+    otherDiscoveryMethod: '',
+    interestReason: '',
   });
-  const { toast } = useToast();
 
-  const totalSteps = 9; // Now including welcome + 7 questions + celebration
-  const progress = ((currentStep + 1) / totalSteps) * 100;
+  const { toast } = useToast();
 
   const updateData = (field: keyof OnboardingData, value: any) => {
     setData(prev => ({ ...prev, [field]: value }));
   };
 
+  const patientSteps = useMemo(() => [
+    { component: MotivationStep, props: { value: data.motivations, onChange: (value: string[]) => updateData('motivations', value) } },
+    { component: CurrentProgressStep, props: { data: { curveDegree: data.curveDegree, currentBracingHours: data.currentBracingHours }, onChange: (field: 'curveDegree' | 'currentBracingHours', value: string) => updateData(field, value) } },
+    { component: GoalStep, props: { value: data.bracingGoal, onChange: (value: number) => updateData('bracingGoal', value) } },
+    { component: PermissionsStep, props: { value: data.consentsToTerms, onChange: (value: boolean) => updateData('consentsToTerms', value) } },
+    { component: WelcomePatientStep, props: {} },
+    { component: OptionalSurveyStep, props: { data, onChange: updateData, onSkip: () => handleComplete() } },
+  ], [data]);
+
+  const otherSteps = useMemo(() => [
+    { component: OtherUserSurveyStep, props: { data, onChange: updateData } },
+    { component: ThankYouStep, props: {} },
+  ], [data]);
+
+  const steps = data.userType === 'patient' ? patientSteps : data.userType === 'other' ? otherSteps : [];
+  const totalSteps = (data.userType ? steps.length : 0) + 1;
+  const progress = totalSteps > 1 ? ((currentStep + 1) / totalSteps) * 100 : 0;
+
   const nextStep = () => {
     if (currentStep < totalSteps - 1) {
       setCurrentStep(currentStep + 1);
+    } else {
+      handleComplete();
     }
   };
 
@@ -57,109 +88,45 @@ const OnboardingWorkflow = ({ onComplete }: { onComplete: (data: OnboardingData)
   };
 
   const handleComplete = () => {
-    if (currentStep === 7 && !data.consentsToTerms) {
-      toast({
-        title: "Terms & Conditions Required",
-        description: "Please accept the terms and conditions to continue.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    if (currentStep === 8) {
-      // Final step - complete onboarding
-      onComplete(data);
-    } else {
-      nextStep();
-    }
+    onComplete(data);
+  };
+
+  const handleContinue = () => {
+    nextStep();
   };
 
   const canContinue = () => {
-    switch (currentStep) {
-      case 0: return true; // Welcome step
-      case 1: return data.curvedegree !== '';
-      case 2: return data.bracingGoal !== '';
-      case 3: return data.discovery !== '';
-      case 4: return data.interests.length > 0;
-      case 5: return data.gender !== '';
-      case 6: return data.ageRange !== '';
-      case 7: return data.consentsToTerms;
-      case 8: return true; // Celebration step
-      default: return false;
-    }
+    if (currentStep === 0) return !!data.userType;
+    // Add validation for other steps later
+    return true; 
   };
 
   const renderStep = () => {
-    switch (currentStep) {
-      case 0:
-        return <WelcomeStep />;
-      case 1:
-        return (
-          <CurveStep
-            value={data.curvedegree}
-            onChange={(value) => updateData('curvedegree', value)}
-          />
-        );
-      case 2:
-        return (
-          <BracingGoalStep
-            value={data.bracingGoal}
-            onChange={(value) => updateData('bracingGoal', value)}
-          />
-        );
-      case 3:
-        return (
-          <DiscoveryStep
-            value={data.discovery}
-            onChange={(value) => updateData('discovery', value)}
-          />
-        );
-      case 4:
-        return (
-          <InterestsStep
-            value={data.interests}
-            onChange={(value) => updateData('interests', value)}
-          />
-        );
-      case 5:
-        return (
-          <GenderStep
-            value={data.gender}
-            onChange={(value) => updateData('gender', value)}
-          />
-        );
-      case 6:
-        return (
-          <AgeStep
-            value={data.ageRange}
-            onChange={(value) => updateData('ageRange', value)}
-          />
-        );
-      case 7:
-        return (
-          <ConsentStep
-            value={data.consentsToTerms}
-            onChange={(value) => updateData('consentsToTerms', value)}
-          />
-        );
-      case 8:
-        return <CelebrationStep />;
-      default:
-        return null;
+    if (currentStep === 0) {
+      return <IdentityStep value={data.userType || ''} onChange={(value) => updateData('userType', value)} />;
     }
+
+    const stepIndex = currentStep - 1;
+    if (stepIndex < steps.length) {
+      const StepComponent = steps[stepIndex].component;
+      return <StepComponent {...steps[stepIndex].props} />;
+    }
+
+    return null;
   };
 
   const getButtonText = () => {
-    if (currentStep === 8) return 'START YOUR JOURNEY';
-    if (currentStep === 7) return 'CONTINUE';
+    if (currentStep === totalSteps - 1) return 'FINISH';
+    if (data.userType === 'patient' && currentStep === 6) return "START YOUR JOURNEY"; // Optional Survey
     return 'CONTINUE';
   };
+  
+  const isLastStep = currentStep === totalSteps - 1;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-orange-50 to-yellow-100 text-gray-800 flex flex-col">
-      {/* Header with progress */}
       <div className="p-4 flex items-center gap-4">
-        {currentStep > 0 && currentStep < 8 && (
+        {currentStep > 0 && (
           <Button
             variant="ghost"
             size="icon"
@@ -170,27 +137,24 @@ const OnboardingWorkflow = ({ onComplete }: { onComplete: (data: OnboardingData)
           </Button>
         )}
         <div className="flex-1">
-          <Progress 
-            value={progress} 
-            className="h-2 bg-white/30"
-          />
+          {data.userType && <Progress value={progress} className="h-2 bg-white/30" />}
         </div>
       </div>
 
-      {/* Step content */}
       <div className="flex-1 flex flex-col justify-center p-6">
         {renderStep()}
       </div>
 
-      {/* Continue button */}
       <div className="p-6">
-        <Button
-          onClick={handleComplete}
-          disabled={!canContinue()}
-          className="w-full h-14 text-lg font-semibold bg-teal-500 hover:bg-teal-600 text-white rounded-xl shadow-lg"
-        >
-          {getButtonText()}
-        </Button>
+        {data.userType && (
+            <Button
+              onClick={isLastStep ? handleComplete : handleContinue}
+              disabled={!canContinue()}
+              className="w-full h-14 text-lg font-semibold bg-teal-500 hover:bg-teal-600 text-white rounded-xl shadow-lg"
+            >
+              {getButtonText()}
+            </Button>
+        )}
       </div>
     </div>
   );
