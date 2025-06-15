@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -97,7 +98,28 @@ const OnboardingWorkflow = ({ onComplete }: { onComplete: (data: Partial<Onboard
 
   const canContinue = () => {
     if (currentStep === 0) return !!data.userType;
-    // Add validation for other steps later
+
+    if (data.userType === 'patient') {
+      const stepIndex = currentStep - 1;
+      if (stepIndex === 0) { // MotivationStep
+        return data.motivations.length > 0;
+      }
+      if (stepIndex === 1) { // CurrentProgressStep
+        return data.curveDegree !== '' && data.currentBracingHours !== '';
+      }
+      // GoalStep has default value, always can continue
+      if (stepIndex === 3) { // PermissionsStep
+        return data.consentsToTerms;
+      }
+    }
+
+    if (data.userType === 'other') {
+      const stepIndex = currentStep - 1;
+       if (stepIndex === 0) { // OtherUserSurveyStep
+        return data.interestReason !== '' && data.otherDiscoveryMethod !== '';
+      }
+    }
+    
     return true; 
   };
 
