@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import BadgeDisplay, { AchievementBadge } from "@/components/BadgeDisplay";
 import { useStreak } from "@/contexts/StreakContext";
-import { CheckCircle, Calendar, MessageSquare, Heart, Award, Shield } from "lucide-react";
+import BraceTimeChart from './BraceTimeChart';
 
 // Sample badge data
 const streakBadgesData = [
@@ -44,52 +44,14 @@ const AchievementsTab = () => {
       
       <Card className="mt-4">
         <CardHeader>
-          <CardTitle className="text-lg">Treatment Progress</CardTitle>
+          <CardTitle className="text-lg">Weekly Brace Time</CardTitle>
+          <p className="text-sm text-muted-foreground">Your daily brace wearing time over the last week.</p>
         </CardHeader>
-        <CardContent>
-          <TreatmentProgressList />
+        <CardContent className="pt-4">
+          <BraceTimeChart />
         </CardContent>
       </Card>
     </>
-  );
-};
-
-const TreatmentProgressList = () => {
-  const progressItems = [
-    {
-      label: "Brace Wearing Time",
-      progress: "16/18 hours",
-      percentage: 89
-    },
-    {
-      label: "Exercise Completion",
-      progress: "4/5 this week",
-      percentage: 80
-    },
-    {
-      label: "Treatment Plan",
-      progress: "Month 2 of 6",
-      percentage: 33
-    }
-  ];
-
-  return (
-    <div className="space-y-2">
-      {progressItems.map((item, index) => (
-        <div key={index}>
-          <div className="flex justify-between mb-1">
-            <span className="text-sm font-medium">{item.label}</span>
-            <span className="text-sm text-muted-foreground">{item.progress}</span>
-          </div>
-          <div className="w-full h-2 bg-muted rounded-full">
-            <div 
-              className="h-2 bg-brand rounded-full" 
-              style={{ width: `${item.percentage}%` }} 
-            />
-          </div>
-        </div>
-      ))}
-    </div>
   );
 };
 
