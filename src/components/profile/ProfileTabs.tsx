@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AchievementsTab from './AchievementsTab';
 import SocialTab from './SocialTab';
 import SettingsTab from './SettingsTab';
+import CommunitiesTab from './CommunitiesTab';
 
 const ProfileTabs = () => {
   return (
@@ -12,8 +13,11 @@ const ProfileTabs = () => {
         <TabsTrigger value="achievements" className="flex-1">
           Achievements
         </TabsTrigger>
+        <TabsTrigger value="communities" className="flex-1">
+          Communities
+        </TabsTrigger>
         <TabsTrigger value="social" className="flex-1">
-          Friends
+          Challenges
         </TabsTrigger>
         <TabsTrigger value="settings" className="flex-1">
           Settings
@@ -24,6 +28,10 @@ const ProfileTabs = () => {
         <AchievementsTab />
       </TabsContent>
       
+      <TabsContent value="communities" className="mt-4">
+        <CommunitiesTab />
+      </TabsContent>
+
       <TabsContent value="social" className="mt-4">
         <SocialTab />
       </TabsContent>
