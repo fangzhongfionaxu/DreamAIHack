@@ -17,7 +17,7 @@ const AIAssistantSettings = () => {
       <CardContent className="space-y-4">        
         <div className="flex justify-between items-center">
           <div>
-            <p className="font-medium">Adaptive interactions</p>
+            <p className="font-medium">Adaptive Learning</p>
             <p className="text-sm text-muted-foreground">
               Allow AI to adjust its style based on your interactions
             </p>
