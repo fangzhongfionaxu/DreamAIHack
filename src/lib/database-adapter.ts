@@ -1,5 +1,4 @@
 
-
 // Database adapter - abstracts database operations
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
@@ -22,7 +21,7 @@ export class DatabaseAdapter {
   static async query<T extends TableName>(
     table: T, 
     options: QueryOptions = {}
-  ): Promise<Database['public']['Tables'][T]['Row'][]> {
+  ): Promise<any[]> {
     let query = supabase
       .from(table)
       .select(options.select || '*');
@@ -60,8 +59,8 @@ export class DatabaseAdapter {
 
   static async insert<T extends TableName>(
     table: T, 
-    data: Database['public']['Tables'][T]['Insert']
-  ): Promise<Database['public']['Tables'][T]['Row']> {
+    data: any
+  ): Promise<any> {
     const { data: result, error } = await supabase
       .from(table)
       .insert(data)
@@ -78,8 +77,8 @@ export class DatabaseAdapter {
   static async update<T extends TableName>(
     table: T, 
     id: string, 
-    data: Database['public']['Tables'][T]['Update']
-  ): Promise<Database['public']['Tables'][T]['Row']> {
+    data: any
+  ): Promise<any> {
     const { data: result, error } = await supabase
       .from(table)
       .update(data)
@@ -105,4 +104,3 @@ export class DatabaseAdapter {
     }
   }
 }
-
