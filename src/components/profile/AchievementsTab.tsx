@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import BadgeDisplay, { AchievementBadge } from "@/components/BadgeDisplay";
@@ -31,27 +32,27 @@ const AchievementsTab = () => {
   });
 
   return (
-    <>
+    <div className="space-y-3 sm:space-y-4">
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Badge Collection</CardTitle>
-          <p className="text-sm text-muted-foreground">Complete streaks to unlock badges and show your commitment to health!</p>
+        <CardHeader className="pb-3 sm:pb-6">
+          <CardTitle className="text-base sm:text-lg">Badge Collection</CardTitle>
+          <p className="text-xs sm:text-sm text-muted-foreground">Complete streaks to unlock badges and show your commitment to health!</p>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-0">
           <BadgeDisplay badges={badges} />
         </CardContent>
       </Card>
       
-      <Card className="mt-4">
-        <CardHeader>
-          <CardTitle className="text-lg">Weekly Brace Time</CardTitle>
-          <p className="text-sm text-muted-foreground">Your daily brace wearing time over the last week.</p>
+      <Card>
+        <CardHeader className="pb-3 sm:pb-6">
+          <CardTitle className="text-base sm:text-lg">Weekly Brace Time</CardTitle>
+          <p className="text-xs sm:text-sm text-muted-foreground">Your daily brace wearing time over the last week.</p>
         </CardHeader>
-        <CardContent className="pt-4">
+        <CardContent className="pt-0 sm:pt-4">
           <BraceTimeChart />
         </CardContent>
       </Card>
-    </>
+    </div>
   );
 };
 

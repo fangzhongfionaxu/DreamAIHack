@@ -48,19 +48,19 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const CustomLegend = () => (
-  <div className="flex justify-center items-center gap-x-6 mt-4 text-sm">
+  <div className="flex justify-center items-center gap-x-3 sm:gap-x-6 mt-3 sm:mt-4 text-xs sm:text-sm flex-wrap">
     {Object.entries(chartConfig)
       .filter((entry): entry is [string, { label: string; color: string }] => 'color' in entry[1])
       .map(([key, config]) => {
         const isGoal = key === 'goal';
 
         return (
-          <div key={key} className="flex items-center gap-1.5">
+          <div key={key} className="flex items-center gap-1 sm:gap-1.5">
             {isGoal ? (
-              <div className="w-3 border-t-2 border-dashed" style={{ borderColor: config.color }} />
+              <div className="w-2 sm:w-3 border-t-2 border-dashed" style={{ borderColor: config.color }} />
             ) : (
               <div
-                className="w-2.5 h-2.5 shrink-0 rounded-full"
+                className="w-2 h-2 sm:w-2.5 sm:h-2.5 shrink-0 rounded-full"
                 style={{ backgroundColor: config.color }}
               />
             )}
@@ -77,27 +77,29 @@ const BraceTimeChart = () => {
 
   return (
     <React.Fragment>
-      <div className="flex flex-row items-baseline gap-2 mb-4">
-        <p className="text-3xl font-bold tracking-tight">{averageHours}</p>
-        <p className="text-sm text-muted-foreground">average hours/day</p>
+      <div className="flex flex-row items-baseline gap-2 mb-3 sm:mb-4">
+        <p className="text-2xl sm:text-3xl font-bold tracking-tight">{averageHours}</p>
+        <p className="text-xs sm:text-sm text-muted-foreground">average hours/day</p>
       </div>
-      <ChartContainer config={chartConfig} className="min-h-[250px] w-full">
+      <ChartContainer config={chartConfig} className="min-h-[200px] sm:min-h-[250px] w-full">
         <BarChart accessibilityLayer data={chartData} margin={{ top: 20, right: 10, left: -10, bottom: 5 }}>
           <CartesianGrid vertical={false} />
           <XAxis
             dataKey="day"
             tickLine={false}
-            tickMargin={10}
+            tickMargin={8}
             axisLine={false}
             tickFormatter={(value) => value.slice(0, 3)}
+            fontSize={12}
           />
           <YAxis
             dataKey="hours"
             tickLine={false}
             axisLine={false}
-            tickMargin={10}
+            tickMargin={8}
             domain={[0, 24]}
             ticks={[0, 6, 12, 18, 24]}
+            fontSize={12}
           />
           <ChartTooltip
             cursor={false}
@@ -108,7 +110,7 @@ const BraceTimeChart = () => {
             stroke="#3166A3"
             strokeDasharray="3 3"
           />
-          <Bar dataKey="hours" radius={[8, 8, 0, 0]} maxBarSize={30} />
+          <Bar dataKey="hours" radius={[6, 6, 0, 0]} maxBarSize={24} />
         </BarChart>
       </ChartContainer>
       <CustomLegend />
