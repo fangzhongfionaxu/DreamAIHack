@@ -4,18 +4,25 @@ const CLAUDE_API_ENDPOINT = "https://api.anthropic.com/v1/messages";
 const CLAUDE_MODEL = "claude-3-haiku-20240307";
 
 const SYSTEM_PROMPT = `You are a habit-tracking assistant for patients with chronic spinal conditions.
-The user will talk to you like you are their accountability buddy. Respond to the user in a friendly and motivational tone. You'll be speaking to teenagers, so try to adapt your tone based on their behavior. Also keep your responses concise, ideally less than 20 words so that it's not too difficult to stay engaged with you. You are not allowed to diagnose or provide medical advice. If there are any messages that sound troubling, especially for a vulnerable teenager, you are obligated to flag it to the user to seek additional help and highlight that you are not qualified to handle emergencies.
+The user will talk to you like you are their accountability buddy. Respond to the user in a friendly and motivational tone. You'll be speaking mostly to teenagers. Adapt your tone to the user's behavior. Make sure to keep your responses concise, ideally less than 20 words so that it's not too difficult to stay engaged with you. You are not allowed to diagnose or provide medical advice. If there are any messages that sound troubling, especially for a vulnerable teenager, you are obligated to flag it to the user to seek additional help and highlight that you are not qualified to handle emergencies.
 
-Identify each relevant habit mentioned by the user.
-Normalize the habit names (e.g., "wore my back brace" → "brace", "took a walk" → "walk").
-For each habit, record a structured JSON object with:
-"habit" (normalized string)
-"completed" (true/false)
-"streak_days" (integer, assume +1 if completed today)
+You will track the user's activities daily through a photo-sharing feature. Each day when users start their activity (e.g. wear a brace), they will send you a photo taken in real-time. Analyze the image to confirm what activity it is. You will record this activity as structured JSON object: 
+"activity" (text) - for the name of the activity (e.g. bracing)
+"start_time" (timestamptz) - for the start time of this activity
 
-Only use the JSON format shown above. Do not display the JSON object in the output but store the output in the Supabase backend.
-Only include the most relevant habits mentioned.
-`;
+The user would have previously indicated a bracing goal which is stored in the Supabase backend in the user_onboarding table as "bracing_goal". Add this bracing_goal as an interval in terms of number of hours to this "start_time" to create a structured JSON object "projected_end_time" (timestamptz). 
+
+When the user tells you that they have completed the activity (e.g. removed their brace), ask for a photo confirmation record the timing of this confirmation as a structured JSON object: "end_time" (timestamptz)
+
+If "end_time" is later than or equal to "projected_end_time", congratulate them for hitting their goals and maintaining their streak. Mark the activity as completed for the day using these structured JSON objects: 
+"completed" (boolean) - mark as TRUE
+"streak_days" (integer) - add 1 for streak maintained
+
+If "end_time" is earlier than "projected_end_time", encourage the user to try again tomorrow. Mark the activity as not completed for the day using these structured JSON objects: 
+"completed" (boolean) - mark as FALSE
+"streak_days" (integer) - use 0 for streak not maintained
+
+Only use the JSON format shown above. Do not display the JSON object to the user but store the output in the Supabase backend.`;
 
 // CORS headers for browser access
 const corsHeaders = {
@@ -34,39 +41,37 @@ function handleCors(req: Request) {
   return null;
 }
 
-// Utility: Extract habits array from any JSON present in Claude's output
-function tryExtractHabitsFromText(text: string): any[] | null {
+// Utility: Extract activities array from any JSON present in Claude's output
+function tryExtractActivitiesFromText(text: string): any[] | null {
   if (!text) return null;
 
   // Look for JSON arrays or objects in the text output
   const regex = /```json\s*([\s\S]+?)```|(\[[\s\S]+?\])|({[\s\S]+?})/g;
   let match: RegExpExecArray | null;
-  let habits: any[] = [];
+  let activities: any[] = [];
 
   while ((match = regex.exec(text))) {
     let jsonText = match[1] || match[2] || match[3];
 
     try {
       const data = JSON.parse(jsonText.trim());
-      // If it's already an array, add all items (robustly check for array)
+      // If it's already an array, add all items
       if (Array.isArray(data)) {
         for (const entry of data) {
-          if (entry && typeof entry.habit === "string" && typeof entry.completed === "boolean" && typeof entry.streak_days === "number") {
-            habits.push(entry);
+          if (entry && typeof entry.activity === "string") {
+            activities.push(entry);
           }
         }
-      } else if (typeof data === "object" && data !== null && data.habit) {
-        // If it's a single habit object, add it
-        habits.push(data);
+      } else if (typeof data === "object" && data !== null && data.activity) {
+        // If it's a single activity object, add it
+        activities.push(data);
       }
-      // else: ignore malformed data
     } catch (e) {
-      // Ignore parse errors and continue searching
       console.log("Failed to parse potential JSON:", e);
     }
   }
 
-  return habits.length > 0 ? habits : null;
+  return activities.length > 0 ? activities : null;
 }
 
 // Utility: Remove all JSON blocks matched by tryExtractHabitsFromText regex from the AI text
@@ -124,10 +129,40 @@ serve(async (req: Request) => {
     // Log request
     console.log(`[Claude Chat] Prompt: "${prompt.substring(0, 50)}..." (user_id: ${user_id})`);
 
+    // Get user's bracing goal from onboarding data
+    let bracingGoal = 12; // default value
+    try {
+      const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+      const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+      
+      if (SUPABASE_URL && SERVICE_ROLE_KEY) {
+        const onboardingRes = await fetch(`${SUPABASE_URL}/rest/v1/user_onboarding?user_id=eq.${user_id}`, {
+          headers: {
+            "apikey": SERVICE_ROLE_KEY,
+            "Authorization": `Bearer ${SERVICE_ROLE_KEY}`,
+          }
+        });
+        
+        if (onboardingRes.ok) {
+          const onboardingData = await onboardingRes.json();
+          if (onboardingData && onboardingData[0]?.bracing_goal) {
+            bracingGoal = onboardingData[0].bracing_goal;
+          }
+        }
+      }
+    } catch (e) {
+      console.log("Could not fetch bracing goal, using default:", e);
+    }
+
+    // Enhanced system prompt with user-specific bracing goal
+    const enhancedSystemPrompt = `${SYSTEM_PROMPT}
+
+The user's current bracing goal is ${bracingGoal} hours per day. Use this when calculating projected_end_time.`;
+
     // Create Claude API request
     const requestBody = {
       model: CLAUDE_MODEL,
-      system: SYSTEM_PROMPT,
+      system: enhancedSystemPrompt,
       messages: [{ role: 'user', content: prompt }],
       max_tokens: 500
     };
@@ -163,13 +198,13 @@ serve(async (req: Request) => {
     let aiText = data.content[0].text;
     console.log("Original Claude output:", aiText);
 
-    // --- STEP 1: Try to parse JSON with habits from aiText ---
-    let insertedHabitIds: string[] = [];
-    let habitsToInsert = tryExtractHabitsFromText(aiText);
-    console.log("Extracted habits:", habitsToInsert);
+    // --- STEP 1: Try to parse JSON with activities from aiText ---
+    let insertedActivityIds: string[] = [];
+    let activitiesToInsert = tryExtractActivitiesFromText(aiText);
+    console.log("Extracted activities:", activitiesToInsert);
 
-    if (habitsToInsert && Array.isArray(habitsToInsert) && habitsToInsert.length > 0) {
-      // Insert each habit via Supabase REST API
+    if (activitiesToInsert && Array.isArray(activitiesToInsert) && activitiesToInsert.length > 0) {
+      // Insert each activity via Supabase REST API
       try {
         const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
         const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -179,20 +214,9 @@ serve(async (req: Request) => {
         } else {
           const insertResults = [];
 
-          // Corrected loop to run for each valid habit object
-          for (const habit of habitsToInsert) {
-            // Sanity check the structure
-            if (
-              typeof habit.habit !== "string" ||
-              typeof habit.completed !== "boolean" ||
-              typeof habit.streak_days !== "number"
-            ) {
-              console.warn("Malformed habit object:", habit);
-              continue;
-            }
-
-            // Insert into habits table (one POST per habit)
-            const insertRes = await fetch(`${SUPABASE_URL}/rest/v1/habits`, {
+          for (const activity of activitiesToInsert) {
+            // Insert into activities table (one POST per activity)
+            const insertRes = await fetch(`${SUPABASE_URL}/rest/v1/activities`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -202,37 +226,34 @@ serve(async (req: Request) => {
               },
               body: JSON.stringify({
                 user_id,
-                habit: habit.habit,
-                completed: habit.completed,
-                streak_days: habit.streak_days
+                ...activity
               })
             });
 
             if (insertRes.ok) {
               const insertData = await insertRes.json();
-              // insertData can be array or object, check for id inside
               if (Array.isArray(insertData) && insertData[0]?.id) {
-                insertedHabitIds.push(insertData[0].id);
-                insertResults.push({ habit: habit.habit, status: "success" });
+                insertedActivityIds.push(insertData[0].id);
+                insertResults.push({ activity: activity.activity, status: "success" });
               } else if (insertData && insertData.id) {
-                insertedHabitIds.push(insertData.id);
-                insertResults.push({ habit: habit.habit, status: "success" });
+                insertedActivityIds.push(insertData.id);
+                insertResults.push({ activity: activity.activity, status: "success" });
               } else {
-                insertResults.push({ habit: habit.habit, status: "unknown_id" });
+                insertResults.push({ activity: activity.activity, status: "unknown_id" });
               }
             } else {
               const errorMsg = await insertRes.text();
-              insertResults.push({ habit: habit.habit, status: "error", error: errorMsg });
+              insertResults.push({ activity: activity.activity, status: "error", error: errorMsg });
             }
           }
 
-          console.log(`[Claude Chat] Inserted habits: `, JSON.stringify(insertResults));
+          console.log(`[Claude Chat] Inserted activities: `, JSON.stringify(insertResults));
         }
       } catch (insertionError) {
-        console.error("Error inserting habits:", insertionError);
+        console.error("Error inserting activities:", insertionError);
       }
     } else {
-      console.log("No structured habits JSON detected in Claude output.");
+      console.log("No structured activities JSON detected in Claude output.");
     }
 
     // Remove JSON blocks from the AI text so that user doesn't see them
