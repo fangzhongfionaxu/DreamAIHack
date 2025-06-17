@@ -84,6 +84,66 @@ export type Database = {
         }
         Relationships: []
       }
+      user_onboarding: {
+        Row: {
+          age_range: string | null
+          bracing_goal: number | null
+          completed_at: string | null
+          consents_to_terms: boolean | null
+          created_at: string
+          current_bracing_hours: string | null
+          curve_degree: string | null
+          discovery_method: string | null
+          gender: string | null
+          id: string
+          interest_reason: string | null
+          interests: string[] | null
+          motivations: string[] | null
+          other_discovery_method: string | null
+          updated_at: string
+          user_id: string
+          user_type: string | null
+        }
+        Insert: {
+          age_range?: string | null
+          bracing_goal?: number | null
+          completed_at?: string | null
+          consents_to_terms?: boolean | null
+          created_at?: string
+          current_bracing_hours?: string | null
+          curve_degree?: string | null
+          discovery_method?: string | null
+          gender?: string | null
+          id?: string
+          interest_reason?: string | null
+          interests?: string[] | null
+          motivations?: string[] | null
+          other_discovery_method?: string | null
+          updated_at?: string
+          user_id: string
+          user_type?: string | null
+        }
+        Update: {
+          age_range?: string | null
+          bracing_goal?: number | null
+          completed_at?: string | null
+          consents_to_terms?: boolean | null
+          created_at?: string
+          current_bracing_hours?: string | null
+          curve_degree?: string | null
+          discovery_method?: string | null
+          gender?: string | null
+          id?: string
+          interest_reason?: string | null
+          interests?: string[] | null
+          motivations?: string[] | null
+          other_discovery_method?: string | null
+          updated_at?: string
+          user_id?: string
+          user_type?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

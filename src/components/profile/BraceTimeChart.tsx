@@ -2,76 +2,80 @@
 import React from "react";
 import { Bar, BarChart, CartesianGrid, ReferenceLine, XAxis, YAxis } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartConfig } from "@/components/ui/chart";
-
-const braceGoal = 18; // User's bracing goal - hardcoded for now
-
-const chartData = [
-  { day: "Mon", hours: 14 },
-  { day: "Tue", hours: 15 },
-  { day: "Wed", hours: 18 },
-  { day: "Thu", hours: 18 },
-  { day: "Fri", hours: 17 },
-  { day: "Sat", hours: 16 },
-  { day: "Sun", hours: 19 },
-].map(item => {
-  let fill;
-  if (item.hours >= braceGoal) {
-    fill = "var(--color-goal-met)";
-  } else if (item.hours >= braceGoal - 2) {
-    fill = "var(--color-close)";
-  } else {
-    fill = "var(--color-below)";
-  }
-  return { ...item, fill };
-});
-
-const chartConfig = {
-  hours: {
-    label: "Hours",
-  },
-  "goal-met": {
-    label: "Goal Met",
-    color: "#6BAFB2",
-  },
-  close: {
-    label: "Close",
-    color: "#F5E2AE",
-  },
-  below: {
-    label: "Below Goal",
-    color: "#DCC1BA",
-  },
-  goal: {
-    label: "Goal",
-    color: "#3166A3",
-  },
-} satisfies ChartConfig;
-
-const CustomLegend = () => (
-  <div className="flex justify-center items-center gap-x-3 sm:gap-x-6 mt-3 sm:mt-4 text-xs sm:text-sm flex-wrap">
-    {Object.entries(chartConfig)
-      .filter((entry): entry is [string, { label: string; color: string }] => 'color' in entry[1])
-      .map(([key, config]) => {
-        const isGoal = key === 'goal';
-
-        return (
-          <div key={key} className="flex items-center gap-1 sm:gap-1.5">
-            {isGoal ? (
-              <div className="w-2 sm:w-3 border-t-2 border-dashed" style={{ borderColor: config.color }} />
-            ) : (
-              <div
-                className="w-2 h-2 sm:w-2.5 sm:h-2.5 shrink-0 rounded-full"
-                style={{ backgroundColor: config.color }}
-              />
-            )}
-            <span className="text-muted-foreground">{config.label}</span>
-          </div>
-        );
-      })}
-  </div>
-);
+import { useOnboardingData } from "@/hooks/useOnboardingData";
 
 const BraceTimeChart = () => {
+  const { data: onboardingData } = useOnboardingData();
+  
+  // Use bracing goal from onboarding data, fallback to 18 if not available
+  const braceGoal = onboardingData?.bracing_goal || 18;
+
+  const chartData = [
+    { day: "Mon", hours: 14 },
+    { day: "Tue", hours: 15 },
+    { day: "Wed", hours: 18 },
+    { day: "Thu", hours: 18 },
+    { day: "Fri", hours: 17 },
+    { day: "Sat", hours: 16 },
+    { day: "Sun", hours: 19 },
+  ].map(item => {
+    let fill;
+    if (item.hours >= braceGoal) {
+      fill = "var(--color-goal-met)";
+    } else if (item.hours >= braceGoal - 2) {
+      fill = "var(--color-close)";
+    } else {
+      fill = "var(--color-below)";
+    }
+    return { ...item, fill };
+  });
+
+  const chartConfig = {
+    hours: {
+      label: "Hours",
+    },
+    "goal-met": {
+      label: "Goal Met",
+      color: "#6BAFB2",
+    },
+    close: {
+      label: "Close",
+      color: "#F5E2AE",
+    },
+    below: {
+      label: "Below Goal",
+      color: "#DCC1BA",
+    },
+    goal: {
+      label: "Goal",
+      color: "#3166A3",
+    },
+  } satisfies ChartConfig;
+
+  const CustomLegend = () => (
+    <div className="flex justify-center items-center gap-x-3 sm:gap-x-6 mt-3 sm:mt-4 text-xs sm:text-sm flex-wrap">
+      {Object.entries(chartConfig)
+        .filter((entry): entry is [string, { label: string; color: string }] => 'color' in entry[1])
+        .map(([key, config]) => {
+          const isGoal = key === 'goal';
+
+          return (
+            <div key={key} className="flex items-center gap-1 sm:gap-1.5">
+              {isGoal ? (
+                <div className="w-2 sm:w-3 border-t-2 border-dashed" style={{ borderColor: config.color }} />
+              ) : (
+                <div
+                  className="w-2 h-2 sm:w-2.5 sm:h-2.5 shrink-0 rounded-full"
+                  style={{ backgroundColor: config.color }}
+                />
+              )}
+              <span className="text-muted-foreground">{config.label}</span>
+            </div>
+          );
+        })}
+    </div>
+  );
+
   const totalHours = chartData.reduce((acc, item) => acc + item.hours, 0);
   const averageHours = (totalHours / chartData.length).toFixed(1);
 

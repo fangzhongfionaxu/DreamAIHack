@@ -7,10 +7,15 @@ import Navigation from "@/components/Navigation";
 import PlantProgress from "@/components/PlantProgress";
 import MotivationalChatBubble from "@/components/plant/MotivationalChatBubble";
 import { useStreak } from "@/contexts/StreakContext";
+import { useOnboardingData } from "@/hooks/useOnboardingData";
 import AchievementsTab from "@/components/profile/AchievementsTab";
 
 const Activities = () => {
   const { streak } = useStreak();
+  const { data: onboardingData } = useOnboardingData();
+  
+  // Use bracing goal from onboarding data, fallback to 30 days for maxStreak
+  const maxStreak = 30;
 
   return (
     <div className="flex flex-col min-h-screen pb-20">
@@ -44,12 +49,15 @@ const Activities = () => {
               
               <PlantProgress 
                 streak={streak}
-                maxStreak={30}
+                maxStreak={maxStreak}
               />
               
               <div className="mt-4 sm:mt-6 text-center">
                 <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3">
-                  Keep going! You're on day {streak} of your 30-day journey.
+                  Keep going! You're on day {streak} of your {maxStreak}-day journey.
+                  {onboardingData?.bracing_goal && (
+                    <> Your daily goal is {onboardingData.bracing_goal} hours of bracing.</>
+                  )}
                 </p>
                 <Button className="bg-brand hover:bg-brand-dark text-sm sm:text-base px-4 sm:px-6">
                   Share Your Progress
