@@ -1,9 +1,9 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { getAppropriateRoute } from "@/utils/routeUtils";
 
 interface AuthContextProps {
   session: Session | null;
@@ -40,12 +40,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         
         if (event === 'SIGNED_IN') {
           // Using setTimeout to avoid Supabase deadlocks
-          setTimeout(() => {
-            navigate('/');
-            
-            // Update login count
+          setTimeout(async () => {
+            // Check if user has completed onboarding and navigate appropriately
             if (session?.user) {
+              const appropriateRoute = await getAppropriateRoute(session.user.id);
+              navigate(appropriateRoute);
+              
+              // Update login count
               updateLoginCount(session.user.id);
+            } else {
+              // Fallback to chat if no user session
+              navigate('/');
             }
           }, 0);
         } else if (event === 'SIGNED_OUT') {

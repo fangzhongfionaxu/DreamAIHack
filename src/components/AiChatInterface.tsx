@@ -50,7 +50,7 @@ const AiChatInterface = () => {
 
     try {
       console.log("Calling generateResponse with input:", input); // Verbose logging
-      const responseContent = await generateRense(input);
+      const responseContent = await generateResponse(input, user?.id || '', JSON.stringify(messages));
       
       console.log("Received response:", responseContent); // Log received response
       
