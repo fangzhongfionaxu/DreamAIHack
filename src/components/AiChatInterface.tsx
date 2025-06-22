@@ -24,7 +24,6 @@ const AiChatInterface = () => {
     }
   ]);
   const [input, setInput] = useState('');
-
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -50,7 +49,7 @@ const AiChatInterface = () => {
 
     try {
       console.log("Calling generateResponse with input:", input); // Verbose logging
-      const responseContent = await generateRense(input);
+      const responseContent = await generateResponse(input);
       
       console.log("Received response:", responseContent); // Log received response
       
