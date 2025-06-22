@@ -1,19 +1,58 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import OnboardingWorkflow, { OnboardingData } from './OnboardingWorkflow';
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useEffect, useState } from 'react';
+import { hasCompletedOnboarding } from '@/utils/routeUtils';
 
 const OnboardingPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
+  const [isCheckingOnboarding, setIsCheckingOnboarding] = useState(true);
 
-  const handleOnboardingComplete = async (data: OnboardingData) => {
+  // Check if user has already completed onboarding
+  useEffect(() => {
+    const checkOnboardingStatus = async () => {
+      if (!user) {
+        setIsCheckingOnboarding(false);
+        return;
+      }
+
+      try {
+        const completed = await hasCompletedOnboarding(user.id);
+        if (completed) {
+          // User has already completed onboarding, redirect to main app
+          navigate('/');
+          return;
+        }
+      } catch (error) {
+        console.error('Error checking onboarding status:', error);
+      } finally {
+        setIsCheckingOnboarding(false);
+      }
+    };
+
+    checkOnboardingStatus();
+  }, [user, navigate]);
+
+  // Show loading while checking onboarding status
+  if (isCheckingOnboarding) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  const handleOnboardingComplete = async (data: Partial<OnboardingData>) => {
     console.log('Onboarding completed with data:', data);
-    
+    const { data: { session } } = await supabase.auth.getSession();
+    console.log('Current session:', session);
+    console.log('Current user:', user);
+    console.log('Onboarding data:', data);
     if (!user) {
       toast({
         title: "Error",

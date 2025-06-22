@@ -1,11 +1,50 @@
-
 import AiChatInterface from "@/components/AiChatInterface";
 import Navigation from "@/components/Navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
+import { hasCompletedOnboarding } from '@/utils/routeUtils';
 
 const Index = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const [isCheckingOnboarding, setIsCheckingOnboarding] = useState(true);
+  
+  // Check if user has completed onboarding
+  useEffect(() => {
+    const checkOnboardingStatus = async () => {
+      if (!user) {
+        setIsCheckingOnboarding(false);
+        return;
+      }
+
+      try {
+        const completed = await hasCompletedOnboarding(user.id);
+        if (!completed) {
+          // User hasn't completed onboarding, redirect to onboarding
+          navigate('/onboarding');
+          return;
+        }
+      } catch (error) {
+        console.error('Error checking onboarding status:', error);
+      } finally {
+        setIsCheckingOnboarding(false);
+      }
+    };
+
+    checkOnboardingStatus();
+  }, [user, navigate]);
+
+  // Show loading while checking onboarding status
+  if (isCheckingOnboarding) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
   
   // Helper function to get user initials - same as in ProfileHeader
   const getUserInitials = () => {
